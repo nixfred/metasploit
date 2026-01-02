@@ -684,8 +684,8 @@ footer .accent {
     font-size: 14px;
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
+/* Responsive - keep side-by-side until very narrow screens */
+@media (max-width: 900px) {
     .lesson-container {
         grid-template-columns: 1fr;
         grid-template-rows: 1fr 1fr;
@@ -910,4 +910,44 @@ footer .accent {
 .lesson-cleanup h2 {
     width: 100%;
     margin-bottom: 15px;
+}
+
+/* ================================
+   DURATION TAGS
+   ================================ */
+
+.duration-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(157, 78, 221, 0.2);
+    color: var(--accent-purple);
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-left: auto;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+.duration-tag::before {
+    content: '\23F1';  /* stopwatch emoji */
+    font-size: 12px;
+}
+
+/* Highlight long-running steps */
+.step:has(.duration-tag) {
+    border-left: 3px solid var(--accent-purple);
+}
+
+.step.active:has(.duration-tag) .duration-tag {
+    background: rgba(255, 204, 0, 0.2);
+    color: var(--accent-yellow);
+    animation: timerPulse 2s infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }

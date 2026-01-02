@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ lesson.name }} - Pentest Lab</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -56,6 +57,9 @@
                     <div class="step-header">
                         <span class="step-number">{{ loop.index }}</span>
                         <h3>{{ step.title }}</h3>
+                        {% if step.duration %}
+                        <span class="duration-tag">{{ step.duration }}</span>
+                        {% endif %}
                         <button class="step-done-btn" onclick="markStepDone({{ loop.index }})" title="Mark as done">✓</button>
                     </div>
                     {% if step.explanation %}
@@ -117,24 +121,7 @@
         let currentStep = 0;
         let completedSteps = new Set();
 
-        // Load saved progress from localStorage
-        const lessonId = '{{ lesson.id }}';
-        function loadProgress() {
-            const saved = localStorage.getItem(`lesson-${lessonId}`);
-            if (saved) {
-                const data = JSON.parse(saved);
-                currentStep = data.currentStep || 0;
-                completedSteps = new Set(data.completedSteps || []);
-                updateUI();
-            }
-        }
-
-        function saveProgress() {
-            localStorage.setItem(`lesson-${lessonId}`, JSON.stringify({
-                currentStep: currentStep,
-                completedSteps: Array.from(completedSteps)
-            }));
-        }
+        // Session-only tracking (resets on page refresh)
 
         function updateUI() {
             // Update all steps
@@ -174,7 +161,6 @@
                 completedSteps.add(i);
             }
             updateUI();
-            saveProgress();
 
             // Scroll to current step
             const stepEl = document.getElementById(`step-${stepNum}`);
@@ -190,7 +176,6 @@
                 currentStep = stepNum + 1;
             }
             updateUI();
-            saveProgress();
         }
 
         function completeLesson() {
@@ -200,7 +185,6 @@
             }
             currentStep = totalSteps;
             updateUI();
-            saveProgress();
 
             // Celebration
             document.getElementById('success-section').classList.add('celebrating');
@@ -243,13 +227,46 @@
         }
 
         async function startTarget() {
-            await fetch(`/api/container/${targetContainer}/start`, { method: 'POST' });
-            setTimeout(checkStatus, 2000);
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Starting...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`/api/container/${targetContainer}/start`, { method: 'POST' });
+                const data = await res.json();
+
+                if (!data.success) {
+                    console.error('Start failed:', data.output);
+                    btn.textContent = 'Failed - Retry';
+                } else {
+                    btn.textContent = 'Started!';
+                }
+            } catch (e) {
+                console.error('Start error:', e);
+                btn.textContent = 'Error - Retry';
+            }
+
+            setTimeout(() => {
+                checkStatus();
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }, 3000);
         }
 
         async function stopTarget() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Stopping...';
+            btn.disabled = true;
+
             await fetch(`/api/container/${targetContainer}/stop`, { method: 'POST' });
-            setTimeout(checkStatus, 2000);
+
+            setTimeout(() => {
+                checkStatus();
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }, 2000);
         }
 
         async function startKali() {
@@ -291,7 +308,6 @@
         };
 
         // Initialize
-        loadProgress();
         checkStatus();
         setInterval(checkStatus, 10000);
     </script>

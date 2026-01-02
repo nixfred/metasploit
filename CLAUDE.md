@@ -154,7 +154,8 @@ lab-ui/
    - Step states: pending, active (current), completed
    - Copy button auto-marks step as current
    - Checkmark button for manual completion
-   - Progress persists in localStorage
+   - Duration tags for slow commands (purple badge)
+   - Session-only tracking (resets on refresh)
    - Auto-scroll to current step
 
 3. **API Endpoints** (app.py)
@@ -371,7 +372,7 @@ volumes:
 Port 5000 is used by macOS AirPlay Receiver since Monterey. We use 5050 to avoid conflicts.
 
 ### Why no database for Lab UI?
-MVP doesn't need it. Lessons are JSON files, easy to edit. Progress tracking uses localStorage. v2 could add SQLite for multi-user support.
+MVP doesn't need it. Lessons are JSON files, easy to edit. Step tracking is session-only (resets on page refresh). v2 could add SQLite for persistent multi-user progress.
 
 ### Why Flask on host instead of containerized?
 For MVP, simpler. The Flask app needs Docker socket access to manage containers. v2 could containerize with nginx/gunicorn.
