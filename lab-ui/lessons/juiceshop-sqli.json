@@ -10,13 +10,11 @@
   "steps": [
     {
       "title": "Open Juice Shop",
-      "command": "Open http://localhost:3000 in your browser",
-      "explanation": "Juice Shop is a Node.js e-commerce application with intentional vulnerabilities."
+      "explanation": "Juice Shop is a Node.js e-commerce application with intentional vulnerabilities. Open http://localhost:3000 in your browser."
     },
     {
       "title": "Find the login page",
-      "command": "Click 'Account' -> 'Login' in the top right",
-      "explanation": "Navigate to the login form."
+      "explanation": "Click 'Account' -> 'Login' in the top right to navigate to the login form."
     },
     {
       "title": "Test for SQL injection",
@@ -38,8 +36,7 @@
     },
     {
       "title": "View the scoreboard",
-      "command": "Navigate to http://localhost:3000/#/score-board",
-      "explanation": "Juice Shop tracks your progress. Check how many challenges you've solved."
+      "explanation": "Juice Shop tracks your progress. Check how many challenges you've solved. Open http://localhost:3000/#/score-board"
     },
     {
       "title": "Use SQLMap for automated testing",
