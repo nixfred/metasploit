@@ -122,7 +122,11 @@
         let completedSteps = new Set();
 
         // Dynamic terminal URL (works from any host)
-        const terminalUrl = `http://${window.location.hostname}:7681`;
+        // Detect Tailscale Funnel (.ts.net) and use appropriate port
+        const isFunnel = window.location.hostname.endsWith('.ts.net');
+        const terminalPort = isFunnel ? 8443 : 7681;
+        const terminalProto = isFunnel ? 'https' : 'http';
+        const terminalUrl = `${terminalProto}://${window.location.hostname}:${terminalPort}`;
         document.getElementById('terminal-frame').src = terminalUrl;
         document.getElementById('terminal-newtab').href = terminalUrl;
 

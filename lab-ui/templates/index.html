@@ -134,7 +134,11 @@
 
     <script>
         // Dynamic Kali terminal URL (works from any host)
-        const kaliTerminalUrl = `http://${window.location.hostname}:7681`;
+        // Detect Tailscale Funnel (.ts.net) and use appropriate port
+        const isFunnel = window.location.hostname.endsWith('.ts.net');
+        const kaliPort = isFunnel ? 8443 : 7681;
+        const kaliProto = isFunnel ? 'https' : 'http';
+        const kaliTerminalUrl = `${kaliProto}://${window.location.hostname}:${kaliPort}`;
         document.getElementById('kali-quick-link').href = kaliTerminalUrl;
 
         // Wizard navigation
