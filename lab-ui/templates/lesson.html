@@ -307,9 +307,20 @@
             document.getElementById('terminal-frame').style.display = 'none';
         };
 
+        // Convert URLs in text to clickable links with "Open" button
+        function linkifyUrls() {
+            const urlRegex = /(https?:\/\/[^\s<]+)/g;
+            document.querySelectorAll('.step-explanation, .expected').forEach(el => {
+                el.innerHTML = el.innerHTML.replace(urlRegex, (url) => {
+                    return `<a href="${url}" target="_blank" class="inline-link">${url}</a> <a href="${url}" target="_blank" class="open-btn">Open ↗</a>`;
+                });
+            });
+        }
+
         // Initialize
         checkStatus();
         setInterval(checkStatus, 10000);
+        linkifyUrls();
     </script>
 </body>
 </html>

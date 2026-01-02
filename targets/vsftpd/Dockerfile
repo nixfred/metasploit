@@ -1,21 +1,24 @@
 # vsftpd 2.3.4 with backdoor
 # The famous smiley face backdoor - username containing :) opens shell on port 6200
-FROM debian:buster-slim
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     build-essential \
     wget \
+    libcap-dev \
+    libpam0g-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Download and compile vsftpd 2.3.4 (contains the backdoor)
 WORKDIR /tmp
-RUN wget https://github.com/nikdubois/vsftpd-2.3.4-infected/archive/refs/heads/master.tar.gz -O vsftpd.tar.gz \
+RUN wget https://github.com/nikdubois/vsftpd-2.3.4-infected/archive/refs/heads/vsftpd_original.tar.gz -O vsftpd.tar.gz \
     && tar xzf vsftpd.tar.gz \
-    && cd vsftpd-2.3.4-infected-master \
+    && cd vsftpd-2.3.4-infected-vsftpd_original \
+    && sed -i 's/^LIBS\s*=.*/LIBS = -lcrypt -lcap -lpam/' Makefile \
     && make \
     && cp vsftpd /usr/local/sbin/ \
     && mkdir -p /var/ftp /var/run/vsftpd/empty /etc/vsftpd \
-    && useradd -d /var/ftp ftp || true
+    && useradd -d /var/ftp ftp 2>/dev/null || true
 
 # vsftpd config
 RUN echo "listen=YES" > /etc/vsftpd.conf \

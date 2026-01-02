@@ -91,7 +91,37 @@
 
 ---
 
-## v0.4.2 - Docker Image Fixes + ETHOS (Current)
+## v0.4.3 - UX Polish + vsftpd Fix (Current)
+
+**Focus:** UI improvements and vsftpd Dockerfile fix for Debian Bookworm.
+
+### Fixes
+
+1. **vsftpd Dockerfile**
+   - Upgraded from `debian:buster-slim` (EOL) to `debian:bookworm-slim`
+   - Fixed linker flags: added `-lpam` for PAM library linkage
+   - vsftpd backdoor container now builds and runs correctly
+
+2. **Wizard Navigation**
+   - "Choose Your Target" now scrolls to top of page instead of bottom
+
+3. **Clickable URLs in Lessons**
+   - URLs in step explanations are now auto-linked
+   - Added "Open ↗" button next to URLs for one-click access
+   - Blue link styling with green hover on buttons
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `targets/vsftpd/Dockerfile` | Bookworm base, `-lpam` linker flag |
+| `lab-ui/templates/index.html` | Scroll to top on wizard navigation |
+| `lab-ui/templates/lesson.html` | linkifyUrls() function for clickable URLs |
+| `lab-ui/static/style.css` | Styles for inline links and open buttons |
+
+---
+
+## v0.4.2 - Docker Image Fixes + ETHOS
 
 **Focus:** Fix broken Docker Hub images, document project philosophy.
 
