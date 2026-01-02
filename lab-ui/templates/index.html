@@ -63,6 +63,13 @@
                     </div>
                 </div>
 
+                <div class="running-targets" id="running-targets" style="display:none;">
+                    <h2>Running Targets</h2>
+                    <p class="targets-note">These containers are using system resources. Stop them when done.</p>
+                    <div class="targets-list" id="targets-list"></div>
+                    <button class="btn btn-danger" id="stop-all-btn" onclick="stopAllTargets()">Stop All Targets</button>
+                </div>
+
                 <button class="btn btn-large btn-primary" onclick="goToStep('step-choose')">
                     Start Hacking →
                 </button>
@@ -176,11 +183,58 @@
                     kaliBtn.textContent = 'Start';
                     kaliBtn.onclick = startKali;
                 }
+
+                // Running targets (exclude kali)
+                const runningTargets = Object.entries(data)
+                    .filter(([name, info]) => name !== 'kali' && info.running)
+                    .map(([name]) => name);
+
+                const targetsSection = document.getElementById('running-targets');
+                const targetsList = document.getElementById('targets-list');
+
+                if (runningTargets.length > 0) {
+                    targetsSection.style.display = 'block';
+                    targetsList.innerHTML = runningTargets.map(name =>
+                        `<div class="target-item">
+                            <span class="target-name">${name}</span>
+                            <button class="btn btn-small btn-danger" onclick="stopTarget('${name}')">Stop</button>
+                        </div>`
+                    ).join('');
+                } else {
+                    targetsSection.style.display = 'none';
+                }
             } catch (e) {
                 const dockerCheck = document.getElementById('docker-status');
                 dockerCheck.querySelector('.check-icon').textContent = '❌';
                 document.getElementById('docker-value').textContent = 'Not Running - Start Docker Desktop';
                 document.getElementById('docker-value').classList.add('stopped');
+            }
+        }
+
+        async function stopTarget(name) {
+            try {
+                await fetch(`/api/container/${name}/stop`, { method: 'POST' });
+                setTimeout(checkStatus, 1000);
+            } catch (e) {
+                console.error('Stop failed:', e);
+            }
+        }
+
+        async function stopAllTargets() {
+            const btn = document.getElementById('stop-all-btn');
+            btn.textContent = 'Stopping...';
+            btn.disabled = true;
+
+            try {
+                await fetch('/api/targets/stop-all', { method: 'POST' });
+                setTimeout(() => {
+                    checkStatus();
+                    btn.textContent = 'Stop All Targets';
+                    btn.disabled = false;
+                }, 2000);
+            } catch (e) {
+                btn.textContent = 'Stop All Targets';
+                btn.disabled = false;
             }
         }
 

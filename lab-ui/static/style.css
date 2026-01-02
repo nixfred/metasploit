@@ -181,6 +181,58 @@ body {
     color: var(--accent-red);
 }
 
+/* Running Targets Section */
+.running-targets {
+    background: var(--bg-secondary);
+    border: 1px solid var(--accent-red);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 30px auto;
+    max-width: 500px;
+}
+
+.running-targets h2 {
+    color: var(--accent-red);
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.targets-note {
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.targets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.target-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 15px;
+    background: var(--bg-card);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent-red);
+}
+
+.target-name {
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+#stop-all-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+}
+
 /* Choose Step */
 .choose-content {
     max-width: 1200px;
