@@ -206,19 +206,20 @@ The basic Java shell payload is simpler and more reliable. You get a real shell 
 
 **Why**: Basic reverse shells (like `java/shell_reverse_tcp`) give you a raw socket connection to /bin/sh. No PTY = no prompt, no tab completion, no arrow keys.
 
-**Solution**: Upgrade to a proper PTY:
+**Solution**: Upgrade to interactive bash:
 ```bash
-python3 -c 'import pty; pty.spawn("/bin/bash")'
+/bin/bash -i
 ```
 
 Now you get a real prompt like `root@container:/#`
 
-**Other upgrade options**:
+**Other upgrade options** (if bash -i doesn't work):
 ```bash
-# If python3 not available
-python -c 'import pty; pty.spawn("/bin/bash")'
 script /dev/null -c bash
-/bin/bash -i
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+python -c 'import pty; pty.spawn("/bin/bash")'
 ```
 
-**Lesson**: Always include the PTY upgrade step in exploitation lessons. Users need a familiar prompt to know they succeeded and to work effectively.
+**Key insight**: `/bin/bash -i` is most reliable since bash is almost always present. Python may not be installed on minimal containers.
+
+**Lesson**: Always include the shell upgrade step in exploitation lessons. Users need a familiar prompt to know they succeeded.
