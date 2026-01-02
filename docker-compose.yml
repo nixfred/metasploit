@@ -1,8 +1,14 @@
 version: '3.8'
 
-# Metasploit Learning Lab - Vulnerable Targets
+# =============================================================================
+# PENTESTING LEARNING LAB - Vulnerable Targets
+# =============================================================================
 # Usage: docker-compose up <service-name>
-# Example: docker-compose up dvwa
+# Example: docker-compose up dvwa vsftpd -d
+#
+# All services bind to localhost (127.0.0.1) for safety.
+# Internal network: 172.20.0.0/24
+# =============================================================================
 
 networks:
   lab:
@@ -10,124 +16,239 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/24
+          gateway: 172.20.0.1
 
 services:
-  # ============================================================
+
+  # ===========================================================================
+  # WEB APPLICATION TARGETS
+  # ===========================================================================
+
+  # ---------------------------------------------------------------------------
   # DVWA - Damn Vulnerable Web Application
-  # Classic web app vulnerabilities: SQLi, XSS, CSRF, etc.
-  # ============================================================
+  # Classic web vulns: SQLi, XSS, CSRF, Command Injection, File Upload
+  # Default creds: admin/password
+  # ---------------------------------------------------------------------------
   dvwa:
     image: vulnerables/web-dvwa
     container_name: dvwa
+    hostname: dvwa
     networks:
       lab:
         ipv4_address: 172.20.0.10
     ports:
-      - "8080:80"
-    environment:
-      - RECAPTCHA_PRIV_KEY=""
-      - RECAPTCHA_PUB_KEY=""
+      - "127.0.0.1:8080:80"
     restart: unless-stopped
 
-  # ============================================================
-  # Metasploitable2 - Classic vulnerable Linux
-  # Multiple services: FTP, SSH, Telnet, Samba, etc.
-  # ============================================================
-  metasploitable2:
-    image: tleemcjr/metasploitable2
-    container_name: metasploitable2
+  # ---------------------------------------------------------------------------
+  # bWAPP - Buggy Web Application (100+ vulnerabilities)
+  # Default creds: bee/bug
+  # ---------------------------------------------------------------------------
+  bwapp:
+    image: raesene/bwapp
+    container_name: bwapp
+    hostname: bwapp
     networks:
       lab:
-        ipv4_address: 172.20.0.20
+        ipv4_address: 172.20.0.70
     ports:
-      - "2221:21"    # FTP
-      - "2222:22"    # SSH
-      - "2223:23"    # Telnet
-      - "2280:80"    # HTTP
-      - "22445:445"  # SMB
+      - "127.0.0.1:8072:80"
     restart: unless-stopped
-    tty: true
-    stdin_open: true
 
-  # ============================================================
-  # Juice Shop - Modern OWASP vulnerabilities
-  # Node.js app with 100+ vulns
-  # ============================================================
+  # ---------------------------------------------------------------------------
+  # Juice Shop - Modern OWASP Top 10
+  # Node.js app with 100+ vulns and built-in scoreboard
+  # ---------------------------------------------------------------------------
   juiceshop:
     image: bkimminich/juice-shop
     container_name: juiceshop
+    hostname: juiceshop
     networks:
       lab:
         ipv4_address: 172.20.0.30
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     restart: unless-stopped
 
-  # ============================================================
+  # ---------------------------------------------------------------------------
   # WebGoat - OWASP Learning Platform
-  # Guided lessons for web security
-  # ============================================================
+  # Guided lessons for each vulnerability type
+  # ---------------------------------------------------------------------------
   webgoat:
     image: webgoat/webgoat
     container_name: webgoat
+    hostname: webgoat
     networks:
       lab:
         ipv4_address: 172.20.0.40
     ports:
-      - "8081:8080"
-      - "9090:9090"
+      - "127.0.0.1:8081:8080"
+      - "127.0.0.1:9090:9090"
     environment:
       - WEBGOAT_HOST=0.0.0.0
     restart: unless-stopped
 
-  # ============================================================
-  # Mutillidae - OWASP Top 10 practice
-  # ============================================================
+  # ---------------------------------------------------------------------------
+  # Mutillidae - OWASP Top 10 Practice
+  # ---------------------------------------------------------------------------
   mutillidae:
     image: citizenstig/nowasp
     container_name: mutillidae
+    hostname: mutillidae
     networks:
       lab:
         ipv4_address: 172.20.0.50
     ports:
-      - "8082:80"
+      - "127.0.0.1:8082:80"
     restart: unless-stopped
 
-  # ============================================================
+  # ---------------------------------------------------------------------------
   # Vulnerable WordPress
-  # Common CMS vulnerabilities
-  # ============================================================
+  # Outdated plugins, weak configs
+  # ---------------------------------------------------------------------------
   vulnerable-wordpress:
     image: wpscanteam/vulnerablewordpress
     container_name: vulnerable-wordpress
+    hostname: vulnwp
     networks:
       lab:
         ipv4_address: 172.20.0.60
     ports:
-      - "8083:80"
-      - "3306:3306"
+      - "127.0.0.1:8083:80"
     restart: unless-stopped
 
-  # ============================================================
-  # VulnHub-style: Kioptrix Level 1
-  # Boot2root challenge
-  # ============================================================
-  # Note: Most VulnHub VMs need to be run separately in VirtualBox/VMware
-  # as they're full OS images, not Docker containers
+  # ===========================================================================
+  # SERVICE EXPLOITS (The fun stuff for Metasploit)
+  # ===========================================================================
 
-  # ============================================================
-  # Honeypot - Cowrie SSH/Telnet
-  # For studying attacker behavior
-  # ============================================================
+  # ---------------------------------------------------------------------------
+  # vsftpd 2.3.4 - Famous Backdoor (EASY WIN - Start Here!)
+  # MSF: exploit/unix/ftp/vsftpd_234_backdoor
+  # Gives root shell immediately
+  # ---------------------------------------------------------------------------
+  vsftpd:
+    image: vulnerables/vsftpd-2.3.4
+    container_name: vsftpd
+    hostname: vsftpd
+    networks:
+      lab:
+        ipv4_address: 172.20.0.15
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # SambaCry - CVE-2017-7494
+  # MSF: exploit/linux/samba/is_known_pipename
+  # ---------------------------------------------------------------------------
+  samba:
+    image: vulnerables/cve-2017-7494
+    container_name: samba
+    hostname: vulnsmb
+    networks:
+      lab:
+        ipv4_address: 172.20.0.16
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Vulnerable SSH - Weak passwords for brute force practice
+  # Use with Hydra or MSF auxiliary/scanner/ssh/ssh_login
+  # Creds: root/toor, user/password
+  # ---------------------------------------------------------------------------
+  vulnssh:
+    image: rastasheep/ubuntu-sshd:18.04
+    container_name: vulnssh
+    hostname: vulnssh
+    networks:
+      lab:
+        ipv4_address: 172.20.0.17
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Vulnerable MySQL - Weak root password
+  # Creds: root/root, admin/admin
+  # ---------------------------------------------------------------------------
+  vulnmysql:
+    image: mysql:5.5
+    container_name: vulnmysql
+    hostname: vulnmysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: vulnerable
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    networks:
+      lab:
+        ipv4_address: 172.20.0.18
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Tomcat with Manager exposed
+  # MSF: exploit/multi/http/tomcat_mgr_upload
+  # Creds: tomcat/tomcat
+  # ---------------------------------------------------------------------------
+  tomcat:
+    image: vulnerables/web-tomcat
+    container_name: tomcat
+    hostname: vulntomcat
+    networks:
+      lab:
+        ipv4_address: 172.20.0.19
+    ports:
+      - "127.0.0.1:8019:8080"
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Metasploitable2 - Classic multi-service vulnerable Linux
+  # FTP, SSH, Telnet, HTTP, Samba, MySQL, IRC, and more
+  # ---------------------------------------------------------------------------
+  metasploitable2:
+    image: tleemcjr/metasploitable2
+    container_name: metasploitable2
+    hostname: metasploitable2
+    networks:
+      lab:
+        ipv4_address: 172.20.0.20
+    ports:
+      - "127.0.0.1:2221:21"    # FTP
+      - "127.0.0.1:2222:22"    # SSH
+      - "127.0.0.1:2223:23"    # Telnet
+      - "127.0.0.1:2280:80"    # HTTP
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  # ===========================================================================
+  # HONEYPOT & UTILITIES
+  # ===========================================================================
+
+  # ---------------------------------------------------------------------------
+  # Cowrie SSH/Telnet Honeypot
+  # Study attacker behavior, capture credentials
+  # ---------------------------------------------------------------------------
   cowrie:
     image: cowrie/cowrie
     container_name: cowrie-honeypot
+    hostname: cowrie
     networks:
       lab:
         ipv4_address: 172.20.0.100
     ports:
-      - "2224:2222"  # SSH honeypot
-      - "2225:2223"  # Telnet honeypot
+      - "127.0.0.1:2224:2222"  # SSH honeypot
+      - "127.0.0.1:2225:2223"  # Telnet honeypot
     volumes:
       - ./targets/honeypot/cowrie-logs:/cowrie/cowrie-git/var/log/cowrie
     restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Dozzle - Real-time Docker log viewer
+  # Access: http://localhost:9999
+  # ---------------------------------------------------------------------------
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    ports:
+      - "127.0.0.1:9999:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+    networks:
+      - lab

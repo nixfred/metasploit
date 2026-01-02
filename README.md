@@ -2,186 +2,282 @@
 
 A complete, portable penetration testing environment for learning offensive security safely and legally. Everything runs locally on your Mac with Docker containers as targets.
 
+---
+
+## REQUIRED: Install These Tools FIRST
+
+**This repo does NOT install tools. It captures their CONFIGURATIONS.**
+
+You must install these before cloning:
+
+### Core Tools (Required)
+
+| Tool | Install Command | Config Captured? |
+|------|-----------------|------------------|
+| **Metasploit Framework** | `brew install metasploit` | Yes - `msf-dotfiles/` |
+| **SET (Social Engineering Toolkit)** | `git clone https://github.com/trustedsec/social-engineer-toolkit.git ~/set && pip3 install --user --break-system-packages -r ~/set/requirements.txt` | Yes - `set-config/` |
+| **Docker Desktop** | Download from docker.com | No - just needs to run |
+| **Nmap** | `brew install nmap` | No - used via MS |
+
+### Recommended Tools (Optional)
+
+| Tool | Install Command | Purpose |
+|------|-----------------|---------|
+| SQLMap | `brew install sqlmap` | SQL injection automation |
+| Nikto | `brew install nikto` | Web server scanner |
+| Gobuster | `brew install gobuster` | Directory brute-forcing |
+| **Hydra** | `brew install hydra` | Password/service brute forcing |
+| John the Ripper | `brew install john` | Password hash cracking |
+| Hashcat | `brew install hashcat` | GPU password cracking |
+| Burp Suite | Download from portswigger.net | Web proxy/scanner |
+| Wireshark | `brew install wireshark` | Packet analysis |
+
+### Quick Install All (Copy/Paste)
+
+```bash
+# Core
+brew install metasploit nmap
+git clone https://github.com/trustedsec/social-engineer-toolkit.git ~/set
+pip3 install --user --break-system-packages -r ~/set/requirements.txt
+
+# Optional but recommended
+brew install sqlmap nikto gobuster hydra john hashcat wireshark
+```
+
+---
+
 ## Project Philosophy
 
 **This is an ENVIRONMENT, not a script or application.**
 
-| Component | Weight | Purpose |
-|-----------|--------|---------|
-| Metasploit Config | 40% | Portable dotfiles for MS customizations across machines |
-| Docker Target UI | 40% | Web interface to spin up vulnerable containers |
-| SET Integration | 20% | Social Engineering Toolkit configs and workflows |
-
-## What This Repository Does
-
-1. **Syncs your pentesting tool configs** - Clone on a new Mac, run install script, you're back where you were
-2. **Provides vulnerable targets** - Docker containers with intentional vulnerabilities
-3. **Keeps everything legal** - All attacks happen on localhost, never touch external systems
-4. **Offers a web UI** - Pick vulnerabilities, launch targets, track progress (coming soon)
-
-## Prerequisites
-
-```bash
-# macOS
-brew install metasploit
-
-# SET (Social Engineering Toolkit)
-git clone https://github.com/trustedsec/social-engineer-toolkit.git ~/set
-pip3 install --user --break-system-packages -r ~/set/requirements.txt
-
-# Docker Desktop must be installed and running
 ```
+┌────────────────────────────────────────────────────────────────┐
+│  Your Mac (tools installed manually)                          │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐          │
+│  │Metasploit│ │   SET    │ │  Nmap    │ │  SQLMap  │  ...     │
+│  └────┬─────┘ └────┬─────┘ └──────────┘ └──────────┘          │
+│       │            │                                           │
+│       ▼            ▼                                           │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │           THIS REPO (captures configs)                   │  │
+│  │  msf-dotfiles/ ──→ ~/.msf4/                             │  │
+│  │  set-config/   ──→ ~/set/config                         │  │
+│  │  wordlists/    ──→ SecLists (submodule)                 │  │
+│  │  targets/      ──→ Docker vulnerable containers         │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                            │                                   │
+│           Clone to new Mac = Same customizations               │
+└────────────────────────────────────────────────────────────────┘
+```
+
+| Component | What's Captured |
+|-----------|-----------------|
+| Metasploit Config | Custom modules, scripts, msfconsole.rc, plugins |
+| SET Integration | SET configs, phishing templates, payload configs |
+| Docker Targets | docker-compose.yml, vulnerable containers |
+| Wordlists | SecLists (submodule), custom wordlists |
+
+---
+
+## What This Repo Does vs Doesn't Do
+
+### DOES:
+- Stores your Metasploit customizations (modules, scripts, settings)
+- Stores SET configuration and templates
+- Provides docker-compose files for vulnerable targets
+- Includes SecLists wordlists (as Git submodule)
+- Symlinks configs to the right places via `install.sh`
+
+### DOES NOT:
+- Install Metasploit, SET, or other tools
+- Check if tools are installed
+- Manage tool versions or updates
+- Store machine-specific data (DB, loot, history)
+
+---
 
 ## Quick Start
 
 ```bash
-# Clone the repo
-git clone git@github.com:nixfred/metasploit.git ~/Projects/metasploit
+# 1. Install prerequisites (see table above)
+
+# 2. Clone with submodules (includes SecLists)
+git clone --recursive git@github.com:nixfred/metasploit.git ~/Projects/metasploit
 cd ~/Projects/metasploit
 
-# Link your configs
+# 3. Link your configs
 ./install.sh
 
-# Start a target
+# 4. Start a target
 docker-compose up dvwa -d
 
-# Launch Metasploit (or use 'ms' alias)
+# 5. Attack it
 msfconsole
-
-# In msfconsole:
-db_nmap -sV 172.20.0.10
+# In msf: db_nmap -sV 172.20.0.10
 ```
+
+### If You Already Cloned Without --recursive
+
+```bash
+git submodule init
+git submodule update
+```
+
+---
 
 ## Project Structure
 
 ```
 metasploit/
-├── msf-dotfiles/              # [40%] Metasploit configuration
-│   ├── msfconsole.rc          # Auto-run commands on startup
-│   ├── modules/               # Custom exploit modules (.rb)
+├── CLAUDE.md                  # AI assistant context
+├── README.md                  # This file
+├── install.sh                 # Symlink configs to system locations
+├── uninstall.sh               # Remove symlinks
+├── docker-compose.yml         # All vulnerable targets
+│
+├── msf-dotfiles/              # Metasploit configuration
+│   ├── msfconsole.rc          # Startup commands
+│   ├── modules/               # Custom exploit modules
 │   ├── plugins/               # Custom plugins
 │   ├── scripts/               # Resource scripts (.rc)
 │   └── logos/                 # Custom banners
 │
-├── set-config/                # [20%] SET configuration
-│   └── set.config             # SET settings (coming soon)
+├── set-config/                # SET configuration
+│   └── (SET configs here)
 │
-├── targets/                   # Docker target configs
-│   ├── metasploitable/
-│   ├── dvwa/
-│   ├── vulnhub/
+├── wordlists/                 # SecLists (Git submodule)
+│   └── seclists/              # → github.com/danielmiessler/SecLists
+│
+├── targets/                   # Docker target configurations
 │   ├── honeypot/
 │   └── custom/
 │
-├── lab-ui/                    # [40%] Web interface (coming soon)
-│   ├── index.html
-│   └── ...
+├── lab-ui/                    # Web interface (coming soon)
 │
-├── docs/
-│   └── MS_CUSTOMIZATION.md    # Metasploit customization guide
-│
-├── docker-compose.yml         # All vulnerable targets
-├── install.sh                 # Symlink configs to ~/.msf4
-├── uninstall.sh               # Remove symlinks
-└── CLAUDE.md                  # Context for AI assistants
+└── docs/
+    ├── CHEATSHEET.md          # Quick exploit commands per target
+    └── MS_CUSTOMIZATION.md    # Detailed MS customization guide
 ```
+
+---
+
+## SecLists (Wordlists)
+
+SecLists is included as a **Git submodule** - it's linked, not copied.
+
+```bash
+# Update SecLists to latest
+git submodule update --remote wordlists/seclists
+
+# Common wordlist locations after clone:
+wordlists/seclists/Passwords/Common-Credentials/
+wordlists/seclists/Discovery/Web-Content/
+wordlists/seclists/Fuzzing/
+wordlists/seclists/Usernames/
+```
+
+### Why Submodule?
+
+- SecLists is ~1.5GB - don't want it in our repo
+- Gets updates from upstream
+- Your repo stays small
+- Users pull it separately
+
+---
 
 ## Available Docker Targets
 
-| Target | IP | Port(s) | Vulnerabilities |
-|--------|-----|---------|-----------------|
-| dvwa | 172.20.0.10 | 8080 | SQLi, XSS, CSRF, File Upload |
-| metasploitable2 | 172.20.0.20 | 2221-22445 | FTP, SSH, SMB, Telnet, HTTP |
-| juiceshop | 172.20.0.30 | 3000 | OWASP Top 10 (100+ vulns) |
+### Web Applications
+| Target | IP | Port | Vulnerabilities |
+|--------|-----|------|-----------------|
+| dvwa | 172.20.0.10 | 8080 | SQLi, XSS, CSRF, Command Injection |
+| bwapp | 172.20.0.70 | 8072 | 100+ web vulnerabilities |
+| juiceshop | 172.20.0.30 | 3000 | Modern OWASP Top 10 |
 | webgoat | 172.20.0.40 | 8081 | Guided OWASP lessons |
 | mutillidae | 172.20.0.50 | 8082 | OWASP Top 10 practice |
 | vulnerable-wordpress | 172.20.0.60 | 8083 | CMS vulnerabilities |
-| cowrie (honeypot) | 172.20.0.100 | 2224-2225 | SSH/Telnet honeypot |
 
-### Start Individual Targets
+### Service Exploits (Metasploit targets)
+| Target | IP | Service | MSF Module |
+|--------|-----|---------|------------|
+| vsftpd | 172.20.0.15 | FTP backdoor | `exploit/unix/ftp/vsftpd_234_backdoor` |
+| samba | 172.20.0.16 | SambaCry | `exploit/linux/samba/is_known_pipename` |
+| vulnssh | 172.20.0.17 | Weak SSH | `auxiliary/scanner/ssh/ssh_login` + Hydra |
+| vulnmysql | 172.20.0.18 | Weak MySQL | `auxiliary/scanner/mysql/mysql_login` |
+| tomcat | 172.20.0.19 | Manager upload | `exploit/multi/http/tomcat_mgr_upload` |
+| metasploitable2 | 172.20.0.20 | Many services | Multiple exploits available |
+
+### Utilities
+| Target | IP | Port | Purpose |
+|--------|-----|------|---------|
+| cowrie | 172.20.0.100 | 2224-2225 | SSH/Telnet honeypot |
+| dozzle | - | 9999 | Real-time Docker log viewer |
 
 ```bash
-docker-compose up dvwa -d           # Web app vulns
-docker-compose up metasploitable2 -d # Classic exploits
-docker-compose up juiceshop -d      # Modern OWASP
-docker-compose down                  # Stop all
+docker-compose up dvwa vsftpd -d    # Start specific targets
+docker-compose up -d                # Start all
+docker-compose down                 # Stop all
 ```
+
+See `docs/CHEATSHEET.md` for exploit commands for each target.
+
+---
 
 ## What Gets Synced vs Ignored
 
-| Synced (in repo) | NOT Synced (machine-specific) |
-|------------------|-------------------------------|
-| modules/ | database.yml |
-| plugins/ | db/ (PostgreSQL data) |
-| scripts/ | loot/ |
-| logos/ | history |
-| msfconsole.rc | bootsnap_cache/ |
+| Synced (version controlled) | NOT Synced (machine-specific) |
+|-----------------------------|-------------------------------|
+| msfconsole.rc | database.yml |
+| modules/ | db/ (PostgreSQL data) |
+| plugins/ | loot/ |
+| scripts/ | history |
+| logos/ | bootsnap_cache/ |
+| SET templates | Credentials/keys |
+
+---
 
 ## Shell Aliases
 
-These aliases are managed via Syncthing from fnix:
+Managed via Syncthing from fnix → shaggy:
 
 ```bash
-alias ms='msfconsole'                      # Metasploit console
-alias set='sudo python3 ~/set/setoolkit'   # SET requires sudo
+alias ms='msfconsole'
+alias set='sudo python3 ~/set/setoolkit'
 ```
 
-## Metasploit Customization Quick Reference
+---
 
-See `docs/MS_CUSTOMIZATION.md` for full details.
+## Typical Workflow
 
-### Key Files
+1. **Pick a vulnerability** to learn (e.g., SQL injection)
+2. **Start target**: `docker-compose up dvwa -d`
+3. **Scan**: `msfconsole` → `db_nmap -sV 172.20.0.10`
+4. **Find vulns**: `vulns`, `services`
+5. **Exploit**: `search sqli`, `use exploit/...`
+6. **Document**: Take notes
+7. **Reset**: `docker-compose down` - evidence destroyed
 
-| File | Purpose |
-|------|---------|
-| `~/.msf4/msfconsole.rc` | Commands run on every startup |
-| `~/.msf4/modules/` | Your custom modules |
-| `~/.msf4/database.yml` | PostgreSQL connection (local) |
+---
 
-### Useful Global Options
+## New Mac Setup Checklist
 
-```ruby
-# In msfconsole.rc or live:
-setg RHOSTS 172.20.0.0/24    # Default target range
-setg LHOST 172.20.0.1        # Your attack IP
-setg Prompt [%T] msf         # Custom prompt with timestamp
-setg ConsoleLogging true     # Log all sessions
-```
+1. [ ] Install Homebrew
+2. [ ] `brew install metasploit nmap`
+3. [ ] `brew install sqlmap nikto gobuster hydra john` (optional)
+4. [ ] Clone SET: `git clone https://github.com/trustedsec/social-engineer-toolkit.git ~/set`
+5. [ ] Install SET deps: `pip3 install --user --break-system-packages -r ~/set/requirements.txt`
+6. [ ] Install Docker Desktop
+7. [ ] Clone this repo: `git clone --recursive git@github.com:nixfred/metasploit.git`
+8. [ ] Run: `./install.sh`
+9. [ ] Start hacking: `docker-compose up dvwa -d && msfconsole`
 
-## Typical Learning Workflow
-
-1. **Pick a vulnerability to learn** (e.g., SQL injection)
-2. **Start the appropriate target**: `docker-compose up dvwa -d`
-3. **Scan it**: `db_nmap -sV 172.20.0.10`
-4. **Find and exploit vulns**: `search sqli`, `use exploit/...`
-5. **Take notes** in your preferred format
-6. **Destroy and repeat**: `docker-compose down`
-
-## SET Integration
-
-SET attacks that work well with Docker targets:
-
-- **Credential Harvester** - Clone target login pages
-- **Website Attack Vectors** - Java applet, HTA attacks
-- **QR Code Generator** - Phishing links
-
-SET attacks requiring real infrastructure (not Docker):
-- Mass mailer (needs SMTP)
-- Wireless attacks (needs WiFi adapter)
+---
 
 ## Legal Notice
 
 This repository is for **educational purposes only**. All attacks target:
-- Localhost containers you control
+- Localhost Docker containers you control
 - Intentionally vulnerable images
-- Systems you own or have explicit permission to test
+- Systems you own or have explicit written permission to test
 
 Never use these techniques against systems without authorization.
-
-## Contributing
-
-This is a private learning repo. As you learn:
-1. Add custom modules to `msf-dotfiles/modules/`
-2. Create resource scripts in `msf-dotfiles/scripts/`
-3. Document findings in `docs/`
-4. Commit and push to sync across machines

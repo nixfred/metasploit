@@ -6,13 +6,15 @@ This file provides context for Claude (AI assistant) when working on this projec
 
 This is a **private learning environment** for penetration testing. The owner is learning Metasploit, SET, and offensive security using local Docker containers as targets.
 
-### Project Breakdown
+### Project Components
 
-| Component | Weight | Description |
-|-----------|--------|-------------|
-| Metasploit Config | 40% | Dotfiles that sync MS customizations across machines |
-| Docker Target UI | 40% | Web interface to launch vulnerable containers |
-| SET Integration | 20% | Social Engineering Toolkit workflows |
+| Component | Description |
+|-----------|-------------|
+| Metasploit Config | Dotfiles that sync MS customizations across machines |
+| SET Integration | Social Engineering Toolkit configs and workflows |
+| Docker Targets | Vulnerable containers for exploitation practice |
+| Wordlists | SecLists (submodule) for brute forcing |
+| Lab UI | Web interface to launch containers (coming soon) |
 
 ### What This Is NOT
 
@@ -42,11 +44,20 @@ All attacks target **localhost Docker containers only**.
 
 ```
 172.20.0.0/24 - Lab network
-172.20.0.1   - Host (attacker)
+172.20.0.1   - Host (attacker - your Mac)
 172.20.0.10  - DVWA
+172.20.0.15  - vsftpd (backdoor - easy win)
+172.20.0.16  - Samba (SambaCry)
+172.20.0.17  - Vuln SSH (brute force with Hydra)
+172.20.0.18  - Vuln MySQL
+172.20.0.19  - Tomcat
 172.20.0.20  - Metasploitable2
 172.20.0.30  - Juice Shop
-... etc
+172.20.0.40  - WebGoat
+172.20.0.50  - Mutillidae
+172.20.0.60  - WordPress
+172.20.0.70  - bWAPP
+172.20.0.100 - Cowrie honeypot
 ```
 
 ## Key Files
