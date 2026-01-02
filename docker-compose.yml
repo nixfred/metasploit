@@ -1,5 +1,3 @@
-version: '3.8'
-
 # =============================================================================
 # PENTESTING LEARNING LAB - Vulnerable Targets
 # =============================================================================
@@ -104,10 +102,12 @@ services:
 
   # ---------------------------------------------------------------------------
   # Vulnerable WordPress
-  # Outdated plugins, weak configs
+  # Weak admin creds, debug mode enabled
+  # Depends on vulnmysql for database
+  # Admin: admin/admin (set during first setup)
   # ---------------------------------------------------------------------------
   vulnerable-wordpress:
-    image: wpscanteam/vulnerablewordpress
+    build: ./targets/wordpress
     container_name: vulnerable-wordpress
     hostname: vulnwp
     networks:
@@ -115,6 +115,13 @@ services:
         ipv4_address: 172.20.0.60
     ports:
       - "127.0.0.1:8083:80"
+    environment:
+      WORDPRESS_DB_HOST: vulnmysql:3306
+      WORDPRESS_DB_USER: admin
+      WORDPRESS_DB_PASSWORD: admin
+      WORDPRESS_DB_NAME: vulnerable
+    depends_on:
+      - vulnmysql
     restart: unless-stopped
 
   # ===========================================================================
@@ -183,10 +190,10 @@ services:
   # ---------------------------------------------------------------------------
   # Tomcat with Manager exposed
   # MSF: exploit/multi/http/tomcat_mgr_upload
-  # Creds: tomcat/tomcat
+  # Creds: tomcat/tomcat, admin/admin
   # ---------------------------------------------------------------------------
   tomcat:
-    image: vulnerables/web-tomcat
+    build: ./targets/tomcat
     container_name: tomcat
     hostname: vulntomcat
     networks:

@@ -91,7 +91,49 @@
 
 ---
 
-## v0.4.1 - Polish & Fixes (Current)
+## v0.4.2 - Docker Image Fixes + ETHOS (Current)
+
+**Focus:** Fix broken Docker Hub images, document project philosophy.
+
+### Fixes
+
+1. **Tomcat Image Rebuild**
+   - `vulnerables/web-tomcat` image removed from Docker Hub
+   - Created `targets/tomcat/Dockerfile` with Tomcat 9 + exposed manager
+   - Credentials: tomcat/tomcat, admin/admin
+   - MSF exploit: `exploit/multi/http/tomcat_mgr_upload`
+
+2. **WordPress Image Rebuild**
+   - `wpscanteam/vulnerablewordpress` image removed from Docker Hub
+   - Created `targets/wordpress/Dockerfile` with WordPress 5.4
+   - Debug mode enabled, uses vulnmysql for database
+   - Admin credentials set during first setup
+
+3. **Docker Compose Cleanup**
+   - Removed deprecated `version: '3.8'` attribute
+   - Updated Tomcat and WordPress to use `build:` instead of `image:`
+
+### New Documentation
+
+1. **ETHOS.md**
+   - Core philosophy: This is an ENVIRONMENT, not an app
+   - Design principles: configs in Git, tools on host
+   - Clone experience documented
+   - Shared config architecture diagram
+   - Network isolation policy
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `targets/tomcat/Dockerfile` | New - Tomcat 9 with exposed manager |
+| `targets/wordpress/Dockerfile` | New - WordPress 5.4 with debug mode |
+| `docker-compose.yml` | Removed version, use build for tomcat/wordpress |
+| `ETHOS.md` | New - Project philosophy document |
+
+---
+
+## v0.4.1 - Polish & Fixes
 
 **Focus:** Bug fixes, UX improvements, visual polish.
 
