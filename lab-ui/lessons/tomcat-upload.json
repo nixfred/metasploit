@@ -78,8 +78,8 @@
     },
     {
       "title": "Upgrade to a real prompt",
-      "command": "python3 -c 'import pty; pty.spawn(\"/bin/bash\")'",
-      "explanation": "Raw reverse shells have no prompt. This spawns a proper PTY so you get a familiar bash prompt.",
+      "command": "/bin/bash -i",
+      "explanation": "Raw reverse shells have no prompt. This spawns an interactive bash so you get a familiar prompt. (python3 pty.spawn works too if available)",
       "expected": "root@<container>:/# prompt appears"
     },
     {
