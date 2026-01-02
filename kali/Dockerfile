@@ -77,7 +77,8 @@ RUN echo 'alias ll="ls -la"' >> /root/.bashrc && \
     echo 'alias ms="msfconsole"' >> /root/.bashrc && \
     echo 'alias settool="setoolkit"' >> /root/.bashrc && \
     echo 'alias scan="nmap -sV"' >> /root/.bashrc && \
-    echo 'alias serve="python3 -m http.server 8888"' >> /root/.bashrc
+    echo 'alias serve="python3 -m http.server 8888"' >> /root/.bashrc && \
+    echo 'export PATH="$PATH:/root/.msf4/scripts"' >> /root/.bashrc
 
 # Initialize Metasploit database on first run
 # Must start PostgreSQL manually (no systemd in container)

