@@ -110,7 +110,7 @@
                 <div class="quick-access">
                     <h3>Quick Access</h3>
                     <div class="quick-links">
-                        <a href="http://localhost:7681" target="_blank" class="quick-link">
+                        <a id="kali-quick-link" href="#" target="_blank" class="quick-link">
                             <span>🖥️</span> Kali Terminal
                         </a>
                         <a href="http://localhost:9999" target="_blank" class="quick-link">
@@ -133,6 +133,10 @@
     </footer>
 
     <script>
+        // Dynamic Kali terminal URL (works from any host)
+        const kaliTerminalUrl = `http://${window.location.hostname}:7681`;
+        document.getElementById('kali-quick-link').href = kaliTerminalUrl;
+
         // Wizard navigation
         function goToStep(stepId) {
             document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
@@ -175,7 +179,7 @@
                     document.getElementById('kali-value').textContent = 'Running';
                     document.getElementById('kali-value').classList.add('running');
                     kaliBtn.textContent = 'Open Terminal';
-                    kaliBtn.onclick = () => window.open('http://localhost:7681', '_blank');
+                    kaliBtn.onclick = () => window.open(kaliTerminalUrl, '_blank');
                 } else {
                     kaliCheck.querySelector('.check-icon').textContent = '❌';
                     document.getElementById('kali-value').textContent = 'Stopped';

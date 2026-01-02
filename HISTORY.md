@@ -91,7 +91,51 @@
 
 ---
 
-## v0.4.4 - Running Targets Panel (Current)
+## v0.5.0 - Remote Access & Reliability (Current)
+
+**Focus:** Make the lab work reliably from any machine on the network.
+
+### Major Fixes
+
+1. **Kali Web Terminal (ttyd)**
+   - Removed broken custom index.html that killed terminal functionality
+   - Use ttyd's built-in `-t` theming options instead of `-I` custom HTML
+   - Terminal now works from any host (localhost, hostname, Tailscale IP)
+
+2. **Remote Access**
+   - Dynamic URLs for Kali terminal iframe (uses `window.location.hostname`)
+   - Clipboard fallback for HTTP (execCommand for non-HTTPS contexts)
+   - Works from any device: Mac, iPad, phone via Tailscale
+
+3. **Metasploit Database**
+   - Fixed PostgreSQL not starting (no systemd in containers)
+   - Entrypoint now runs `service postgresql start` before `msfdb init`
+   - Added `lsof` package (msfdb dependency)
+
+4. **Tomcat Exploit Chain**
+   - Added `Server: Apache-Coyote/1.1` header for MSF fingerprinting
+   - Changed payload to `java/shell_reverse_tcp` (more reliable than meterpreter)
+   - Added PTY upgrade step so users end on a real prompt
+   - Complete exploitation flow from scan to root shell
+
+### New Documentation
+
+- **LESSONS_LEARNED.md** - 8 hard-won lessons with problem/cause/solution format
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `kali/Dockerfile` | PostgreSQL fix, lsof, removed -I flag |
+| `targets/tomcat/Dockerfile` | Added Server header |
+| `lab-ui/templates/lesson.html` | Dynamic terminal URL, clipboard fallback |
+| `lab-ui/templates/index.html` | Dynamic Kali link |
+| `lab-ui/lessons/tomcat-upload.json` | New payload, PTY upgrade, full flow |
+| `LESSONS_LEARNED.md` | New - 8 lessons documented |
+
+---
+
+## v0.4.4 - Running Targets Panel
 
 **Focus:** Container lifecycle visibility and cleanup.
 
@@ -354,15 +398,17 @@
 
 ## Lessons Learned
 
+See **[LESSONS_LEARNED.md](LESSONS_LEARNED.md)** for detailed technical lessons with code examples.
+
+Quick hits:
 1. **Alias conflicts:** `set` is a bash builtin. Named it `settool` instead.
 2. **Port conflicts:** macOS Monterey+ uses port 5000. Use 5050 for Flask.
 3. **Docker credential helper:** Must add `/Applications/Docker.app/Contents/Resources/bin` to PATH on macOS.
 4. **Docker Hub image removal:** Popular vulnerable images get removed. Build from source instead.
-5. **Symlink management:** `install.sh` handles linking configs to tool directories.
-6. **Persistence matters:** First Docker build is slow; after that it's instant.
-7. **Always-on Kali:** With `restart: always`, Kali starts with your Mac.
-8. **Progress tracking:** localStorage is perfect for single-user progress - no backend needed.
-9. **Tailscale access:** Binding to 0.0.0.0 instead of 127.0.0.1 enables remote access.
+5. **No systemd in Docker:** Use `service <name> start` not `systemctl`.
+6. **ttyd customization:** Don't use `-I` for custom HTML - it breaks the terminal.
+7. **Remote clipboard:** `navigator.clipboard` needs HTTPS; use `execCommand` fallback.
+8. **Raw shells:** Always include PTY upgrade step (`python3 -c 'import pty...'`).
 
 ---
 
@@ -378,4 +424,4 @@
 
 ---
 
-*Last updated: 2026-01-02*
+*Last updated: 2026-01-02 (v0.5.0)*

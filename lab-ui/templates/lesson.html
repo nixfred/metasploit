@@ -99,11 +99,11 @@
         <div class="terminal-panel">
             <div class="terminal-header">
                 <span class="terminal-title">🖥️ KALI TERMINAL</span>
-                <a href="http://localhost:7681" target="_blank" class="btn btn-small">Open in New Tab ↗</a>
+                <a id="terminal-newtab" href="#" target="_blank" class="btn btn-small">Open in New Tab ↗</a>
             </div>
             <iframe
                 id="terminal-frame"
-                src="http://localhost:7681"
+                src="about:blank"
                 class="terminal-iframe"
                 title="Kali Terminal"
             ></iframe>
@@ -120,6 +120,11 @@
         const totalSteps = {{ lesson.steps | length }};
         let currentStep = 0;
         let completedSteps = new Set();
+
+        // Dynamic terminal URL (works from any host)
+        const terminalUrl = `http://${window.location.hostname}:7681`;
+        document.getElementById('terminal-frame').src = terminalUrl;
+        document.getElementById('terminal-newtab').href = terminalUrl;
 
         // Session-only tracking (resets on page refresh)
 
@@ -288,17 +293,35 @@
             textarea.innerHTML = cmd;
             const cleanCmd = textarea.value;
 
-            navigator.clipboard.writeText(cleanCmd).then(() => {
+            // Try modern clipboard API first, fallback to execCommand for non-HTTPS
+            const copySuccess = () => {
                 btn.textContent = 'COPIED!';
                 btn.classList.add('copied');
                 setTimeout(() => {
                     btn.textContent = 'COPY';
                     btn.classList.remove('copied');
                 }, 1500);
-
-                // Set this as current step
                 setCurrentStep(stepNum);
-            });
+            };
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(cleanCmd).then(copySuccess);
+            } else {
+                // Fallback for non-HTTPS (remote access via HTTP)
+                textarea.value = cleanCmd;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    copySuccess();
+                } catch (err) {
+                    btn.textContent = 'FAILED';
+                    setTimeout(() => btn.textContent = 'COPY', 1500);
+                }
+                document.body.removeChild(textarea);
+            }
         }
 
         // Check terminal iframe loading

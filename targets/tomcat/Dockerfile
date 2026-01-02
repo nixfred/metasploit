@@ -36,6 +36,9 @@ RUN echo '<?xml version="1.0" encoding="UTF-8"?>\n\
          allow=".*" />\n\
 </Context>' > /usr/local/tomcat/webapps/host-manager/META-INF/context.xml
 
+# Enable Server header for MSF fingerprinting (disabled by default in modern Tomcat)
+RUN sed -i 's/<Connector port="8080"/<Connector port="8080" server="Apache-Coyote\/1.1"/' /usr/local/tomcat/conf/server.xml
+
 EXPOSE 8080
 
 CMD ["catalina.sh", "run"]
