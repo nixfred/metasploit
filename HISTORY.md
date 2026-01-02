@@ -55,6 +55,42 @@
 
 ---
 
+## v0.3.5 - Shared Configs (Current)
+
+**The duality problem solved:** Same configs on Mac AND Kali.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      GIT REPO (MASTER)                          │
+│                      msf-dotfiles/                              │
+│                        ├── modules/                             │
+│                        ├── plugins/                             │
+│                        ├── scripts/                             │
+│                        └── msfconsole.rc                        │
+│                              │                                  │
+│              ┌───────────────┴───────────────┐                  │
+│              │                               │                  │
+│              ▼                               ▼                  │
+│   YOUR MAC (symlink)              KALI (docker mount)           │
+│   ~/.msf4/ → msf-dotfiles/        /root/.msf4/* → msf-dotfiles/ │
+│                                                                 │
+│   EDIT ANYWHERE → CHANGES GO TO REPO → GIT TRACKS              │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**What gets shared:**
+- Custom modules
+- Plugins
+- Resource scripts (.rc files)
+- msfconsole.rc startup config
+
+**What stays local:**
+- Database (machine-specific)
+- History
+- Loot
+
+---
+
 ## Roadmap
 
 ### v0.4.0 - Containerized Lab UI (Planned)

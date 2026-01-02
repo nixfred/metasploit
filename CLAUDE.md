@@ -179,6 +179,13 @@ The entire `/root` is a Docker volume. This means:
 With Docker Desktop auto-starting on login, Kali becomes a permanent member of your Mac.
 Open `http://localhost:7681` anytime and it's there.
 
+### How do Mac and Kali share configs?
+The Git repo is the master. Both Mac and Kali mount the same files:
+- Mac: `install.sh` symlinks `msf-dotfiles/` → `~/.msf4/`
+- Kali: docker-compose mounts `msf-dotfiles/*` → `/root/.msf4/*`
+
+Edit in either place, changes go to the repo, git tracks everything.
+
 ## Git Workflow
 
 This is a private repo at `github.com/nixfred/metasploit`.

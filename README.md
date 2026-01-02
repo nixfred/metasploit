@@ -335,6 +335,19 @@ docker exec -it kali bash
 
 ## 0x07 // WHAT GETS SYNCED
 
+### Shared Between Mac AND Kali (Git is Master)
+
+```
+msf-dotfiles/           ← YOUR MAC (~/.msf4/)
+     │                  ← KALI (/root/.msf4/)
+     ├── modules/       ← Custom exploits
+     ├── plugins/       ← Plugins
+     ├── scripts/       ← Resource scripts (.rc)
+     └── msfconsole.rc  ← Startup config
+```
+
+**Edit in either place → Changes go to repo → Git tracks it**
+
 | Synced (Version Controlled) | NOT Synced (Machine-Specific) |
 |-----------------------------|-------------------------------|
 | `msfconsole.rc` | `database.yml` |
@@ -342,7 +355,6 @@ docker exec -it kali bash
 | `plugins/` | `loot/` |
 | `scripts/` | `history` |
 | `logos/` | credentials |
-| SET templates | - |
 
 ---
 

@@ -246,8 +246,10 @@ services:
   # Kali Linux Attack Box - ALWAYS RUNNING
   # Access via browser: http://localhost:7681 (web terminal)
   # Or via docker: docker exec -it kali bash
-  # Persistent: Entire /root directory survives restarts/rebuilds
-  # Auto-starts: restart: always means it starts with Docker Desktop
+  #
+  # PERSISTENCE: Entire /root survives restarts/rebuilds
+  # SHARED CONFIGS: msf-dotfiles/ syncs between Mac and Kali (Git is master)
+  # AUTO-START: restart: always means it starts with Docker Desktop
   # ---------------------------------------------------------------------------
   kali:
     build: ./kali
@@ -259,8 +261,16 @@ services:
     ports:
       - "127.0.0.1:7681:7681"   # Web terminal (ttyd)
     volumes:
-      - kali-home:/root                 # ENTIRE home directory persists!
-      - ./wordlists:/root/wordlists:ro  # SecLists available (read-only overlay)
+      # Persistent home directory (survives rebuilds)
+      - kali-home:/root
+      # SHARED CONFIGS - Edit on Mac OR Kali, Git tracks changes
+      # These overlay on top of kali-home
+      - ./msf-dotfiles/modules:/root/.msf4/modules        # Custom exploits
+      - ./msf-dotfiles/plugins:/root/.msf4/plugins        # Plugins
+      - ./msf-dotfiles/scripts:/root/.msf4/scripts        # Resource scripts
+      - ./msf-dotfiles/msfconsole.rc:/root/.msf4/msfconsole.rc  # Startup config
+      # Wordlists
+      - ./wordlists:/root/wordlists:ro  # SecLists (read-only)
     cap_add:
       - NET_ADMIN
       - NET_RAW
