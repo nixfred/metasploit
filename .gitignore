@@ -1,0 +1,33 @@
+# Machine-specific Metasploit files (never sync)
+database.yml
+*.bak
+
+# Loot and sensitive data
+loot/
+*.loot
+
+# Database files
+db/
+*.db
+
+# Logs
+*.log
+logs/
+
+# Cache
+bootsnap_cache/
+*.cache
+
+# macOS
+.DS_Store
+
+# Docker volumes (generated data)
+targets/honeypot/cowrie-logs/
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# Session data
+sessions/

@@ -1,0 +1,12 @@
+# Metasploit Console Auto-Run Configuration
+# These commands run every time msfconsole starts
+
+# Set default options
+setg RHOSTS 172.17.0.0/24
+setg LHOST 172.17.0.1
+
+# Database workspace
+workspace -a default
+
+# Show banner and status
+db_status
