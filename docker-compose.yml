@@ -127,7 +127,7 @@ services:
   # Gives root shell immediately
   # ---------------------------------------------------------------------------
   vsftpd:
-    image: vulnerables/vsftpd-2.3.4
+    build: ./targets/vsftpd
     container_name: vsftpd
     hostname: vsftpd
     networks:
@@ -259,7 +259,7 @@ services:
       lab:
         ipv4_address: 172.20.0.5
     ports:
-      - "127.0.0.1:7681:7681"   # Web terminal (ttyd)
+      - "0.0.0.0:7681:7681"   # Web terminal (ttyd) - 0.0.0.0 for Tailscale access
     volumes:
       # Persistent home directory (survives rebuilds)
       - kali-home:/root

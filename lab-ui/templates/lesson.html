@@ -19,6 +19,17 @@
                 </div>
             </header>
 
+            <!-- Progress Bar -->
+            <div class="progress-tracker">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="progress-label">Step 0 of {{ lesson.steps | length }}</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+            </div>
+
             <section class="lesson-intro">
                 <h2>// OVERVIEW //</h2>
                 <p>{{ lesson.description }}</p>
@@ -41,10 +52,11 @@
             <section class="lesson-steps">
                 <h2>// STEP-BY-STEP //</h2>
                 {% for step in lesson.steps %}
-                <div class="step" id="step-{{ loop.index }}">
+                <div class="step" id="step-{{ loop.index }}" data-step="{{ loop.index }}">
                     <div class="step-header">
                         <span class="step-number">{{ loop.index }}</span>
                         <h3>{{ step.title }}</h3>
+                        <button class="step-done-btn" onclick="markStepDone({{ loop.index }})" title="Mark as done">✓</button>
                     </div>
                     {% if step.explanation %}
                     <p class="step-explanation">{{ step.explanation }}</p>
@@ -52,7 +64,7 @@
                     {% if step.command %}
                     <div class="command-block">
                         <code>{{ step.command }}</code>
-                        <button class="copy-btn" onclick="copyCommand(this, '{{ step.command }}')">COPY</button>
+                        <button class="copy-btn" onclick="copyCommand(this, '{{ step.command | e }}', {{ loop.index }})">COPY</button>
                     </div>
                     {% endif %}
                     {% if step.expected %}
@@ -64,11 +76,12 @@
                 {% endfor %}
             </section>
 
-            <section class="lesson-success">
+            <section class="lesson-success" id="success-section">
                 <h2>// SUCCESS //</h2>
                 <div class="success-box">
                     <p>{{ lesson.success_criteria }}</p>
                 </div>
+                <button class="btn btn-success" onclick="completeLesson()">🎉 Mark Lesson Complete</button>
             </section>
 
             <section class="lesson-cleanup">
@@ -100,6 +113,101 @@
 
     <script>
         const targetContainer = '{{ lesson.container }}';
+        const totalSteps = {{ lesson.steps | length }};
+        let currentStep = 0;
+        let completedSteps = new Set();
+
+        // Load saved progress from localStorage
+        const lessonId = '{{ lesson.id }}';
+        function loadProgress() {
+            const saved = localStorage.getItem(`lesson-${lessonId}`);
+            if (saved) {
+                const data = JSON.parse(saved);
+                currentStep = data.currentStep || 0;
+                completedSteps = new Set(data.completedSteps || []);
+                updateUI();
+            }
+        }
+
+        function saveProgress() {
+            localStorage.setItem(`lesson-${lessonId}`, JSON.stringify({
+                currentStep: currentStep,
+                completedSteps: Array.from(completedSteps)
+            }));
+        }
+
+        function updateUI() {
+            // Update all steps
+            document.querySelectorAll('.step').forEach(step => {
+                const stepNum = parseInt(step.dataset.step);
+                step.classList.remove('active', 'completed');
+
+                if (completedSteps.has(stepNum)) {
+                    step.classList.add('completed');
+                } else if (stepNum === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Update progress bar
+            const progress = (completedSteps.size / totalSteps) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            document.getElementById('progress-percent').textContent = `${Math.round(progress)}%`;
+
+            // Update progress label
+            if (currentStep > 0) {
+                document.getElementById('progress-label').textContent = `Step ${currentStep} of ${totalSteps}`;
+            } else {
+                document.getElementById('progress-label').textContent = `${completedSteps.size} of ${totalSteps} done`;
+            }
+
+            // Highlight success section when all done
+            if (completedSteps.size === totalSteps) {
+                document.getElementById('success-section').classList.add('all-complete');
+            }
+        }
+
+        function setCurrentStep(stepNum) {
+            currentStep = stepNum;
+            // Mark all previous steps as completed
+            for (let i = 1; i < stepNum; i++) {
+                completedSteps.add(i);
+            }
+            updateUI();
+            saveProgress();
+
+            // Scroll to current step
+            const stepEl = document.getElementById(`step-${stepNum}`);
+            if (stepEl) {
+                stepEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function markStepDone(stepNum) {
+            completedSteps.add(stepNum);
+            // Move to next step if this was current
+            if (stepNum === currentStep && stepNum < totalSteps) {
+                currentStep = stepNum + 1;
+            }
+            updateUI();
+            saveProgress();
+        }
+
+        function completeLesson() {
+            // Mark all steps complete
+            for (let i = 1; i <= totalSteps; i++) {
+                completedSteps.add(i);
+            }
+            currentStep = totalSteps;
+            updateUI();
+            saveProgress();
+
+            // Celebration
+            document.getElementById('success-section').classList.add('celebrating');
+            setTimeout(() => {
+                document.getElementById('success-section').classList.remove('celebrating');
+            }, 2000);
+        }
 
         async function checkStatus() {
             try {
@@ -157,10 +265,22 @@
             frame.src = frame.src;
         }
 
-        function copyCommand(btn, cmd) {
-            navigator.clipboard.writeText(cmd).then(() => {
+        function copyCommand(btn, cmd, stepNum) {
+            // Unescape the command
+            const textarea = document.createElement('textarea');
+            textarea.innerHTML = cmd;
+            const cleanCmd = textarea.value;
+
+            navigator.clipboard.writeText(cleanCmd).then(() => {
                 btn.textContent = 'COPIED!';
-                setTimeout(() => btn.textContent = 'COPY', 1500);
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'COPY';
+                    btn.classList.remove('copied');
+                }, 1500);
+
+                // Set this as current step
+                setCurrentStep(stepNum);
             });
         }
 
@@ -170,7 +290,8 @@
             document.getElementById('terminal-frame').style.display = 'none';
         };
 
-        // Check status on load and periodically
+        // Initialize
+        loadProgress();
         checkStatus();
         setInterval(checkStatus, 10000);
     </script>
