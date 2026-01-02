@@ -238,6 +238,36 @@ services:
       - ./targets/honeypot/cowrie-logs:/cowrie/cowrie-git/var/log/cowrie
     restart: unless-stopped
 
+  # ===========================================================================
+  # ATTACK BOX - Your Kali Linux with Web Terminal
+  # ===========================================================================
+
+  # ---------------------------------------------------------------------------
+  # Kali Linux Attack Box
+  # Access via browser: http://localhost:7681 (web terminal)
+  # Or via docker: docker exec -it kali bash
+  # Persistent: /root/.msf4, /root/loot, /root/wordlists
+  # ---------------------------------------------------------------------------
+  kali:
+    build: ./kali
+    container_name: kali
+    hostname: attackbox
+    networks:
+      lab:
+        ipv4_address: 172.20.0.5
+    ports:
+      - "127.0.0.1:7681:7681"   # Web terminal (ttyd)
+    volumes:
+      - kali-msf:/root/.msf4          # Metasploit data persists
+      - kali-loot:/root/loot          # Your loot persists
+      - ./wordlists:/root/wordlists:ro  # SecLists available
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
   # ---------------------------------------------------------------------------
   # Dozzle - Real-time Docker log viewer
   # Access: http://localhost:9999
@@ -252,3 +282,10 @@ services:
     restart: unless-stopped
     networks:
       - lab
+
+# =============================================================================
+# VOLUMES - Persistent storage
+# =============================================================================
+volumes:
+  kali-msf:      # Metasploit database and configs
+  kali-loot:     # Captured data and notes

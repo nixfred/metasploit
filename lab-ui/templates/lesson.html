@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ lesson.name }} - Pentest Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="lesson-container">
+        <!-- Left Panel: Instructions -->
+        <div class="lesson-panel">
+            <header class="lesson-header">
+                <a href="/" class="back-link">← Back to Lessons</a>
+                <h1>{{ lesson.name }}</h1>
+                <div class="lesson-meta">
+                    <span class="difficulty {{ lesson.difficulty }}">{{ lesson.difficulty | upper }}</span>
+                    <span class="target">Target: {{ lesson.ip }}:{{ lesson.port }}</span>
+                </div>
+            </header>
+
+            <section class="lesson-intro">
+                <h2>// OVERVIEW //</h2>
+                <p>{{ lesson.description }}</p>
+            </section>
+
+            <section class="lesson-prereq">
+                <h2>// PREREQUISITES //</h2>
+                <div class="prereq-check" id="container-check">
+                    <span class="check-icon">⏳</span>
+                    <span>Container <code>{{ lesson.container }}</code>: <span id="target-status">checking...</span></span>
+                    <button class="btn btn-small" onclick="startTarget()">Start</button>
+                </div>
+                <div class="prereq-check" id="kali-check">
+                    <span class="check-icon">⏳</span>
+                    <span>Kali Attack Box: <span id="kali-status">checking...</span></span>
+                    <button class="btn btn-small" onclick="startKali()">Start</button>
+                </div>
+            </section>
+
+            <section class="lesson-steps">
+                <h2>// STEP-BY-STEP //</h2>
+                {% for step in lesson.steps %}
+                <div class="step" id="step-{{ loop.index }}">
+                    <div class="step-header">
+                        <span class="step-number">{{ loop.index }}</span>
+                        <h3>{{ step.title }}</h3>
+                    </div>
+                    {% if step.explanation %}
+                    <p class="step-explanation">{{ step.explanation }}</p>
+                    {% endif %}
+                    {% if step.command %}
+                    <div class="command-block">
+                        <code>{{ step.command }}</code>
+                        <button class="copy-btn" onclick="copyCommand(this, '{{ step.command }}')">COPY</button>
+                    </div>
+                    {% endif %}
+                    {% if step.expected %}
+                    <div class="expected">
+                        <strong>Expected:</strong> {{ step.expected }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </section>
+
+            <section class="lesson-success">
+                <h2>// SUCCESS //</h2>
+                <div class="success-box">
+                    <p>{{ lesson.success_criteria }}</p>
+                </div>
+            </section>
+
+            <section class="lesson-cleanup">
+                <h2>// CLEANUP //</h2>
+                <button class="btn btn-danger" onclick="stopTarget()">Stop Target Container</button>
+                <a href="/" class="btn">← Try Another Lesson</a>
+            </section>
+        </div>
+
+        <!-- Right Panel: Terminal -->
+        <div class="terminal-panel">
+            <div class="terminal-header">
+                <span class="terminal-title">🖥️ KALI TERMINAL</span>
+                <a href="http://localhost:7681" target="_blank" class="btn btn-small">Open in New Tab ↗</a>
+            </div>
+            <iframe
+                id="terminal-frame"
+                src="http://localhost:7681"
+                class="terminal-iframe"
+                title="Kali Terminal"
+            ></iframe>
+            <div class="terminal-fallback" id="terminal-fallback" style="display:none;">
+                <p>⚠️ Terminal not available. Make sure Kali is running:</p>
+                <code>docker-compose up kali -d</code>
+                <button class="btn" onclick="startKali(); reloadTerminal();">Start Kali & Retry</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const targetContainer = '{{ lesson.container }}';
+
+        async function checkStatus() {
+            try {
+                const res = await fetch('/api/containers/status');
+                const data = await res.json();
+
+                // Update target status
+                const targetStatus = document.getElementById('target-status');
+                const targetCheck = document.getElementById('container-check');
+                if (data[targetContainer] && data[targetContainer].running) {
+                    targetStatus.textContent = 'RUNNING ✓';
+                    targetCheck.querySelector('.check-icon').textContent = '✅';
+                } else {
+                    targetStatus.textContent = 'STOPPED';
+                    targetCheck.querySelector('.check-icon').textContent = '❌';
+                }
+
+                // Update Kali status
+                const kaliStatus = document.getElementById('kali-status');
+                const kaliCheck = document.getElementById('kali-check');
+                if (data.kali && data.kali.running) {
+                    kaliStatus.textContent = 'RUNNING ✓';
+                    kaliCheck.querySelector('.check-icon').textContent = '✅';
+                    document.getElementById('terminal-fallback').style.display = 'none';
+                    document.getElementById('terminal-frame').style.display = 'block';
+                } else {
+                    kaliStatus.textContent = 'STOPPED';
+                    kaliCheck.querySelector('.check-icon').textContent = '❌';
+                }
+            } catch (e) {
+                console.error('Status check failed:', e);
+            }
+        }
+
+        async function startTarget() {
+            await fetch(`/api/container/${targetContainer}/start`, { method: 'POST' });
+            setTimeout(checkStatus, 2000);
+        }
+
+        async function stopTarget() {
+            await fetch(`/api/container/${targetContainer}/stop`, { method: 'POST' });
+            setTimeout(checkStatus, 2000);
+        }
+
+        async function startKali() {
+            await fetch('/api/kali/start', { method: 'POST' });
+            setTimeout(() => {
+                checkStatus();
+                reloadTerminal();
+            }, 5000);
+        }
+
+        function reloadTerminal() {
+            const frame = document.getElementById('terminal-frame');
+            frame.src = frame.src;
+        }
+
+        function copyCommand(btn, cmd) {
+            navigator.clipboard.writeText(cmd).then(() => {
+                btn.textContent = 'COPIED!';
+                setTimeout(() => btn.textContent = 'COPY', 1500);
+            });
+        }
+
+        // Check terminal iframe loading
+        document.getElementById('terminal-frame').onerror = function() {
+            document.getElementById('terminal-fallback').style.display = 'block';
+            document.getElementById('terminal-frame').style.display = 'none';
+        };
+
+        // Check status on load and periodically
+        checkStatus();
+        setInterval(checkStatus, 10000);
+    </script>
+</body>
+</html>

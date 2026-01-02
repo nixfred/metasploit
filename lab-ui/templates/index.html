@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔓 Pentest Learning Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <pre class="ascii-logo">
+██████╗ ███████╗███╗   ██╗████████╗███████╗███████╗████████╗    ██╗      █████╗ ██████╗
+██╔══██╗██╔════╝████╗  ██║╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝    ██║     ██╔══██╗██╔══██╗
+██████╔╝█████╗  ██╔██╗ ██║   ██║   █████╗  ███████╗   ██║       ██║     ███████║██████╔╝
+██╔═══╝ ██╔══╝  ██║╚██╗██║   ██║   ██╔══╝  ╚════██║   ██║       ██║     ██╔══██║██╔══██╗
+██║     ███████╗██║ ╚████║   ██║   ███████╗███████║   ██║       ███████╗██║  ██║██████╔╝
+╚═╝     ╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚══════╝   ╚═╝       ╚══════╝╚═╝  ╚═╝╚═════╝
+            </pre>
+            <p class="tagline">// Select a vulnerability. Learn to exploit it. Get root. //</p>
+        </header>
+
+        <section class="status-bar">
+            <div class="status-item">
+                <span class="label">Kali Attack Box:</span>
+                <span id="kali-status" class="status loading">checking...</span>
+                <button id="start-kali" class="btn btn-small" onclick="startKali()">Start</button>
+            </div>
+            <div class="status-item">
+                <a href="http://localhost:7681" target="_blank" class="btn btn-terminal">Open Kali Terminal ↗</a>
+            </div>
+        </section>
+
+        <section class="lessons">
+            <h2>// CHOOSE YOUR EXPLOIT //</h2>
+            <div class="lesson-grid">
+                {% for lesson in lessons %}
+                <div class="lesson-card" data-difficulty="{{ lesson.difficulty }}">
+                    <div class="difficulty {{ lesson.difficulty }}">{{ lesson.difficulty | upper }}</div>
+                    <h3>{{ lesson.name }}</h3>
+                    <p class="container-name">Container: {{ lesson.container }}</p>
+                    <p class="description">{{ lesson.description }}</p>
+                    <a href="/lesson/{{ lesson.id }}" class="btn btn-start">START LESSON →</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <footer>
+            <p>All attacks target localhost Docker containers only. Never use against systems without authorization.</p>
+            <p class="hack-the-planet">// HACK THE PLANET //</p>
+        </footer>
+    </div>
+
+    <script>
+        async function checkStatus() {
+            try {
+                const res = await fetch('/api/containers/status');
+                const data = await res.json();
+
+                const kaliStatus = document.getElementById('kali-status');
+                if (data.kali && data.kali.running) {
+                    kaliStatus.textContent = 'RUNNING';
+                    kaliStatus.className = 'status running';
+                } else {
+                    kaliStatus.textContent = 'STOPPED';
+                    kaliStatus.className = 'status stopped';
+                }
+            } catch (e) {
+                console.error('Status check failed:', e);
+            }
+        }
+
+        async function startKali() {
+            const btn = document.getElementById('start-kali');
+            btn.textContent = 'Starting...';
+            btn.disabled = true;
+
+            try {
+                await fetch('/api/kali/start', { method: 'POST' });
+                setTimeout(checkStatus, 3000);
+            } catch (e) {
+                console.error('Failed to start Kali:', e);
+            }
+
+            btn.textContent = 'Start';
+            btn.disabled = false;
+        }
+
+        // Check status on load and every 10 seconds
+        checkStatus();
+        setInterval(checkStatus, 10000);
+    </script>
+</body>
+</html>
