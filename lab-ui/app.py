@@ -100,9 +100,9 @@ def start_kali():
 if __name__ == '__main__':
     print("""
     ╔═══════════════════════════════════════════════════════════╗
-    ║  🔓 PENTEST LEARNING LAB                                  ║
-    ║  Open http://localhost:5000 in your browser               ║
+    ║  🔓 P3N73S7 L4B                                           ║
+    ║  Open http://localhost:5050 in your browser               ║
     ║  Kali terminal at http://localhost:7681                   ║
     ╚═══════════════════════════════════════════════════════════╝
     """)
-    app.run(host='127.0.0.1', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5050, debug=True)
