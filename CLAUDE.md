@@ -54,6 +54,26 @@ From any device on your Tailscale network:
 - `http://<tailscale-ip>:5050` - Lab UI
 - `http://<tailscale-ip>:7681` - Kali Terminal
 
+### Tailscale Funnel (Public Internet Access)
+
+Share the lab with anyone on the internet (no Tailscale needed for them):
+
+```bash
+./funnel.sh start   # Expose lab to internet
+./funnel.sh stop    # Close public access
+./funnel.sh status  # Check current state
+```
+
+When Funnel is active:
+- Lab UI: `https://shaggy.<tailnet>.ts.net` (port 443)
+- Kali terminal: `https://shaggy.<tailnet>.ts.net:8443`
+
+The frontend auto-detects `.ts.net` domains and uses the correct ports.
+
+Prerequisites:
+1. Enable MagicDNS: https://login.tailscale.com/admin/dns
+2. Enable HTTPS certificates in the same DNS settings page
+
 ---
 
 ## Architecture
