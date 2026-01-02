@@ -55,7 +55,7 @@
 
 ---
 
-## v0.3.5 - Shared Configs (Current)
+## v0.3.5 - Shared Configs
 
 **The duality problem solved:** Same configs on Mac AND Kali.
 
@@ -72,9 +72,9 @@
 │              │                               │                  │
 │              ▼                               ▼                  │
 │   YOUR MAC (symlink)              KALI (docker mount)           │
-│   ~/.msf4/ → msf-dotfiles/        /root/.msf4/* → msf-dotfiles/ │
+│   ~/.msf4/ -> msf-dotfiles/       /root/.msf4/* -> msf-dotfiles/│
 │                                                                 │
-│   EDIT ANYWHERE → CHANGES GO TO REPO → GIT TRACKS              │
+│   EDIT ANYWHERE -> CHANGES GO TO REPO -> GIT TRACKS            │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -91,20 +91,89 @@
 
 ---
 
+## v0.4.0 - Wizard UI + Step Tracking + Tailscale (Current)
+
+**Major UI Overhaul:** Complete rewrite of Lab UI with wizard-style interface.
+
+### New Features
+
+**1. Wizard Welcome Page**
+- ASCII art logo with green glow effect
+- Feature cards explaining Kali, Targets, and Lessons
+- Live system status checks (Docker running, Kali ready)
+- "Choose Your Target" button leads to lesson picker
+- Difficulty filter buttons (All, Easy, Medium, Hard)
+- Quick access links to Kali terminal and Dozzle
+
+**2. Step Tracking System**
+- Progress bar at top of lesson page (sticky while scrolling)
+- Three step states: pending, active (current), completed
+- Active step has green glow, "CURRENT" badge, pulsing animation
+- Completed steps are dimmed with strikethrough title
+- Copy button automatically marks step as current
+- Checkmark button on each step for manual completion
+- Progress saved to localStorage - resume where you left off
+- Auto-scroll keeps current step visible
+
+**3. 4 New Lessons** (8 total)
+- DVWA Command Injection - OS command injection to reverse shell
+- Juice Shop SQL Injection - Modern OWASP SQLi challenge
+- SambaCry CVE-2017-7494 - Metasploit CVE exploitation
+- Metasploitable2 DistCC - Daemon vulnerability exploitation
+
+**4. Tailscale Remote Access**
+- Lab UI on port 5050 (changed from 5000 - macOS AirPlay conflict)
+- Kali terminal on port 7681
+- Both bound to 0.0.0.0 for Tailscale accessibility
+- Target containers stay on 127.0.0.1 for security
+- Access from iPad, phone, laptop - anywhere on Tailscale network
+
+**5. Shell Improvements**
+- Added `lab` alias to start Lab UI
+- Added `kali()` function - starts container if needed, drops into bash
+- Added Docker credential helper to PATH (fixes image pull issues)
+- All aliases added to ~/.bashrc (synced via Syncthing)
+
+**6. Infrastructure Fixes**
+- Port 5050 instead of 5000 (macOS AirPlay Receiver uses 5000)
+- Docker credential helper PATH fix for image pulls
+- vsftpd custom Dockerfile (old Docker Hub image removed)
+- Kali terminal bound to 0.0.0.0 for remote access
+
+### Files Changed/Added
+
+| File | Change |
+|------|--------|
+| `lab-ui/app.py` | Port 5050, host 0.0.0.0 |
+| `lab-ui/templates/index.html` | Complete rewrite - wizard welcome |
+| `lab-ui/templates/lesson.html` | Added step tracking system |
+| `lab-ui/static/style.css` | +200 lines for wizard and step styles |
+| `lab-ui/lessons/dvwa-command-injection.json` | New lesson |
+| `lab-ui/lessons/juiceshop-sqli.json` | New lesson |
+| `lab-ui/lessons/sambacry.json` | New lesson |
+| `lab-ui/lessons/metasploitable2-distcc.json` | New lesson |
+| `docker-compose.yml` | vsftpd build, Kali port 0.0.0.0 |
+| `targets/vsftpd/Dockerfile` | Custom vsftpd 2.3.4 build |
+| `~/.bashrc` | lab alias, kali() function, PATH fix |
+
+---
+
 ## Roadmap
 
-### v0.4.0 - Containerized Lab UI (Planned)
+### v0.5.0 - Containerized Lab UI (Planned)
 - Move Flask app into its own container with nginx
 - Single `docker-compose up` starts everything
 - No Python/pip needed on host
 
-### v0.5.0 - Progress Tracking (Planned)
-- SQLite database for user progress
-- Track completed lessons, captured flags
-- Session history
+### v0.6.0 - More Lessons (Planned)
+- WebGoat lessons
+- bWAPP lessons
+- Privilege escalation lessons
+- Post-exploitation lessons
 
 ### v1.0.0 - Full Learning Platform (Vision)
-- More lessons covering OWASP Top 10
+- SQLite database for multi-user progress
+- Lesson completion certificates
 - Custom vulnerable containers
 - Automated setup scripts for new Macs
 - Video walkthroughs embedded in lessons
@@ -120,16 +189,37 @@
 | Kali persistence | Docker volume on /root | Entire home survives rebuilds |
 | Lab UI framework | Flask (Python) | Simple, we already have Python, MVP focus |
 | Lesson storage | JSON files | No database for MVP, easy to edit |
+| Progress tracking | localStorage | No backend needed, works offline |
 | Target containers | Pre-built images | Don't maintain vulnerable code ourselves |
+| vsftpd container | Custom Dockerfile | Original image removed from Docker Hub |
+| Lab UI port | 5050 | macOS uses 5000 for AirPlay Receiver |
+| Remote access | 0.0.0.0 binding | Enables Tailscale from any device |
 
 ---
 
 ## Lessons Learned
 
 1. **Alias conflicts:** `set` is a bash builtin. Named it `settool` instead.
-2. **Symlink management:** `install.sh` handles linking configs to tool directories.
-3. **Persistence matters:** First Docker build is slow; after that it's instant.
-4. **Always-on Kali:** With `restart: always`, Kali starts with your Mac.
+2. **Port conflicts:** macOS Monterey+ uses port 5000. Use 5050 for Flask.
+3. **Docker credential helper:** Must add `/Applications/Docker.app/Contents/Resources/bin` to PATH on macOS.
+4. **Docker Hub image removal:** Popular vulnerable images get removed. Build from source instead.
+5. **Symlink management:** `install.sh` handles linking configs to tool directories.
+6. **Persistence matters:** First Docker build is slow; after that it's instant.
+7. **Always-on Kali:** With `restart: always`, Kali starts with your Mac.
+8. **Progress tracking:** localStorage is perfect for single-user progress - no backend needed.
+9. **Tailscale access:** Binding to 0.0.0.0 instead of 127.0.0.1 enables remote access.
+
+---
+
+## Technical Debt
+
+- [ ] Containerize Flask app with nginx
+- [ ] Add SQLite for multi-user support
+- [ ] Add lesson completion tracking
+- [ ] Pre-pull all container images in install.sh
+- [ ] Add health checks to docker-compose
+- [ ] Add more lessons for remaining targets
+- [ ] Create video walkthroughs
 
 ---
 
