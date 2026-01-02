@@ -130,6 +130,8 @@
         function goToStep(stepId) {
             document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
             document.getElementById(stepId).classList.add('active');
+            // Scroll to top of page
+            window.scrollTo(0, 0);
         }
 
         // Filter lessons by difficulty
