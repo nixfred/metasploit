@@ -4,7 +4,9 @@ This file provides context for Claude (AI assistant) when working on this projec
 
 ## Project Overview
 
-This is a **private learning environment** for penetration testing. The owner is learning Metasploit, SET, and offensive security using local Docker containers as targets.
+**This is a PORTABLE PENTESTING ENVIRONMENT, not an application.**
+
+The goal: Clone this repo on any Mac → run `./install.sh` → entire pentesting setup is restored with all customizations.
 
 ### Project Components
 
@@ -12,7 +14,7 @@ This is a **private learning environment** for penetration testing. The owner is
 |-----------|-------------|
 | Metasploit Config | Dotfiles that sync MS customizations across machines |
 | SET Integration | Social Engineering Toolkit configs and workflows |
-| Docker Targets | Vulnerable containers for exploitation practice |
+| Docker Targets | 13 vulnerable containers for exploitation practice |
 | Wordlists | SecLists (submodule) for brute forcing |
 | Lab UI | Web interface to launch containers (coming soon) |
 
@@ -31,6 +33,7 @@ All attacks target **localhost Docker containers only**.
 
 - Metasploit Framework installed via Homebrew (`/opt/metasploit-framework/`)
 - SET installed at `~/set/`
+- Hydra, John, SQLMap, Nmap, etc. via Homebrew
 - Config files live at `~/.msf4/`
 - This repo symlinks `msf-dotfiles/` → `~/.msf4/` via `install.sh`
 
@@ -48,7 +51,7 @@ All attacks target **localhost Docker containers only**.
 172.20.0.10  - DVWA
 172.20.0.15  - vsftpd (backdoor - easy win)
 172.20.0.16  - Samba (SambaCry)
-172.20.0.17  - Vuln SSH (brute force with Hydra)
+172.20.0.17  - Vuln SSH (brute force with Hydra/John)
 172.20.0.18  - Vuln MySQL
 172.20.0.19  - Tomcat
 172.20.0.20  - Metasploitable2
@@ -60,16 +63,43 @@ All attacks target **localhost Docker containers only**.
 172.20.0.100 - Cowrie honeypot
 ```
 
+## Tools Installed
+
+| Tool | Location | Purpose |
+|------|----------|---------|
+| Metasploit | `/opt/metasploit-framework/` | Exploitation framework |
+| SET | `~/set/` | Social engineering |
+| Hydra | `/opt/homebrew/bin/hydra` | Service brute forcing |
+| John | `/opt/homebrew/bin/john` | Password hash cracking |
+| SQLMap | `/opt/homebrew/bin/sqlmap` | SQL injection |
+| Nmap | `/opt/homebrew/bin/nmap` | Port scanning |
+| Nikto | `/opt/homebrew/bin/nikto` | Web server scanning |
+| Gobuster | `/opt/homebrew/bin/gobuster` | Directory brute force |
+
 ## Key Files
 
 | File | Purpose |
 |------|---------|
 | `install.sh` | Symlinks msf-dotfiles → ~/.msf4 |
 | `uninstall.sh` | Removes symlinks, restores backups |
-| `docker-compose.yml` | All vulnerable target containers |
+| `docker-compose.yml` | 13 vulnerable target containers |
 | `msf-dotfiles/msfconsole.rc` | Auto-run commands on MS startup |
 | `msf-dotfiles/modules/` | Custom exploit modules |
 | `msf-dotfiles/scripts/` | Resource scripts (.rc files) |
+| `docs/CHEATSHEET.md` | Quick exploit commands per target |
+| `docs/MS_CUSTOMIZATION.md` | Full Metasploit reference |
+
+## SecLists Submodule
+
+SecLists is linked as a Git submodule - a pointer to the upstream repo:
+
+```
+wordlists/seclists/ → github.com/danielmiessler/SecLists
+```
+
+- Your repo stays small (~1MB vs 1.5GB)
+- Updates from upstream: `git submodule update --remote wordlists/seclists`
+- Clone with: `git clone --recursive <repo>`
 
 ## What Claude Should Do
 
@@ -82,6 +112,7 @@ All attacks target **localhost Docker containers only**.
 - Help with SET configurations and workflows
 - Add custom modules to msf-dotfiles/modules/
 - Improve documentation
+- Help with Hydra/John commands
 
 ### DO NOT:
 - Create exploits for external systems
@@ -97,7 +128,7 @@ All attacks target **localhost Docker containers only**.
 1. Add service to `docker-compose.yml`
 2. Assign IP in 172.20.0.x range
 3. Document ports and vulnerabilities in README
-4. Update lab-ui if it exists
+4. Add exploit commands to `docs/CHEATSHEET.md`
 
 ### Adding a Custom Module
 
@@ -110,55 +141,14 @@ All attacks target **localhost Docker containers only**.
 1. Add `.rc` file to `msf-dotfiles/scripts/`
 2. Run in msfconsole: `resource ~/.msf4/scripts/yourscript.rc`
 
-## Metasploit Key Concepts
+## Shell Aliases
 
-### Global Options (setg)
-Persist across module changes within a session:
-```
-setg RHOSTS 172.20.0.0/24
-setg LHOST 172.20.0.1
+```bash
+alias ms='msfconsole'
+alias set='sudo python3 ~/set/setoolkit'
 ```
 
-### msfconsole.rc
-Runs on every msfconsole startup. Good for:
-- Setting globals
-- Loading plugins
-- Custom prompt
-- Workspace setup
-
-### Database Commands
-```
-db_status          # Check PostgreSQL connection
-db_nmap            # Scan and store in DB
-hosts              # List discovered hosts
-vulns              # List discovered vulns
-services           # List discovered services
-workspace          # Manage workspaces
-```
-
-## SET Key Concepts
-
-SET (Social Engineering Toolkit) is for social engineering attacks:
-- Credential harvesting (fake login pages)
-- Phishing (email campaigns)
-- Website attack vectors
-- Payload generation
-
-SET config lives at `/etc/setoolkit/set.config` (or can be overridden).
-
-SET integrates with Metasploit for payload delivery and handler setup.
-
-## Future Plans
-
-1. **Lab UI**: Web interface at `lab-ui/` to:
-   - List available targets with vulnerability info
-   - One-click container launch/stop
-   - Show target status and IPs
-   - Integrate SET attack options
-
-2. **SET Configs**: Store SET configuration in `set-config/`
-
-3. **Learning Notes**: Track attack playbooks in `docs/`
+These are managed via Syncthing from fnix, or can be added directly to ~/.bashrc.
 
 ## Git Workflow
 
@@ -171,7 +161,7 @@ git commit -m "Description of changes"
 git push
 
 # On new machine
-git clone git@github.com:nixfred/metasploit.git ~/Projects/metasploit
+git clone --recursive git@github.com:nixfred/metasploit.git ~/Projects/metasploit
 ./install.sh
 ```
 
@@ -193,4 +183,11 @@ msfconsole -x "db_status"
 docker network ls
 docker network inspect metasploit_lab
 ping 172.20.0.10
+```
+
+### ms alias not working
+```bash
+# Either wait for Syncthing to sync from fnix, or add manually:
+echo 'alias ms="msfconsole"' >> ~/.bashrc
+source ~/.bashrc
 ```
