@@ -9,13 +9,15 @@ Quick reference for exploiting each target in the lab.
 │  VULNERABLE NETWORK: 172.20.0.0/24                                      │
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
-│  YOUR MAC (Attacker)                                                    │
-│  ┌─────────────────┐                                                    │
-│  │ 172.20.0.1      │  msfconsole, nmap, hydra, sqlmap                  │
-│  │ Host machine    │                                                    │
-│  └────────┬────────┘                                                    │
-│           │                                                             │
-│           ▼                                                             │
+│  YOUR MAC (Attacker)           KALI ATTACK BOX                          │
+│  ┌─────────────────┐           ┌─────────────────┐                      │
+│  │ 172.20.0.1      │           │ 172.20.0.5      │                      │
+│  │ msfconsole      │◄─────────►│ localhost:7681  │                      │
+│  │ nmap, hydra     │           │ Full Kali tools │                      │
+│  └────────┬────────┘           └────────┬────────┘                      │
+│           │                             │                               │
+│           └─────────────┬───────────────┘                               │
+│                         ▼                                               │
 │  ┌────────────────────────────────────────────────────────────────┐    │
 │  │                     TARGETS                                     │    │
 │  ├────────────────────────────────────────────────────────────────┤    │
@@ -93,7 +95,7 @@ msf6> run
 hydra -l root -P wordlists/seclists/Passwords/Common-Credentials/10k-most-common.txt ssh://172.20.0.17
 ```
 
-Known creds: `root/toor`, `user/password`
+Known creds: `root/root`, `user/password`
 
 ### 172.20.0.18 - MySQL Weak Credentials
 

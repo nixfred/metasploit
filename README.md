@@ -134,11 +134,26 @@ cd ~/Projects/metasploit/lab-ui && python3 app.py
 │   └─────────────┘  └─────────────┘  └─────────────┘                        │
 │                                                                             │
 │   System Status:                                                            │
-│   [x] Docker Running    [x] Kali Ready    [ ] Target Stopped               │
+│   [x] Docker Running    [x] Kali Ready                                     │
+│                                                                             │
+│   Running Targets (if any):                                                │
+│   ┌─────────────────────────────────────────┐                              │
+│   │ dvwa        [Stop]  juiceshop  [Stop]  │                              │
+│   │        [ Stop All Targets ]             │                              │
+│   └─────────────────────────────────────────┘                              │
 │                                                                             │
 │                    [ Choose Your Target -> ]                                │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
+
+### Container Lifecycle
+
+| Container | Behavior |
+|-----------|----------|
+| **Kali** | Always running (`restart: always`) - your attack box |
+| **Targets** | Start via lesson "Start" button, shown in Running Targets panel |
+
+The **Running Targets** panel appears on the welcome page when you have containers using resources. One-click "Stop All" for cleanup.
 
 ### Lesson Interface with Step Tracking
 

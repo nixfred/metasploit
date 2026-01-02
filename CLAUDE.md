@@ -145,7 +145,9 @@ lab-ui/
 1. **Wizard Welcome Page** (index.html)
    - ASCII art logo
    - Feature overview (Kali, Targets, Lessons)
-   - System status checks (Docker, Kali, targets)
+   - System status checks (Docker, Kali)
+   - **Running Targets panel** - shows containers using resources with Stop buttons
+   - "Stop All Targets" button for one-click cleanup
    - Lesson picker with difficulty filters
 
 2. **Lesson Page with Step Tracking** (lesson.html)
@@ -166,6 +168,7 @@ lab-ui/
    - `GET /api/container/<name>/status` - Get status
    - `GET /api/containers/status` - All container statuses
    - `POST /api/kali/start` - Start Kali
+   - `POST /api/targets/stop-all` - Stop all target containers (not Kali)
 
 ### Lesson JSON Structure
 
@@ -472,4 +475,4 @@ docker-compose up -d --force-recreate kali
 
 See `HISTORY.md` for detailed project evolution.
 
-Current version: **v0.4.0** - Wizard UI with step tracking and Tailscale support.
+Current version: **v0.4.4** - Running Targets panel with stop controls.

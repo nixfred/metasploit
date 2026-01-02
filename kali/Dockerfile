@@ -81,6 +81,9 @@ RUN echo 'alias ll="ls -la"' >> /root/.bashrc && \
 # Initialize Metasploit database on first run
 RUN echo '#!/bin/bash\nif [ ! -f /root/.msf4/.db_initialized ]; then\n  msfdb init\n  touch /root/.msf4/.db_initialized\nfi\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
 
+# Copy custom index.html with favicon
+COPY index.html /usr/local/share/ttyd/index.html
+
 # Expose ttyd port
 EXPOSE 7681
 
@@ -89,5 +92,6 @@ WORKDIR /root
 # Start ttyd with bash
 # -W: Writable (allow input)
 # -t: Terminal options
+# -I: Custom index.html with favicon
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["ttyd", "-W", "-t", "fontSize=14", "-t", "theme={'background':'#1a1a2e','foreground':'#eee'}", "bash"]
+CMD ["ttyd", "-W", "-I", "/usr/local/share/ttyd/index.html", "-t", "fontSize=14", "-t", "theme={'background':'#1a1a2e','foreground':'#eee'}", "bash"]
