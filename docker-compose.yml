@@ -243,10 +243,11 @@ services:
   # ===========================================================================
 
   # ---------------------------------------------------------------------------
-  # Kali Linux Attack Box
+  # Kali Linux Attack Box - ALWAYS RUNNING
   # Access via browser: http://localhost:7681 (web terminal)
   # Or via docker: docker exec -it kali bash
-  # Persistent: /root/.msf4, /root/loot, /root/wordlists
+  # Persistent: Entire /root directory survives restarts/rebuilds
+  # Auto-starts: restart: always means it starts with Docker Desktop
   # ---------------------------------------------------------------------------
   kali:
     build: ./kali
@@ -258,13 +259,12 @@ services:
     ports:
       - "127.0.0.1:7681:7681"   # Web terminal (ttyd)
     volumes:
-      - kali-msf:/root/.msf4          # Metasploit data persists
-      - kali-loot:/root/loot          # Your loot persists
-      - ./wordlists:/root/wordlists:ro  # SecLists available
+      - kali-home:/root                 # ENTIRE home directory persists!
+      - ./wordlists:/root/wordlists:ro  # SecLists available (read-only overlay)
     cap_add:
       - NET_ADMIN
       - NET_RAW
-    restart: unless-stopped
+    restart: always    # Starts automatically with Docker Desktop
     tty: true
     stdin_open: true
 
@@ -287,5 +287,4 @@ services:
 # VOLUMES - Persistent storage
 # =============================================================================
 volumes:
-  kali-msf:      # Metasploit database and configs
-  kali-loot:     # Captured data and notes
+  kali-home:     # Entire /root directory - survives rebuilds, persists forever

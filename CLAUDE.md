@@ -16,7 +16,8 @@ The goal: Clone this repo on any Mac → run `./install.sh` → entire pentestin
 | SET Integration | Social Engineering Toolkit configs and workflows |
 | Docker Targets | 13 vulnerable containers for exploitation practice |
 | Wordlists | SecLists (submodule) for brute forcing |
-| Lab UI | Web interface to launch containers (coming soon) |
+| Lab UI | Web interface with guided lessons and embedded terminal |
+| Kali Attack Box | Persistent Kali container with web terminal (always running) |
 
 ### What This Is NOT
 
@@ -61,6 +62,7 @@ All attacks target **localhost Docker containers only**.
 172.20.0.60  - WordPress
 172.20.0.70  - bWAPP
 172.20.0.100 - Cowrie honeypot
+172.20.0.5   - Kali attack box (web terminal at localhost:7681)
 ```
 
 ## Tools Installed
@@ -82,7 +84,11 @@ All attacks target **localhost Docker containers only**.
 |------|---------|
 | `install.sh` | Symlinks msf-dotfiles → ~/.msf4 |
 | `uninstall.sh` | Removes symlinks, restores backups |
-| `docker-compose.yml` | 13 vulnerable target containers |
+| `docker-compose.yml` | 13 targets + Kali + Dozzle |
+| `kali/Dockerfile` | Kali attack box with ttyd web terminal |
+| `lab-ui/app.py` | Flask backend for Lab UI |
+| `lab-ui/lessons/*.json` | Lesson definitions |
+| `HISTORY.md` | Project evolution log |
 | `msf-dotfiles/msfconsole.rc` | Auto-run commands on MS startup |
 | `msf-dotfiles/modules/` | Custom exploit modules |
 | `msf-dotfiles/scripts/` | Resource scripts (.rc files) |
@@ -145,10 +151,33 @@ wordlists/seclists/ → github.com/danielmiessler/SecLists
 
 ```bash
 alias ms='msfconsole'
-alias set='sudo python3 ~/set/setoolkit'
+alias settool='cd ~/set && sudo python3 setoolkit'  # NOT 'set' - conflicts with bash builtin!
 ```
 
 These are managed via Syncthing from fnix, or can be added directly to ~/.bashrc.
+
+## Architecture Decisions
+
+### Why no database for Lab UI?
+MVP doesn't need it. Lessons are JSON files, easy to edit. v2 will add SQLite for:
+- User progress tracking
+- Session history
+- Multi-user support
+
+### Why Flask on host instead of containerized?
+For MVP, simpler. The Flask app needs Docker socket access to manage containers.
+v2 will containerize with nginx/gunicorn for single `docker-compose up` experience.
+
+### Why persistent Kali home directory?
+The entire `/root` is a Docker volume. This means:
+- Shell history persists
+- Metasploit database persists
+- Custom tools/scripts survive rebuilds
+- Only first build is slow; after that Kali is always ready
+
+### Why `restart: always` on Kali?
+With Docker Desktop auto-starting on login, Kali becomes a permanent member of your Mac.
+Open `http://localhost:7681` anytime and it's there.
 
 ## Git Workflow
 

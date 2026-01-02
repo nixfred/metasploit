@@ -62,7 +62,7 @@ brew install hydra john-jumbo sqlmap nikto gobuster hashcat wireshark
 | Tool | Command | Purpose | Config Saved? |
 |------|---------|---------|:-------------:|
 | **Metasploit** | `msfconsole` / `ms` | Exploitation framework | ✓ |
-| **SET** | `setoolkit` / `set` | Social engineering | ✓ |
+| **SET** | `settool` | Social engineering | ✓ |
 | **Hydra** | `hydra` | Brute force services | - |
 | **John** | `john` | Crack password hashes | - |
 | **SQLMap** | `sqlmap` | SQL injection | - |
@@ -134,11 +134,13 @@ metasploit/
 ├── wordlists/
 │   └── seclists/              # SecLists (submodule)
 ├── targets/                   # Custom target configs
-├── lab-ui/                    # Web launcher (coming)
+├── lab-ui/                    # Web UI with guided lessons
+├── kali/                      # Kali attack box Dockerfile
+├── HISTORY.md                 # Project evolution log
 ├── docs/
 │   ├── CHEATSHEET.md          # Exploit commands
 │   └── MS_CUSTOMIZATION.md    # Full MS reference
-├── docker-compose.yml         # 13 vulnerable targets
+├── docker-compose.yml         # 13 targets + Kali + Dozzle
 ├── install.sh                 # Symlink configs
 └── uninstall.sh               # Remove symlinks
 ```
@@ -303,21 +305,31 @@ open http://localhost:5000
 | http://localhost:7681 | Kali terminal (standalone) |
 | http://localhost:9999 | Dozzle - Docker log viewer |
 
-### Kali Attack Box
+### Kali Attack Box (Always Running)
 
-The Kali container has:
+The Kali container is your **persistent attack platform**:
+- **First build:** Slow (downloads all Kali tools)
+- **After that:** Instant starts, everything persists
+- **Auto-starts:** With Docker Desktop (which can auto-start on login)
+
+**What's inside:**
 - Metasploit, Nmap, Hydra, John, SQLMap, Nikto, Gobuster
 - Web terminal via ttyd (accessible in browser!)
-- Persistent storage for /root/.msf4 and /root/loot
+- **Persistent /root directory** - your configs, history, loot all survive reboots
 - SecLists mounted at /root/wordlists
 
 ```bash
-# Access via browser
+# First time only - build the Kali image
+docker-compose up kali -d
+
+# Access via browser (always)
 open http://localhost:7681
 
-# Or via docker
+# Or via docker exec
 docker exec -it kali bash
 ```
+
+**Make Docker Desktop auto-start:** System Preferences → Users & Groups → Login Items → Add Docker
 
 ---
 
@@ -336,32 +348,61 @@ docker exec -it kali bash
 
 ## 0x08 // NEW MAC SETUP
 
+Complete checklist for a fresh Mac:
+
+### Prerequisites (Manual Install)
 ```bash
-# 1. Install Homebrew
+# 1. Homebrew (package manager)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# 2. Install tools
-brew install metasploit nmap hydra john-jumbo sqlmap nikto gobuster hashcat
+# 2. Docker Desktop - download from https://docker.com
+#    After install: Open Docker Desktop, let it start, close it
+#    Enable auto-start: System Preferences → Users & Groups → Login Items → Add Docker
 
-# 3. Install SET
+# 3. Python 3 (usually pre-installed, but verify)
+python3 --version
+```
+
+### Install Pentesting Tools
+```bash
+# Core arsenal
+brew install metasploit nmap
+
+# Extended arsenal
+brew install hydra john-jumbo sqlmap nikto gobuster hashcat wireshark
+
+# Social Engineering Toolkit
 git clone https://github.com/trustedsec/social-engineer-toolkit.git ~/set
 pip3 install --user --break-system-packages -r ~/set/requirements.txt
+```
 
-# 4. Install Docker Desktop (from docker.com)
-
-# 5. Clone this repo
+### Clone This Repo
+```bash
+# Clone with SecLists submodule
 git clone --recursive git@github.com:nixfred/metasploit.git ~/Projects/metasploit
 cd ~/Projects/metasploit
 
-# 6. Link configs
+# Link configs to your tools
 ./install.sh
 
-# 7. Verify
+# Verify Metasploit
 msfconsole -q -x "db_status; exit"
+```
 
-# 8. Start hacking
-docker-compose up vsftpd -d
-ms
+### Build Kali Attack Box (One Time)
+```bash
+# This takes 10-15 mins first time (downloads all Kali tools)
+docker-compose up kali -d
+
+# After this, Kali auto-starts with Docker Desktop forever
+# Access at http://localhost:7681
+```
+
+### Start Hacking
+```bash
+docker-compose up vsftpd -d   # Start a target
+open http://localhost:7681     # Open Kali terminal
+# or just: ms                  # Use Metasploit on Mac
 ```
 
 ---
@@ -371,7 +412,7 @@ ms
 Add to `~/.bashrc`:
 ```bash
 alias ms='msfconsole'
-alias set='sudo python3 ~/set/setoolkit'
+alias settool='cd ~/set && sudo python3 setoolkit'   # NOT 'set' - conflicts with bash builtin!
 ```
 
 ---
