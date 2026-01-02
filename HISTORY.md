@@ -91,7 +91,33 @@
 
 ---
 
-## v0.4.3 - UX Polish + vsftpd Fix (Current)
+## v0.4.4 - Running Targets Panel (Current)
+
+**Focus:** Container lifecycle visibility and cleanup.
+
+### New Features
+
+1. **Running Targets Panel**
+   - Shows all running target containers on welcome page (not Kali)
+   - Individual "Stop" button per container
+   - "Stop All Targets" button for one-click cleanup
+   - Red-themed UI to draw attention to resource usage
+   - Auto-hides when no targets are running
+
+2. **New API Endpoint**
+   - `/api/targets/stop-all` - stops all target containers in one call
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `lab-ui/app.py` | Added stop-all endpoint |
+| `lab-ui/templates/index.html` | Running targets panel + JS |
+| `lab-ui/static/style.css` | Red-themed panel styles |
+
+---
+
+## v0.4.3 - UX Polish + vsftpd Fix
 
 **Focus:** UI improvements and vsftpd Dockerfile fix for Debian Bookworm.
 

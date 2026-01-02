@@ -107,6 +107,26 @@ def start_kali():
     result = run_docker("up -d kali")
     return jsonify(result)
 
+@app.route('/api/targets/stop-all', methods=['POST'])
+def stop_all_targets():
+    """Stop all target containers (not Kali)"""
+    targets = ['dvwa', 'vsftpd', 'vulnssh', 'vulnmysql', 'tomcat', 'samba',
+               'metasploitable2', 'juiceshop', 'webgoat', 'bwapp', 'mutillidae',
+               'wordpress', 'cowrie', 'dozzle']
+    stopped = []
+    failed = []
+    for name in targets:
+        try:
+            result = subprocess.run(
+                f"docker stop {name}",
+                shell=True, capture_output=True, text=True, timeout=10
+            )
+            if result.returncode == 0:
+                stopped.append(name)
+        except:
+            pass  # Container might not exist or already stopped
+    return jsonify({"success": True, "stopped": stopped})
+
 if __name__ == '__main__':
     print("""
     ╔═══════════════════════════════════════════════════════════╗
