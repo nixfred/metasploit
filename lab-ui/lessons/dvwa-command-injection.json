@@ -10,13 +10,11 @@
   "steps": [
     {
       "title": "Open DVWA in browser",
-      "command": "Open http://localhost:8080 in your browser",
-      "explanation": "Access DVWA. Default login: admin/password. Set security to 'Low' in DVWA Security settings."
+      "explanation": "Open http://localhost:8080 in your browser. Default login: admin/password. Set security to 'Low' in DVWA Security settings."
     },
     {
       "title": "Navigate to Command Injection",
-      "command": "Click 'Command Injection' in the left menu",
-      "explanation": "This page lets you ping an IP. It's supposed to just ping, but we can inject commands."
+      "explanation": "Click 'Command Injection' in the left menu. This page lets you ping an IP. It's supposed to just ping, but we can inject commands."
     },
     {
       "title": "Test command injection",
