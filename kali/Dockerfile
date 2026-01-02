@@ -42,6 +42,7 @@ RUN apt-get update && apt-get install -y --fix-missing \
     zsh \
     jq \
     tree \
+    lsof \
     # Python for scripts
     python3 \
     python3-pip \
@@ -79,10 +80,19 @@ RUN echo 'alias ll="ls -la"' >> /root/.bashrc && \
     echo 'alias serve="python3 -m http.server 8888"' >> /root/.bashrc
 
 # Initialize Metasploit database on first run
-RUN echo '#!/bin/bash\nif [ ! -f /root/.msf4/.db_initialized ]; then\n  msfdb init\n  touch /root/.msf4/.db_initialized\nfi\nexec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
-
-# Copy custom index.html with favicon
-COPY index.html /usr/local/share/ttyd/index.html
+# Must start PostgreSQL manually (no systemd in container)
+RUN echo '#!/bin/bash\n\
+# Start PostgreSQL\n\
+service postgresql start\n\
+sleep 2\n\
+\n\
+# Initialize msfdb if not done\n\
+if [ ! -f /root/.msf4/.db_initialized ]; then\n\
+  msfdb init\n\
+  touch /root/.msf4/.db_initialized\n\
+fi\n\
+\n\
+exec "$@"' > /entrypoint.sh && chmod +x /entrypoint.sh
 
 # Expose ttyd port
 EXPOSE 7681
@@ -91,7 +101,6 @@ WORKDIR /root
 
 # Start ttyd with bash
 # -W: Writable (allow input)
-# -t: Terminal options
-# -I: Custom index.html with favicon
+# -t: Terminal options for theming
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["ttyd", "-W", "-I", "/usr/local/share/ttyd/index.html", "-t", "fontSize=14", "-t", "theme={'background':'#1a1a2e','foreground':'#eee'}", "bash"]
+CMD ["ttyd", "-W", "-t", "fontSize=14", "-t", "theme={'background':'#1a1a2e','foreground':'#eee'}", "bash"]

