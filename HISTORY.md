@@ -91,7 +91,64 @@
 
 ---
 
-## v0.4.0 - Wizard UI + Step Tracking + Tailscale (Current)
+## v0.4.1 - Polish & Fixes (Current)
+
+**Focus:** Bug fixes, UX improvements, visual polish.
+
+### Fixes
+
+1. **SSH Password Consistency**
+   - Fixed lesson showing `toor` when actual password is `root`
+   - Updated ssh-bruteforce.json and docker-compose.yml comment
+
+2. **Container Start/Stop Buttons**
+   - Fixed "Start" button not working (Docker credential helper PATH issue)
+   - Fixed "Stop Target Container" button (switched from docker-compose stop to docker stop)
+   - Added button feedback: "Starting...", "Started!", "Stopping...", "Failed - Retry"
+
+3. **Docker Credential Helper**
+   - Added PATH fix directly in app.py run_docker() function
+   - No longer depends on shell environment having the PATH set
+
+### New Features
+
+1. **Duration Tags**
+   - Added time estimates to lesson steps that take noticeable time
+   - Purple stopwatch badge in step header (e.g., "5-10 sec", "1-2 min")
+   - Pulsing yellow animation when step is active
+   - Purple left border accent on steps with duration
+
+2. **Favicon**
+   - Terminal-themed SVG favicon
+   - macOS-style traffic light buttons
+   - Glowing green `$_` prompt with `(^_^)` kaomoji
+   - Animated blinking cursor
+
+3. **Session-Only Step Tracking**
+   - Removed localStorage persistence
+   - Steps reset on page refresh (cleaner per-session experience)
+   - Strikethrough still works during session
+
+4. **Layout Improvement**
+   - Side-by-side layout persists until 900px (was 1200px)
+   - Better experience on smaller screens
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `lab-ui/app.py` | Docker PATH fix, docker stop, 120s timeout |
+| `lab-ui/templates/lesson.html` | Duration tags, button feedback, no localStorage |
+| `lab-ui/templates/index.html` | Favicon link |
+| `lab-ui/static/style.css` | Duration tag styles, 900px breakpoint |
+| `lab-ui/static/favicon.svg` | New terminal-themed favicon |
+| `lab-ui/lessons/*.json` | Duration fields added to all 8 lessons |
+| `lab-ui/lessons/ssh-bruteforce.json` | Fixed toor -> root |
+| `docker-compose.yml` | Fixed vulnssh comment |
+
+---
+
+## v0.4.0 - Wizard UI + Step Tracking + Tailscale
 
 **Major UI Overhaul:** Complete rewrite of Lab UI with wizard-style interface.
 

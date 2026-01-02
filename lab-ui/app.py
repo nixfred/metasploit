@@ -17,9 +17,13 @@ LESSONS_DIR = os.path.join(os.path.dirname(__file__), 'lessons')
 def run_docker(cmd):
     """Run a docker-compose command and return result"""
     try:
+        # Include Docker credential helper in PATH
+        env = os.environ.copy()
+        env['PATH'] = env.get('PATH', '') + ':/Applications/Docker.app/Contents/Resources/bin'
+
         result = subprocess.run(
             f"cd {os.path.dirname(os.path.dirname(__file__))} && docker-compose {cmd}",
-            shell=True, capture_output=True, text=True, timeout=60
+            shell=True, capture_output=True, text=True, timeout=120, env=env
         )
         return {"success": result.returncode == 0, "output": result.stdout + result.stderr}
     except Exception as e:
@@ -70,9 +74,15 @@ def start_container(name):
 
 @app.route('/api/container/<name>/stop', methods=['POST'])
 def stop_container(name):
-    """Stop a specific container"""
-    result = run_docker(f"stop {name}")
-    return jsonify(result)
+    """Stop a specific container using docker stop (more reliable than docker-compose stop)"""
+    try:
+        result = subprocess.run(
+            f"docker stop {name}",
+            shell=True, capture_output=True, text=True, timeout=30
+        )
+        return jsonify({"success": result.returncode == 0, "output": result.stdout + result.stderr})
+    except Exception as e:
+        return jsonify({"success": False, "output": str(e)})
 
 @app.route('/api/container/<name>/status')
 def container_status(name):

@@ -151,7 +151,7 @@ services:
   # ---------------------------------------------------------------------------
   # Vulnerable SSH - Weak passwords for brute force practice
   # Use with Hydra or MSF auxiliary/scanner/ssh/ssh_login
-  # Creds: root/toor, user/password
+  # Creds: root/root, user/password
   # ---------------------------------------------------------------------------
   vulnssh:
     image: rastasheep/ubuntu-sshd:18.04

@@ -171,7 +171,8 @@ When you pick a lesson, you get a split screen:
 - **Completed steps** are dimmed with strikethrough
 - **Copy button** automatically marks step as current
 - **Checkmark button** to manually mark steps done
-- **Progress persists** in browser localStorage - come back later and continue
+- **Duration tags** show time estimates for slow commands (purple badge)
+- **Session-only** - resets on page refresh for clean starts
 
 ### Available Lessons (8 Total)
 
@@ -420,7 +421,8 @@ metasploit/
 │   │   ├── index.html         # Wizard welcome page
 │   │   └── lesson.html        # Lesson page with step tracking
 │   ├── static/
-│   │   └── style.css          # Dark hacker theme
+│   │   ├── style.css          # Dark hacker theme
+│   │   └── favicon.svg        # Terminal-themed favicon
 │   └── lessons/               # JSON lesson definitions
 │       ├── vsftpd-backdoor.json
 │       ├── ssh-bruteforce.json
