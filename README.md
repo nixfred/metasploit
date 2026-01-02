@@ -384,8 +384,8 @@ alias ms='msfconsole'
 # SET (NOT 'set' - conflicts with bash builtin!)
 alias settool='cd ~/set && sudo python3 setoolkit'
 
-# Lab UI - starts Flask on port 5050
-alias lab='cd ~/Projects/metasploit/lab-ui && python3 app.py'
+# Lab UI - verifies Kali is running, then starts Flask on port 5050
+alias lab='~/Projects/metasploit/lab.sh'
 
 # Kali Attack Box - starts container if needed, drops into bash
 kali() {
@@ -592,7 +592,7 @@ cat >> ~/.bashrc << 'EOF'
 # === P3N73S7 L4B ===
 alias ms='msfconsole'
 alias settool='cd ~/set && sudo python3 setoolkit'
-alias lab='cd ~/Projects/metasploit/lab-ui && python3 app.py'
+alias lab='~/Projects/metasploit/lab.sh'
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"
 
 kali() {

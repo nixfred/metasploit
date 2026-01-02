@@ -208,8 +208,8 @@ alias ms='msfconsole'
 # SET (NOT 'set' - conflicts with bash builtin!)
 alias settool='cd ~/set && sudo python3 setoolkit'
 
-# Lab UI - starts Flask on port 5050
-alias lab='cd ~/Projects/metasploit/lab-ui && python3 app.py'
+# Lab UI - verifies Kali is running, then starts Flask on port 5050
+alias lab='~/Projects/metasploit/lab.sh'
 
 # Docker credential helpers (fixes image pull issues on macOS)
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin"
