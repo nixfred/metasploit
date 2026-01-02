@@ -19,20 +19,17 @@ case "$1" in
         echo "Starting Tailscale Funnel for P3N73S7 L4B..."
         echo ""
 
-        # Proxy Lab UI (5050 → 443)
-        echo "[1/4] Setting up Lab UI proxy (localhost:5050 → :443)..."
-        tailscale serve --bg --https=443 http://localhost:5050
+        # Reset any existing config
+        echo "[1/3] Resetting existing Funnel config..."
+        tailscale serve reset 2>/dev/null || true
 
-        # Proxy Kali terminal (7681 → 8443)
-        echo "[2/4] Setting up Kali terminal proxy (localhost:7681 → :8443)..."
-        tailscale serve --bg --https=8443 http://localhost:7681
+        # Funnel Lab UI (5050 → 443) - funnel includes serve
+        echo "[2/3] Enabling Funnel for Lab UI (localhost:5050 → :443)..."
+        tailscale funnel --bg --https=443 http://localhost:5050
 
-        # Enable Funnel for both ports
-        echo "[3/4] Enabling Funnel on port 443 (Lab UI)..."
-        tailscale funnel --bg 443
-
-        echo "[4/4] Enabling Funnel on port 8443 (Kali terminal)..."
-        tailscale funnel --bg 8443
+        # Funnel Kali terminal (7681 → 8443)
+        echo "[3/3] Enabling Funnel for Kali terminal (localhost:7681 → :8443)..."
+        tailscale funnel --bg --https=8443 http://localhost:7681
 
         echo ""
         echo "╔═══════════════════════════════════════════════════════════════╗"
@@ -50,13 +47,9 @@ case "$1" in
     stop)
         echo "Stopping Tailscale Funnel..."
 
-        # Disable Funnel
-        tailscale funnel --bg=false 443 2>/dev/null || true
-        tailscale funnel --bg=false 8443 2>/dev/null || true
-
-        # Remove serve proxies
-        tailscale serve --bg=false --https=443 2>/dev/null || true
-        tailscale serve --bg=false --https=8443 2>/dev/null || true
+        # Turn off Funnel on both ports
+        tailscale funnel --https=443 off 2>/dev/null || true
+        tailscale funnel --https=8443 off 2>/dev/null || true
 
         echo ""
         echo "✅ Funnel disabled. Lab is no longer publicly accessible."
