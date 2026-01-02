@@ -9,8 +9,11 @@ FROM kalilinux/kali-rolling
 # Avoid prompts during package installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update and install pentesting tools
-RUN apt-get update && apt-get install -y \
+# Use a reliable Kali mirror (cloudflare)
+RUN echo "deb http://kali.download/kali kali-rolling main contrib non-free non-free-firmware" > /etc/apt/sources.list
+
+# Update and install pentesting tools (with retry logic for flaky mirrors)
+RUN apt-get update && apt-get install -y --fix-missing \
     # Core pentesting tools
     metasploit-framework \
     set \

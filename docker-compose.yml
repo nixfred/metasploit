@@ -263,14 +263,11 @@ services:
     volumes:
       # Persistent home directory (survives rebuilds)
       - kali-home:/root
-      # SHARED CONFIGS - Edit on Mac OR Kali, Git tracks changes
-      # These overlay on top of kali-home
-      - ./msf-dotfiles/modules:/root/.msf4/modules        # Custom exploits
-      - ./msf-dotfiles/plugins:/root/.msf4/plugins        # Plugins
-      - ./msf-dotfiles/scripts:/root/.msf4/scripts        # Resource scripts
-      - ./msf-dotfiles/msfconsole.rc:/root/.msf4/msfconsole.rc  # Startup config
-      # Wordlists
-      - ./wordlists:/root/wordlists:ro  # SecLists (read-only)
+      # NOTE: Shared configs require Docker Desktop file sharing for /Users
+      # To enable: Docker Desktop > Preferences > Resources > File Sharing
+      # Uncomment after configuring:
+      # - ./msf-dotfiles:/root/.msf4                      # All MSF configs
+      # - ./wordlists:/root/wordlists:ro                  # SecLists (read-only)
     cap_add:
       - NET_ADMIN
       - NET_RAW
