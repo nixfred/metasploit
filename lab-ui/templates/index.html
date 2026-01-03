@@ -9,123 +9,82 @@
 </head>
 <body>
     <div class="wizard-container">
-        <!-- Step 1: Welcome/Intro -->
-        <section id="step-welcome" class="wizard-step active">
-            <div class="welcome-content">
-                <pre class="ascii-logo">
+        <!-- Single Page Layout -->
+        <section class="main-content">
+            <pre class="ascii-logo">
     ____  _____  _   _ _____ _____ ____ _____   _        _    ____
    |  _ \|___ / | \ | |___  | ____/ ___|_   _| | |      / \  | __ )
    | |_) | |_ \ |  \| |  / /|  _| \___ \ | |   | |     / _ \ |  _ \
    |  __/ ___) || |\  | / / | |___ ___) || |   | |___ / ___ \| |_) |
    |_|   |____/ |_| \_|/_/  |_____|____/ |_|   |_____/_/   \_\____/
-                </pre>
-                <h1>Welcome to the Pentesting Learning Lab</h1>
-                <p class="intro-text">
-                    This is your personal hacking playground. Real tools. Real vulnerabilities.
-                    Completely safe - everything runs in Docker containers on your Mac.
-                </p>
-
-                <div class="what-is-this">
-                    <h2>What is this?</h2>
-                    <div class="features-grid">
-                        <div class="feature">
-                            <span class="feature-icon">🐉</span>
-                            <h3>Kali Attack Box</h3>
-                            <p>Full Kali Linux with Metasploit, Nmap, Hydra, and 20+ tools - running in your browser.</p>
-                        </div>
-                        <div class="feature">
-                            <span class="feature-icon">🎯</span>
-                            <h3>Vulnerable Targets</h3>
-                            <p>13+ intentionally vulnerable systems to practice on. FTP backdoors, SQL injection, weak passwords.</p>
-                        </div>
-                        <div class="feature">
-                            <span class="feature-icon">📖</span>
-                            <h3>Guided Lessons</h3>
-                            <p>Step-by-step instructions with exact commands. Copy, paste, learn. Get root.</p>
-                        </div>
-                    </div>
+            </pre>
+            <div class="header-row">
+                <div class="header-actions-left">
+                    <button class="btn btn-primary btn-small" id="kali-start-btn" onclick="startKali()">▶ Start Kali</button>
+                    <button class="btn btn-danger btn-small" id="kali-stop-btn" onclick="stopKali()" style="display:none;">⬛ Stop Kali</button>
+                    <a id="kali-quick-link" href="#" target="_blank" class="btn btn-small" style="display:none;">🖥️ Terminal</a>
+                    <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All Targets</button>
                 </div>
-
-                <div class="system-status" id="system-status">
-                    <h2>System Status</h2>
-                    <div class="status-checks">
-                        <div class="status-check" id="docker-status">
-                            <span class="check-icon">⏳</span>
-                            <span>Docker Desktop</span>
-                            <span class="status-value" id="docker-value">Checking...</span>
-                        </div>
-                        <div class="status-check" id="kali-status-check">
-                            <span class="check-icon">⏳</span>
-                            <span>Kali Attack Box</span>
-                            <span class="status-value" id="kali-value">Checking...</span>
-                            <button class="btn btn-small" id="kali-btn" onclick="startKali()">Start</button>
-                        </div>
-                    </div>
+                <div class="header-actions">
+                    <span class="kali-status" id="kali-status-header">Kali: ⚫</span>
                 </div>
-
-                <div class="running-targets" id="running-targets" style="display:none;">
-                    <h2>Running Targets</h2>
-                    <p class="targets-note">These containers are using system resources. Stop them when done.</p>
-                    <div class="targets-list" id="targets-list"></div>
-                    <button class="btn btn-danger" id="stop-all-btn" onclick="stopAllTargets()">Stop All Targets</button>
-                </div>
-
-                <button class="btn btn-large btn-primary" onclick="goToStep('step-choose')">
-                    Start Hacking →
-                </button>
             </div>
-        </section>
 
-        <!-- Step 2: Choose Vulnerability -->
-        <section id="step-choose" class="wizard-step">
-            <div class="choose-content">
-                <button class="back-btn" onclick="goToStep('step-welcome')">← Back</button>
-                <h1>Choose Your Target</h1>
-                <p class="choose-intro">Pick a vulnerability to exploit. Each lesson walks you through the complete attack from scan to root shell.</p>
+            <div class="wtf-section">
+                <h2>// WTF IS THIS? //</h2>
+                <p>A localhost hacking lab. Vulnerable Docker containers you can legally attack to learn penetration testing. Click a lesson → container starts → hack it in the Kali terminal.</p>
+            </div>
 
-                <div class="difficulty-filter">
-                    <span>Filter:</span>
-                    <button class="filter-btn active" onclick="filterLessons('all')">All</button>
-                    <button class="filter-btn" onclick="filterLessons('easy')">Easy</button>
-                    <button class="filter-btn" onclick="filterLessons('medium')">Medium</button>
-                    <button class="filter-btn" onclick="filterLessons('hard')">Hard</button>
+            <div class="lessons-section">
+                <div class="lessons-header">
+                    <h2>Lessons</h2>
+                    <div class="difficulty-filter">
+                        <button class="filter-btn active" onclick="filterLessons('all')">All</button>
+                        <button class="filter-btn" onclick="filterLessons('easy')">Easy</button>
+                        <button class="filter-btn" onclick="filterLessons('medium')">Medium</button>
+                    </div>
                 </div>
 
-                <div class="lesson-grid">
+                <div class="lesson-grid" id="lesson-grid">
                     {% for lesson in lessons %}
-                    <div class="lesson-card" data-difficulty="{{ lesson.difficulty }}">
+                    <div class="lesson-card" data-difficulty="{{ lesson.difficulty }}" data-container="{{ lesson.container }}">
                         <div class="card-header">
                             <span class="difficulty {{ lesson.difficulty }}">{{ lesson.difficulty | upper }}</span>
-                            <span class="card-container">{{ lesson.container }}</span>
+                            <span class="container-tag" data-container="{{ lesson.container }}">{{ lesson.container }} ⚫</span>
                         </div>
                         <h3>{{ lesson.name }}</h3>
                         <p class="card-description">{{ lesson.description }}</p>
-                        <a href="/lesson/{{ lesson.id }}" class="btn btn-start">
-                            Start This Lesson →
-                        </a>
+                        <div class="card-actions">
+                            <button class="btn btn-start" onclick="launchLesson('{{ lesson.id }}', '{{ lesson.container }}')">
+                                Start →
+                            </button>
+                            <button class="btn btn-stop btn-small" data-container="{{ lesson.container }}" onclick="stopContainer('{{ lesson.container }}'); event.stopPropagation();" style="display:none;">
+                                ⬛ Stop
+                            </button>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
-
-                <div class="quick-access">
-                    <h3>Quick Access</h3>
-                    <div class="quick-links">
-                        <a id="kali-quick-link" href="#" target="_blank" class="quick-link">
-                            <span>🖥️</span> Kali Terminal
-                        </a>
-                        <a href="http://localhost:9999" target="_blank" class="quick-link">
-                            <span>📊</span> Docker Logs
-                        </a>
-                        <a href="http://localhost:8080" target="_blank" class="quick-link">
-                            <span>🌐</span> DVWA (Web App)
-                        </a>
-                        <a href="http://localhost:3000" target="_blank" class="quick-link">
-                            <span>🧃</span> Juice Shop
-                        </a>
-                    </div>
-                </div>
             </div>
         </section>
+    </div>
+
+    <!-- Cyber Popup Modal -->
+    <div class="cyber-modal" id="cyber-modal">
+        <div class="cyber-modal-content">
+            <div class="cyber-header">
+                <span class="cyber-title" id="modal-title">INITIALIZING...</span>
+                <div class="cyber-progress">
+                    <div class="cyber-progress-bar" id="modal-progress"></div>
+                </div>
+            </div>
+            <div class="cyber-log" id="modal-log">
+                <!-- Log entries appear here -->
+            </div>
+            <div class="cyber-footer">
+                <span class="cyber-hint">Press ESC to run in background</span>
+            </div>
+        </div>
     </div>
 
     <footer>
@@ -134,20 +93,11 @@
 
     <script>
         // Dynamic Kali terminal URL (works from any host)
-        // Detect Tailscale Funnel (.ts.net) and use appropriate port
         const isFunnel = window.location.hostname.endsWith('.ts.net');
         const kaliPort = isFunnel ? 8443 : 7681;
         const kaliProto = isFunnel ? 'https' : 'http';
         const kaliTerminalUrl = `${kaliProto}://${window.location.hostname}:${kaliPort}`;
         document.getElementById('kali-quick-link').href = kaliTerminalUrl;
-
-        // Wizard navigation
-        function goToStep(stepId) {
-            document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
-            document.getElementById(stepId).classList.add('active');
-            // Scroll to top of page
-            window.scrollTo(0, 0);
-        }
 
         // Filter lessons by difficulty
         function filterLessons(difficulty) {
@@ -156,70 +106,85 @@
 
             document.querySelectorAll('.lesson-card').forEach(card => {
                 if (difficulty === 'all' || card.dataset.difficulty === difficulty) {
-                    card.style.display = 'block';
+                    card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
                 }
             });
         }
 
-        // Status checking
+        // Launch lesson - start container if needed, then go to lesson
+        async function launchLesson(lessonId, container) {
+            showModal('LAUNCHING...', '');
+            addLog('kali', 'pending');
+            addLog(container, 'pending');
+
+            // Start Kali first (needed for terminal)
+            try {
+                await fetch('/api/kali/start', { method: 'POST' });
+                updateLog('kali', 'success');
+            } catch (e) {
+                updateLog('kali', 'error');
+            }
+
+            // Start the target container
+            try {
+                await fetch(`/api/container/${container}/start`, { method: 'POST' });
+                updateLog(container, 'success');
+            } catch (e) {
+                updateLog(container, 'error');
+            }
+
+            updateProgress(100);
+
+            // Go to lesson
+            setTimeout(() => {
+                window.location.href = `/lesson/${lessonId}`;
+            }, 1000);
+        }
+
+        // Status checking - updates lesson cards
         async function checkStatus() {
             try {
                 const res = await fetch('/api/containers/status');
                 const data = await res.json();
 
-                // Docker is running if we got a response
-                const dockerCheck = document.getElementById('docker-status');
-                dockerCheck.querySelector('.check-icon').textContent = '✅';
-                document.getElementById('docker-value').textContent = 'Running';
-                document.getElementById('docker-value').classList.add('running');
+                // Update Kali status and buttons
+                const kaliHeader = document.getElementById('kali-status-header');
+                const kaliStartBtn = document.getElementById('kali-start-btn');
+                const kaliStopBtn = document.getElementById('kali-stop-btn');
+                const kaliTermLink = document.getElementById('kali-quick-link');
 
-                // Kali status
-                const kaliCheck = document.getElementById('kali-status-check');
-                const kaliBtn = document.getElementById('kali-btn');
                 if (data.kali && data.kali.running) {
-                    kaliCheck.querySelector('.check-icon').textContent = '✅';
-                    document.getElementById('kali-value').textContent = 'Running';
-                    document.getElementById('kali-value').classList.add('running');
-                    kaliBtn.textContent = 'Open Terminal';
-                    kaliBtn.onclick = () => window.open(kaliTerminalUrl, '_blank');
+                    kaliHeader.textContent = 'Kali: ✅';
+                    kaliHeader.classList.add('running');
+                    kaliStartBtn.style.display = 'none';
+                    kaliStopBtn.style.display = 'inline-block';
+                    kaliTermLink.style.display = 'inline-block';
                 } else {
-                    kaliCheck.querySelector('.check-icon').textContent = '❌';
-                    document.getElementById('kali-value').textContent = 'Stopped';
-                    document.getElementById('kali-value').classList.add('stopped');
-                    kaliBtn.textContent = 'Start';
-                    kaliBtn.onclick = startKali;
+                    kaliHeader.textContent = 'Kali: ⚫';
+                    kaliHeader.classList.remove('running');
+                    kaliStartBtn.style.display = 'inline-block';
+                    kaliStopBtn.style.display = 'none';
+                    kaliTermLink.style.display = 'none';
                 }
 
-                // Running targets (exclude kali)
-                const runningTargets = Object.entries(data)
-                    .filter(([name, info]) => name !== 'kali' && info.running)
-                    .map(([name]) => name);
-
-                const targetsSection = document.getElementById('running-targets');
-                const targetsList = document.getElementById('targets-list');
-
-                if (runningTargets.length > 0) {
-                    targetsSection.style.display = 'block';
-                    targetsList.innerHTML = runningTargets.map(name =>
-                        `<div class="target-item">
-                            <span class="target-name">${name}</span>
-                            <button class="btn btn-small btn-danger" onclick="stopTarget('${name}')">Stop</button>
-                        </div>`
-                    ).join('');
-                } else {
-                    targetsSection.style.display = 'none';
-                }
+                // Update each lesson card's container status (handles multiple lessons per container)
+                Object.entries(data).forEach(([name, info]) => {
+                    document.querySelectorAll(`.container-tag[data-container="${name}"]`).forEach(tag => {
+                        tag.textContent = info.running ? `${name} ✅` : `${name} ⚫`;
+                        tag.classList.toggle('running', info.running);
+                    });
+                    document.querySelectorAll(`.btn-stop[data-container="${name}"]`).forEach(btn => {
+                        btn.style.display = info.running ? 'inline-block' : 'none';
+                    });
+                });
             } catch (e) {
-                const dockerCheck = document.getElementById('docker-status');
-                dockerCheck.querySelector('.check-icon').textContent = '❌';
-                document.getElementById('docker-value').textContent = 'Not Running';
-                document.getElementById('docker-value').classList.add('stopped');
+                console.error('Status check failed:', e);
             }
         }
 
-        async function stopTarget(name) {
+        async function stopContainer(name) {
             try {
                 await fetch(`/api/container/${name}/stop`, { method: 'POST' });
                 setTimeout(checkStatus, 1000);
@@ -228,40 +193,87 @@
             }
         }
 
-        async function stopAllTargets() {
-            const btn = document.getElementById('stop-all-btn');
-            btn.textContent = 'Stopping...';
-            btn.disabled = true;
-
-            try {
-                await fetch('/api/targets/stop-all', { method: 'POST' });
-                setTimeout(() => {
-                    checkStatus();
-                    btn.textContent = 'Stop All Targets';
-                    btn.disabled = false;
-                }, 2000);
-            } catch (e) {
-                btn.textContent = 'Stop All Targets';
-                btn.disabled = false;
-            }
-        }
-
         async function startKali() {
-            const btn = document.getElementById('kali-btn');
+            const btn = document.getElementById('kali-start-btn');
             btn.textContent = 'Starting...';
             btn.disabled = true;
-
             try {
                 await fetch('/api/kali/start', { method: 'POST' });
-                setTimeout(() => {
-                    checkStatus();
-                    btn.disabled = false;
-                }, 5000);
             } catch (e) {
-                btn.textContent = 'Start';
+                console.error('Start Kali failed:', e);
+            }
+            setTimeout(() => {
+                checkStatus();
+                btn.textContent = '▶ Start Kali';
                 btn.disabled = false;
+            }, 3000);
+        }
+
+        async function stopKali() {
+            try {
+                await fetch('/api/container/kali/stop', { method: 'POST' });
+                setTimeout(checkStatus, 1000);
+            } catch (e) {
+                console.error('Stop Kali failed:', e);
             }
         }
+
+        async function stopAllContainers() {
+            showModal('STOPPING ALL TARGETS...', '');
+
+            const containers = ['vsftpd', 'dvwa', 'vulnssh', 'tomcat', 'samba',
+                               'juiceshop', 'metasploitable2', 'vulnmysql', 'webgoat'];
+            for (const name of containers) {
+                addLog(name, 'pending');
+            }
+
+            await fetch('/api/targets/stop-all', { method: 'POST' });
+
+            for (const name of containers) {
+                updateLog(name, 'success');
+            }
+            updateProgress(100);
+
+            setTimeout(() => { checkStatus(); hideModal(); }, 1500);
+        }
+
+        // Cyber Modal functions
+        function showModal(title, subtitle) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-log').innerHTML = '';
+            document.getElementById('modal-progress').style.width = '0%';
+            document.getElementById('cyber-modal').classList.add('active');
+        }
+
+        function hideModal() {
+            document.getElementById('cyber-modal').classList.remove('active');
+        }
+
+        function addLog(name, status) {
+            const log = document.getElementById('modal-log');
+            const icon = status === 'pending' ? '⏳' : status === 'success' ? '✅' : '❌';
+            log.innerHTML += `<div class="log-entry" id="log-${name}">
+                <span class="log-icon">${icon}</span>
+                <span class="log-name">${name}</span>
+            </div>`;
+        }
+
+        function updateLog(name, status) {
+            const entry = document.getElementById(`log-${name}`);
+            if (entry) {
+                const icon = status === 'success' ? '✅' : '❌';
+                entry.querySelector('.log-icon').textContent = icon;
+            }
+        }
+
+        function updateProgress(percent) {
+            document.getElementById('modal-progress').style.width = `${percent}%`;
+        }
+
+        // ESC to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') hideModal();
+        });
 
         // Initial check
         checkStatus();
