@@ -143,21 +143,30 @@
         // Launch lesson - start container if needed, then go to lesson
         async function launchLesson(lessonId, container) {
             showModal('INITIALIZING', 'Preparing attack environment...');
-            addLog('kali', 'pending', 'Kali Attack Box');
-            addLog(container, 'pending', container);
 
-            // Start Kali first (needed for terminal)
-            updateSubtitle('Starting Kali (may pull image on first run)...');
-            updateLog('kali', 'loading');
+            // Check if Kali is already running
+            let kaliRunning = false;
             try {
-                await fetch('/api/kali/start', { method: 'POST' });
-                updateLog('kali', 'success');
-            } catch (e) {
-                updateLog('kali', 'error');
+                const statusRes = await fetch('/api/container/kali/status');
+                const statusData = await statusRes.json();
+                kaliRunning = statusData.running;
+            } catch (e) {}
+
+            if (!kaliRunning) {
+                addLog('kali', 'pending', 'Kali Attack Box');
+                updateSubtitle('Starting Kali (may pull image on first run)...');
+                updateLog('kali', 'loading');
+                try {
+                    await fetch('/api/kali/start', { method: 'POST' });
+                    updateLog('kali', 'success');
+                } catch (e) {
+                    updateLog('kali', 'error');
+                }
             }
             updateProgress(50);
 
             // Start the target container
+            addLog(container, 'pending', container);
             updateSubtitle(`Starting ${container} (may pull image on first run)...`);
             updateLog(container, 'loading');
             try {
