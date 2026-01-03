@@ -7,22 +7,16 @@
   "port": 8080,
   "short_description": "Upload a malicious WAR file to Tomcat Manager for remote code execution.",
   "description": "Apache Tomcat's Manager application allows deploying web apps. If you have valid credentials (often defaults like tomcat/tomcat), you can upload a malicious WAR file that gives you a shell. This is a common attack against misconfigured Java servers.",
-
   "episode_number": 3,
   "episode_title": "THE DEPLOYMENT",
   "next_episode_id": "sambacry",
-
   "handler_message": "The Tomcat server at 172.20.0.19 handles Cerberus deployment staging. This is where their operators push code to production systems.\n\nDavid Chen's notes mentioned 'active builds' on this server. Whatever NIGHTFALL is, pieces of it are being assembled here. Marcus Webb signed off on a deployment three days ago.\n\nThe Manager interface uses default credentials. Sloppy, but these internal systems were never meant to be exposed.\n\nGet inside. Find out what they're building. The clock is ticking.",
-
   "episode_intro": "David Chen knew something. He was building evidence, screenshots, logs. And then he vanished.\n\nHis notes pointed here - Cerberus's internal deployment infrastructure. If NIGHTFALL is real, if it's more than paranoid speculation, the proof is on this server.\n\nYour hands are shaking. You haven't slept in thirty hours. The car outside your building moved yesterday, but you don't know where it went.\n\nFocus. One target at a time.",
-
   "episode_outro": "The build manifests confirm it. NIGHTFALL isn't just real - it's almost ready.\n\nSCADA-BRIDGE. That's what they're calling it. A toolkit designed to compromise industrial control systems. Power grids. Water treatment. Gas pipelines.\n\nThe deployment is scheduled for 72 hours from now. And buried in the code comments, you find something worse: Chinese language strings. Mandarin error messages. Beijing IP addresses hardcoded as 'attribution markers.'\n\nThey're not just planning an attack. They're planning to frame another country for it.\n\nYou need to move faster. The executive file shares might have the authorization chain - who approved this, who funded it, who benefits.\n\nBut as you disconnect, a notification flashes in your peripheral vision. A new device just connected to your home network.\n\nThey're getting closer.",
-
   "interstitial": {
     "title": "Episode 3: THE DEPLOYMENT",
     "content": "PREVIOUSLY: You found the first references to NIGHTFALL on a forgotten FTP server. A scheduling document. A list of internal IPs. And a name - David Chen.\n\nDavid was a senior systems administrator at Cerberus. Twenty years of experience. TS/SCI clearance. He started asking questions about NIGHTFALL three weeks ago.\n\nThen he disappeared.\n\nYou accessed his home workstation. His browser history told the story - he was scared, he was gathering evidence, he was trying to figure out who to trust.\n\nHe never found out. But you found what he left behind: screenshots of internal memos, and a Tomcat deployment URL.\n\nWhatever Cerberus is building, it's on that server. And you need to get inside."
   },
-
   "steps": [
     {
       "title": "Scan the deployment server",

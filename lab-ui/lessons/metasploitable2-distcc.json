@@ -7,22 +7,16 @@
   "port": 3632,
   "short_description": "Exploit the DistCC daemon for remote code execution on Metasploitable2.",
   "description": "Metasploitable2 is a deliberately vulnerable Linux VM created by Rapid7 for security training. The DistCC (Distributed C Compiler) daemon allows remote code execution due to a misconfiguration. This is CVE-2004-2687.",
-
   "episode_number": 5,
   "episode_title": "THE BUILD FARM",
   "next_episode_id": "dvwa-command-injection",
-
   "handler_message": "The executive files mentioned a 'build farm' - distributed infrastructure for compiling SCADA-BRIDGE at scale.\n\nWe've traced it to 172.20.0.20. They're running DistCC - distributed compilation. The daemon is misconfigured. CVE-2004-2687. Remote code execution through the compilation request itself.\n\nThis is where they're building the weapon. The binaries. The payloads. Everything that will be deployed when NIGHTFALL goes live.\n\nGet inside. See what they're creating. And look for the false flag markers - the Chinese attribution they're planting in the code.",
-
   "episode_intro": "They're not just planning an attack. They're manufacturing evidence.\n\nThe executive files showed wire transfers, authorization chains, surveillance photos of David Chen. But the build farm is where theory becomes reality.\n\nDistributed compilation. Dozens of machines working together to create something. SCADA-BRIDGE isn't a single tool - it's a suite. And somewhere in that compiled code, they've buried the breadcrumbs that will point to Beijing.\n\nMandarin error strings. IP addresses in Chinese netblocks. Compiler artifacts that look like they came from a Chinese APT.\n\nThis is how you frame a nation for an attack you committed yourself.",
-
   "episode_outro": "The build artifacts tell the story.\n\nYou find compiled binaries with Chinese language strings embedded throughout. Error messages in simplified Mandarin. Debug symbols pointing to /home/li_wei/ - a username that doesn't exist on any Cerberus system.\n\nHardcoded IP addresses in the 202.x.x.x range - Chinese telecom netblocks. Compilation timestamps adjusted to Beijing time zone. Malware signatures that match known Chinese APT tools.\n\nEvery piece of evidence screams 'China did this.' And every piece is fake.\n\nWhen NIGHTFALL hits - when power grids fail and water systems go haywire - investigators will find these breadcrumbs. They'll write reports. Congress will demand action. And nobody will question the evidence because it looks exactly like what they expect to see.\n\nYou have the truth. But you're running out of time to prove it.\n\nThe public-facing portal might have more - customer lists, transactions, the money flow that connects NIGHTFALL to its beneficiaries.",
-
   "interstitial": {
     "title": "Episode 5: THE BUILD FARM",
     "content": "PREVIOUSLY: The executive file shares revealed the full scope of Cerberus's conspiracy. Authorization documents. Wire transfers to shell companies. Surveillance photos of David Chen before his disappearance.\n\nBut documents don't launch cyberattacks. Someone has to build the weapon.\n\nThe files referenced a 'build farm' - distributed compilation infrastructure at 172.20.0.20. DistCC daemon, misconfigured and exploitable.\n\nThis is where SCADA-BRIDGE is being assembled. And if your handler is right, it's where you'll find the false flag evidence - the Chinese attribution markers that will start a war."
   },
-
   "steps": [
     {
       "title": "Quick scan for DistCC port",
