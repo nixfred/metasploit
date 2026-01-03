@@ -143,6 +143,70 @@ def stop_all_targets():
             pass  # Container might not exist or already stopped
     return jsonify({"success": True, "stopped": stopped})
 
+# Funnel API endpoints
+def run_funnel(action):
+    """Run funnel.sh with given action"""
+    project_dir = os.path.dirname(os.path.dirname(__file__))
+    funnel_script = os.path.join(project_dir, 'funnel.sh')
+    try:
+        result = subprocess.run(
+            [funnel_script, action],
+            capture_output=True, text=True, timeout=30
+        )
+        return {"success": result.returncode == 0, "output": result.stdout + result.stderr}
+    except Exception as e:
+        return {"success": False, "output": str(e)}
+
+@app.route('/api/funnel/status')
+def funnel_status():
+    """Get Tailscale Funnel status"""
+    try:
+        # Check if funnel is active by looking at tailscale serve status
+        result = subprocess.run(
+            ['tailscale', 'serve', 'status', '--json'],
+            capture_output=True, text=True, timeout=10
+        )
+        if result.returncode == 0:
+            status_data = json.loads(result.stdout) if result.stdout.strip() else {}
+            # Funnel is active if there are any services AND funnel is enabled
+            funnel_result = subprocess.run(
+                ['tailscale', 'funnel', 'status'],
+                capture_output=True, text=True, timeout=10
+            )
+            is_active = 'Funnel on' in funnel_result.stdout or ':443' in funnel_result.stdout
+            # Get the hostname
+            hostname_result = subprocess.run(
+                ['tailscale', 'status', '--json'],
+                capture_output=True, text=True, timeout=10
+            )
+            hostname = ""
+            if hostname_result.returncode == 0:
+                try:
+                    ts_data = json.loads(hostname_result.stdout)
+                    hostname = ts_data.get('Self', {}).get('DNSName', '').rstrip('.')
+                except:
+                    pass
+            return jsonify({
+                "active": is_active,
+                "hostname": hostname,
+                "output": funnel_result.stdout
+            })
+        return jsonify({"active": False, "hostname": "", "output": ""})
+    except Exception as e:
+        return jsonify({"active": False, "hostname": "", "error": str(e)})
+
+@app.route('/api/funnel/start', methods=['POST'])
+def funnel_start():
+    """Start Tailscale Funnel"""
+    result = run_funnel('start')
+    return jsonify(result)
+
+@app.route('/api/funnel/stop', methods=['POST'])
+def funnel_stop():
+    """Stop Tailscale Funnel"""
+    result = run_funnel('stop')
+    return jsonify(result)
+
 if __name__ == '__main__':
     print("""
     ╔═══════════════════════════════════════════════════════════╗

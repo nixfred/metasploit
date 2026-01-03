@@ -62,6 +62,25 @@
                 <button class="btn btn-danger btn-small" id="kali-stop-btn" onclick="stopKali()" style="display:none;">⬛ Stop Kali</button>
                 <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All Targets</button>
             </div>
+
+            <!-- Funnel Toggle Section -->
+            <div class="funnel-section" id="funnel-section">
+                <div class="funnel-header">
+                    <h3>🌐 Public Access (Tailscale Funnel)</h3>
+                    <span class="funnel-status" id="funnel-status">Checking...</span>
+                </div>
+                <div class="funnel-warning" id="funnel-warning">
+                    ⚠️ <strong>WARNING:</strong> If you are connected remotely, toggling Funnel will disconnect you!
+                </div>
+                <div class="funnel-urls" id="funnel-urls" style="display:none;">
+                    <div class="funnel-url">Lab UI: <a id="funnel-lab-url" href="#" target="_blank"></a></div>
+                    <div class="funnel-url">Terminal: <a id="funnel-term-url" href="#" target="_blank"></a></div>
+                </div>
+                <div class="funnel-controls">
+                    <button class="btn btn-funnel-start" id="funnel-start-btn" onclick="toggleFunnel('start')">🌐 Enable Public Access</button>
+                    <button class="btn btn-funnel-stop" id="funnel-stop-btn" onclick="toggleFunnel('stop')" style="display:none;">🔒 Disable Public Access</button>
+                </div>
+            </div>
         </section>
     </div>
 
@@ -277,9 +296,76 @@
             hideModal();
         });
 
+        // Funnel toggle functions
+        async function checkFunnelStatus() {
+            try {
+                const res = await fetch('/api/funnel/status');
+                const data = await res.json();
+
+                const statusEl = document.getElementById('funnel-status');
+                const startBtn = document.getElementById('funnel-start-btn');
+                const stopBtn = document.getElementById('funnel-stop-btn');
+                const urlsEl = document.getElementById('funnel-urls');
+                const warningEl = document.getElementById('funnel-warning');
+
+                if (data.active && data.hostname) {
+                    statusEl.textContent = 'ACTIVE';
+                    statusEl.className = 'funnel-status active';
+                    startBtn.style.display = 'none';
+                    stopBtn.style.display = 'inline-block';
+                    urlsEl.style.display = 'block';
+
+                    const labUrl = `https://${data.hostname}`;
+                    const termUrl = `https://${data.hostname}:8443`;
+                    document.getElementById('funnel-lab-url').href = labUrl;
+                    document.getElementById('funnel-lab-url').textContent = labUrl;
+                    document.getElementById('funnel-term-url').href = termUrl;
+                    document.getElementById('funnel-term-url').textContent = termUrl;
+
+                    // Show warning if we're accessing via funnel
+                    warningEl.style.display = window.location.hostname.endsWith('.ts.net') ? 'block' : 'none';
+                } else {
+                    statusEl.textContent = 'OFF';
+                    statusEl.className = 'funnel-status off';
+                    startBtn.style.display = 'inline-block';
+                    stopBtn.style.display = 'none';
+                    urlsEl.style.display = 'none';
+                    warningEl.style.display = 'none';
+                }
+            } catch (e) {
+                console.error('Funnel status check failed:', e);
+                document.getElementById('funnel-status').textContent = 'Error';
+            }
+        }
+
+        async function toggleFunnel(action) {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = action === 'start' ? 'Starting...' : 'Stopping...';
+
+            try {
+                const res = await fetch(`/api/funnel/${action}`, { method: 'POST' });
+                const data = await res.json();
+
+                if (data.success) {
+                    setTimeout(checkFunnelStatus, 2000);
+                } else {
+                    alert('Funnel operation failed: ' + (data.output || 'Unknown error'));
+                }
+            } catch (e) {
+                alert('Funnel operation failed: ' + e.message);
+            }
+
+            btn.disabled = false;
+            btn.textContent = originalText;
+        }
+
         // Initial check
         checkStatus();
+        checkFunnelStatus();
         setInterval(checkStatus, 10000);
+        setInterval(checkFunnelStatus, 30000);
     </script>
 </body>
 </html>
