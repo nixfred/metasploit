@@ -170,6 +170,11 @@ def lesson(lesson_id):
 
     return render_template('lesson.html', lesson=lesson_data)
 
+@app.route('/finale')
+def finale():
+    """Finale page - story payoff and comprehensive skills review"""
+    return render_template('finale.html')
+
 # Target containers (excludes kali which always stays running)
 TARGET_CONTAINERS = ['vsftpd', 'dvwa', 'vulnssh', 'tomcat', 'samba',
                      'juiceshop', 'metasploitable2', 'vulnmysql', 'webgoat',
