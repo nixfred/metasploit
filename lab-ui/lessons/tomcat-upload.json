@@ -71,9 +71,9 @@
       "duration": "5-15 sec"
     },
     {
-      "title": "Check your access",
+      "title": "Check your access (no prompt - just type!)",
       "command": "id",
-      "explanation": "Check what user you're running as. No prompt is normal - raw shells don't show one.",
+      "explanation": "IMPORTANT: There is NO prompt. The cursor is just blinking. Type 'id' and press Enter anyway - it works! Raw reverse shells don't show a prompt.",
       "expected": "uid=0(root) gid=0(root) groups=0(root)"
     },
     {
