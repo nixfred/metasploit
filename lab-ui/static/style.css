@@ -99,15 +99,26 @@ body {
     flex-wrap: wrap;
 }
 
-/* Make all control bar buttons same height */
+/* Make all control bar buttons same height - force override btn-small */
 .lessons-controls .filter-btn,
-.lessons-controls .btn {
-    padding: 8px 16px;
-    font-size: 13px;
-    height: 36px;
+.lessons-controls .btn,
+.lessons-controls .btn.btn-small {
+    padding: 8px 16px !important;
+    font-size: 13px !important;
+    height: 36px !important;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     box-sizing: border-box;
+    vertical-align: middle;
+}
+
+/* Align difficulty-filter inline with other buttons */
+.lessons-controls .difficulty-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
 }
 
 .kali-link {
