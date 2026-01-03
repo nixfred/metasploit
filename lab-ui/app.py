@@ -285,4 +285,4 @@ if __name__ == '__main__':
     ║  Kali terminal at http://localhost:7681                   ║
     ╚═══════════════════════════════════════════════════════════╝
     """)
-    app.run(host='0.0.0.0', port=5050, debug=True)
+    app.run(host='0.0.0.0', port=5050, debug=False)
