@@ -80,9 +80,27 @@ def lesson(lesson_id):
 
     return render_template('lesson.html', lesson=lesson_data)
 
+# Target containers (excludes kali which always stays running)
+TARGET_CONTAINERS = ['vsftpd', 'dvwa', 'vulnssh', 'tomcat', 'samba',
+                     'juiceshop', 'metasploitable2', 'vulnmysql', 'webgoat',
+                     'bwapp', 'mutillidae', 'wordpress']
+
+def stop_other_targets(keep_container):
+    """Stop all target containers except the one we're starting (and kali)"""
+    for target in TARGET_CONTAINERS:
+        if target != keep_container:
+            try:
+                subprocess.run(f"docker stop {target}", shell=True,
+                              capture_output=True, timeout=10)
+            except:
+                pass  # Ignore errors - container might not exist or already stopped
+
 @app.route('/api/container/<name>/start', methods=['POST'])
 def start_container(name):
-    """Start a specific container"""
+    """Start a specific container, stopping other targets to conserve resources"""
+    # Stop other targets first (kali stays running)
+    if name in TARGET_CONTAINERS:
+        stop_other_targets(name)
     result = run_docker(f"up -d {name}")
     return jsonify(result)
 
