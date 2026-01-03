@@ -91,7 +91,57 @@
 
 ---
 
-## v0.5.0 - Remote Access & Reliability (Current)
+## v1.0.0 - GOLD RELEASE 🎉
+
+**The lab is complete and fully tested.**
+
+### What's New
+
+1. **All 8 Lessons Tested End-to-End**
+   - vsftpd-backdoor: ✅ Root shell via backdoor
+   - ssh-bruteforce: ✅ Root via weak creds (sshpass fixed)
+   - tomcat-upload: ✅ Meterpreter via WAR upload
+   - sambacry: ✅ Root via CVE-2017-7494 (credentials added)
+   - metasploitable2-distcc: ✅ Shell via DistCC (perl payload)
+   - sqli-dvwa, dvwa-command-injection, juiceshop-sqli: Web-based (manual)
+
+2. **pwn Scripts for All Exploitable Targets**
+   - `pwn vsftpd` - One-shot backdoor exploit
+   - `pwn ssh` - Auto-login with sshpass
+   - `pwn tomcat` - WAR upload exploit
+   - `pwn sambacry` - SambaCry with credentials
+   - `pwn distcc` - DistCC with perl payload
+
+3. **COPY Button Fix**
+   - Commands with quotes (like SSH wordlist) now copy correctly
+   - Changed from inline onclick to data attributes
+
+4. **Kali Improvements**
+   - Added `sshpass` for SSH automation
+   - Added `smbclient` for SMB enumeration
+
+5. **SambaCry Fix**
+   - Added SMB credentials to lesson: `sambacry:nosambanocry`
+   - Updated pwn-sambacry.rc with authentication
+
+6. **DistCC Fix**
+   - Changed payload from `cmd/unix/reverse_bash` to `cmd/unix/reverse_perl`
+   - Target's bash lacks `/dev/tcp` support
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `lab-ui/templates/lesson.html` | COPY button data attributes |
+| `kali/Dockerfile` | Added sshpass, smbclient |
+| `msf-dotfiles/scripts/pwn` | Added sambacry, distcc targets |
+| `msf-dotfiles/scripts/pwn-sambacry.rc` | Added SMB credentials |
+| `msf-dotfiles/scripts/pwn-distcc.rc` | Changed to perl payload |
+| `lab-ui/lessons/sambacry.json` | Added credential steps |
+
+---
+
+## v0.5.0 - Remote Access & Reliability
 
 **Focus:** Make the lab work reliably from any machine on the network.
 
@@ -359,18 +409,18 @@
 
 ## Roadmap
 
-### v0.5.0 - Containerized Lab UI (Planned)
+### v1.1.0 - Containerized Lab UI (Planned)
 - Move Flask app into its own container with nginx
 - Single `docker-compose up` starts everything
 - No Python/pip needed on host
 
-### v0.6.0 - More Lessons (Planned)
+### v1.2.0 - More Lessons (Planned)
 - WebGoat lessons
 - bWAPP lessons
 - Privilege escalation lessons
 - Post-exploitation lessons
 
-### v1.0.0 - Full Learning Platform (Vision)
+### v2.0.0 - Full Learning Platform (Vision)
 - SQLite database for multi-user progress
 - Lesson completion certificates
 - Custom vulnerable containers
@@ -424,4 +474,4 @@ Quick hits:
 
 ---
 
-*Last updated: 2026-01-02 (v0.5.0)*
+*Last updated: 2026-01-02 (v1.0.0 GOLD RELEASE)*

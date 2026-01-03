@@ -495,4 +495,4 @@ docker-compose up -d --force-recreate kali
 
 See `HISTORY.md` for detailed project evolution.
 
-Current version: **v0.4.4** - Running Targets panel with stop controls.
+Current version: **v1.0.0 GOLD RELEASE** - All 8 lessons tested and working.

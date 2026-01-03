@@ -1,6 +1,6 @@
 # P3N73S7 L4B - TODO
 
-Tracking what works and what needs polish.
+**v1.0.0 GOLD RELEASE - All lessons tested and working!**
 
 ---
 
@@ -8,45 +8,46 @@ Tracking what works and what needs polish.
 
 | Lesson | Container | Builds | Starts from UI | Exploit Works | Ends on # Prompt | pwn Script |
 |--------|-----------|--------|----------------|---------------|------------------|------------|
-| vsftpd-backdoor | vsftpd | ✅ | ✅ | ✅ | ✅ | ✅ |
-| tomcat-upload | tomcat | ✅ | ✅ | ✅ | ✅ | ✅ |
-| ssh-bruteforce | vulnssh | ? | ? | ? | ? | ❌ |
-| sqli-dvwa | dvwa | ? | ? | ? | ? | ❌ |
-| dvwa-command-injection | dvwa | ? | ? | ? | ? | ❌ |
-| juiceshop-sqli | juiceshop | ? | ? | ? | ? | ❌ |
-| sambacry | samba | ? | ? | ? | ? | ❌ |
-| metasploitable2-distcc | metasploitable2 | ? | ? | ? | ? | ❌ |
+| vsftpd-backdoor | vsftpd | ✅ | ✅ | ✅ | ✅ | ✅ `pwn vsftpd` |
+| ssh-bruteforce | vulnssh | ✅ | ✅ | ✅ | ✅ | ✅ `pwn ssh` |
+| tomcat-upload | tomcat | ✅ | ✅ | ✅ | ✅ | ✅ `pwn tomcat` |
+| sambacry | samba | ✅ | ✅ | ✅ | ✅ | ✅ `pwn sambacry` |
+| metasploitable2-distcc | metasploitable2 | ✅ | ✅ | ✅ | ✅ | ✅ `pwn distcc` |
+| sqli-dvwa | dvwa | ✅ | ✅ | ✅ | N/A | N/A (web-based) |
+| dvwa-command-injection | dvwa | ✅ | ✅ | ✅ | N/A | N/A (web-based) |
+| juiceshop-sqli | juiceshop | ✅ | ✅ | ✅ | N/A | N/A (web-based) |
 
-**Legend:** ✅ = Tested and working | ❌ = Not done | ? = Needs testing
+**Legend:** ✅ = Tested and working | N/A = Not applicable (web-based lesson)
 
 ---
 
-## Quality Bar for Each Lesson
+## Quality Bar for Each Lesson ✅
 
 Every lesson must:
 
-1. **Container builds on fresh clone** - `docker compose build <name>` works
-2. **Container starts from UI** - Click "Start" button works
-3. **Exploit chain works end-to-end** - All steps execute successfully
-4. **User ends on `root@container:#` prompt** - Not a blinking cursor
-5. **Instructions clear about no-prompt** - "Just type!" warning on first shell command
-6. **pwn script exists** - `pwn <target>` automation for after learning
+1. ✅ **Container builds on fresh clone** - `docker compose build <name>` works
+2. ✅ **Container starts from UI** - Click "Start" button works
+3. ✅ **Exploit chain works end-to-end** - All steps execute successfully
+4. ✅ **User ends on `root@container:#` prompt** - Not a blinking cursor (for shell exploits)
+5. ✅ **Instructions clear about no-prompt** - "Just type!" warning on first shell command
+6. ✅ **pwn script exists** - `pwn <target>` automation for shell exploits
 
 ---
 
-## UI Fixes Needed
+## UI Fixes ✅
 
 - [x] "Back to Lessons" → goes to lesson picker, not landing page
 - [x] Docker status says "Not Running" (not "Start Docker Desktop")
-- [ ] Funnel toggle on website (nice-to-have)
+- [x] COPY button works with commands containing quotes
+- [ ] Funnel toggle on website (nice-to-have, v1.1.0)
 
 ---
 
-## Documentation Needed
+## Documentation ✅
 
-- [ ] Document clone → build → run workflow for fresh Mac
-- [ ] Document Ubuntu support (if any differences)
-- [ ] Add LESSONS_LEARNED.md entries as issues arise
+- [x] Clone → build → run workflow documented in README.md
+- [x] LESSONS_LEARNED.md with 8 detailed entries
+- [ ] Document Ubuntu support (if any differences) - v1.1.0
 
 ---
 
@@ -77,12 +78,12 @@ source ~/.bashrc
 lab
 ```
 
-**Key insight:** Containers build on first use. The `docker compose build` step compiles vsftpd from source, builds Kali, etc. This is automatic but takes time on first run.
-
 ---
 
-## Next Lesson to Polish
+## v1.1.0 Roadmap
 
-Pick ONE, test end-to-end, update lesson JSON, add pwn script if missing.
-
-Current focus: **vsftpd-backdoor** (DONE) → next: **ssh-bruteforce**
+- [ ] Funnel toggle on website
+- [ ] Containerize Flask app with nginx
+- [ ] Document Ubuntu support
+- [ ] Add WebGoat lessons
+- [ ] Add bWAPP lessons
