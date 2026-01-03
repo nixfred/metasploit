@@ -14,7 +14,7 @@
 - **Preference:** Dark, no-bullshit, professional code
 - **Philosophy:** Simple > clever, working > perfect
 - **Communication:** Direct, technical, appreciates irreverence
-- **Infrastructure:** Mac (shaggy), Ubuntu server (box), Tailscale network
+- **Infrastructure:** Host machine, Ubuntu server (box), Tailscale network
 
 ---
 

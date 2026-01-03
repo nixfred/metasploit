@@ -73,7 +73,7 @@ Every lesson must:
 
 ## Fresh Clone Workflow
 
-When someone clones this repo on a new Mac:
+When someone clones this repo on a new machine:
 
 ```bash
 # 1. Clone with submodules

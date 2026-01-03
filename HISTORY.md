@@ -6,7 +6,7 @@
 
 ## v0.1.0 - The Beginning (Initial Commit)
 
-**Goal:** Create a portable pentesting environment that can be cloned to any Mac.
+**Goal:** Create a portable pentesting environment that can be cloned to any Linux or macOS machine.
 
 **What we built:**
 - Basic project structure with `msf-dotfiles/` for Metasploit configs
@@ -14,7 +14,7 @@
 - Initial `docker-compose.yml` with a few vulnerable targets
 - Added Metasploit (via Homebrew) as the core tool
 
-**Key insight:** This is NOT a script or app. It's an ENVIRONMENT. Tools are installed manually on each Mac; this repo syncs their CONFIGURATIONS.
+**Key insight:** This is NOT a script or app. It's an ENVIRONMENT. Tools are installed on each machine; this repo syncs their CONFIGURATIONS.
 
 ---
 
@@ -51,13 +51,13 @@
 - 4 initial lessons: vsftpd backdoor, SSH brute force, SQL injection, Tomcat upload
 - JSON-based lesson system (no database needed for MVP)
 
-**Philosophy:** Clone to new Mac, one-time Docker build, then Kali is always there.
+**Philosophy:** Clone to new machine, one-time Docker build, then Kali is always there.
 
 ---
 
 ## v0.3.5 - Shared Configs
 
-**The duality problem solved:** Same configs on Mac AND Kali.
+**The duality problem solved:** Same configs on host AND Kali.
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐

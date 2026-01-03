@@ -6,7 +6,7 @@ This file provides context for Claude (AI assistant) when working on this projec
 
 **This is a PORTABLE PENTESTING ENVIRONMENT, not an application.**
 
-The goal: Clone this repo on any Mac -> run `./install.sh` -> entire pentesting setup is restored with all customizations.
+The goal: Clone this repo on any Linux or macOS machine -> run `./install.sh` -> entire pentesting setup is restored with all customizations.
 
 ### What This Is
 
@@ -78,7 +78,7 @@ Prerequisites:
 
 ## Architecture
 
-### Host Machine: shaggy (Mac)
+### Host Machine: Linux or macOS
 
 - Metasploit Framework installed via Homebrew (`/opt/metasploit-framework/`)
 - SET installed at `~/set/`
@@ -96,7 +96,7 @@ Prerequisites:
 
 ```
 172.20.0.0/24 - Lab network
-172.20.0.1   - Host (attacker - your Mac)
+172.20.0.1   - Host (attacker - your machine)
 172.20.0.5   - Kali attack box (web terminal at localhost:7681)
 172.20.0.10  - DVWA
 172.20.0.15  - vsftpd (backdoor - easy win)
@@ -558,10 +558,10 @@ The entire `/root` is a Docker volume. This means:
 - Only first build is slow; after that Kali is always ready
 
 ### Why `restart: always` on Kali?
-With Docker Desktop auto-starting on login, Kali becomes a permanent member of your Mac. Open `http://localhost:7681` anytime and it's there.
+With Docker Desktop auto-starting on login, Kali becomes a permanent member of your machine. Open `http://localhost:7681` anytime and it's there.
 
 ### Why bind mounts for msf-dotfiles and wordlists?
-Git becomes the single source of truth. Edit configs on Mac or in Kali, changes go to the repo, git tracks everything.
+Git becomes the single source of truth. Edit configs on the host or in Kali, changes go to the repo, git tracks everything.
 
 ### Why custom vsftpd Dockerfile?
 The old `vulnerables/vsftpd-2.3.4` image was removed from Docker Hub. We now build from the infected source at `targets/vsftpd/Dockerfile`.
