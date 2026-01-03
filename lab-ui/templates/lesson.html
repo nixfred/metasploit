@@ -54,7 +54,7 @@
                     {% if step.command %}
                     <div class="command-block">
                         <code>{{ step.command }}</code>
-                        <button class="copy-btn" onclick="copyCommand(this, '{{ step.command | e }}', {{ loop.index }})">COPY</button>
+                        <button class="copy-btn" data-cmd="{{ step.command | e }}" data-step="{{ loop.index }}" onclick="copyCommand(this)">COPY</button>
                     </div>
                     {% endif %}
                     {% if step.expected %}
@@ -277,8 +277,10 @@
             frame.src = frame.src;
         }
 
-        function copyCommand(btn, cmd, stepNum) {
-            // Unescape the command
+        function copyCommand(btn) {
+            // Read command from data attribute and unescape HTML entities
+            const cmd = btn.dataset.cmd;
+            const stepNum = parseInt(btn.dataset.step);
             const textarea = document.createElement('textarea');
             textarea.innerHTML = cmd;
             const cleanCmd = textarea.value;
