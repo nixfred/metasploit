@@ -20,9 +20,8 @@
             </pre>
             <div class="header-row">
                 <div class="header-actions-left">
-                    <button class="btn btn-primary btn-small" id="kali-start-btn" onclick="startKali()">▶ Start Kali</button>
+                    <a id="kali-quick-link" href="#" target="_blank" class="btn btn-small" style="display:none;">🖥️ Kali Terminal</a>
                     <button class="btn btn-danger btn-small" id="kali-stop-btn" onclick="stopKali()" style="display:none;">⬛ Stop Kali</button>
-                    <a id="kali-quick-link" href="#" target="_blank" class="btn btn-small" style="display:none;">🖥️ Terminal</a>
                     <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All Targets</button>
                 </div>
                 <div class="header-actions">
@@ -160,20 +159,17 @@
 
                 // Update Kali status and buttons
                 const kaliHeader = document.getElementById('kali-status-header');
-                const kaliStartBtn = document.getElementById('kali-start-btn');
                 const kaliStopBtn = document.getElementById('kali-stop-btn');
                 const kaliTermLink = document.getElementById('kali-quick-link');
 
                 if (data.kali && data.kali.running) {
                     kaliHeader.textContent = 'Kali: ✅';
                     kaliHeader.classList.add('running');
-                    kaliStartBtn.style.display = 'none';
                     kaliStopBtn.style.display = 'inline-block';
                     kaliTermLink.style.display = 'inline-block';
                 } else {
                     kaliHeader.textContent = 'Kali: ⚫';
                     kaliHeader.classList.remove('running');
-                    kaliStartBtn.style.display = 'inline-block';
                     kaliStopBtn.style.display = 'none';
                     kaliTermLink.style.display = 'none';
                 }
@@ -200,22 +196,6 @@
             } catch (e) {
                 console.error('Stop failed:', e);
             }
-        }
-
-        async function startKali() {
-            const btn = document.getElementById('kali-start-btn');
-            btn.textContent = 'Starting...';
-            btn.disabled = true;
-            try {
-                await fetch('/api/kali/start', { method: 'POST' });
-            } catch (e) {
-                console.error('Start Kali failed:', e);
-            }
-            setTimeout(() => {
-                checkStatus();
-                btn.textContent = '▶ Start Kali';
-                btn.disabled = false;
-            }, 3000);
         }
 
         async function stopKali() {
