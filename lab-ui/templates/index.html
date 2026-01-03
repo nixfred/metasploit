@@ -214,7 +214,7 @@
             } catch (e) {
                 const dockerCheck = document.getElementById('docker-status');
                 dockerCheck.querySelector('.check-icon').textContent = '❌';
-                document.getElementById('docker-value').textContent = 'Not Running - Start Docker Desktop';
+                document.getElementById('docker-value').textContent = 'Not Running';
                 document.getElementById('docker-value').classList.add('stopped');
             }
         }
