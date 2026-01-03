@@ -15,7 +15,7 @@ app = Flask(__name__)
 LESSONS_DIR = os.path.join(os.path.dirname(__file__), 'lessons')
 
 def run_docker(cmd):
-    """Run a docker-compose command and return result"""
+    """Run a docker compose command and return result"""
     try:
         project_dir = os.path.dirname(os.path.dirname(__file__))
 
@@ -28,10 +28,17 @@ def run_docker(cmd):
         env['PATH'] = extra_paths + ":" + env.get('PATH', '')
         env['DOCKER_CONFIG'] = os.path.join(project_dir, '.docker')
 
+        # Try docker compose v2 first, fall back to docker-compose v1
         result = subprocess.run(
-            f"cd {project_dir} && docker-compose {cmd}",
+            f"cd {project_dir} && docker compose {cmd}",
             shell=True, capture_output=True, text=True, timeout=300, env=env
         )
+        if result.returncode != 0 and "is not a docker command" in result.stderr:
+            # Fall back to docker-compose v1
+            result = subprocess.run(
+                f"cd {project_dir} && docker-compose {cmd}",
+                shell=True, capture_output=True, text=True, timeout=300, env=env
+            )
         return {"success": result.returncode == 0, "output": result.stdout + result.stderr}
     except Exception as e:
         return {"success": False, "output": str(e)}
