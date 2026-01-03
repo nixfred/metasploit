@@ -7,55 +7,69 @@
   "port": 3000,
   "short_description": "Bypass authentication in OWASP Juice Shop using SQL injection.",
   "description": "OWASP Juice Shop is a modern web application with 100+ security challenges. This lesson covers the classic SQL injection login bypass - one of the first challenges. You'll learn how improper input sanitization leads to authentication bypass.",
+
+  "episode_number": 8,
+  "episode_title": "STOREFRONT",
+  "next_episode_id": null,
+
+  "handler_message": "This is it. The final piece.\n\nCerberus runs a legitimate-looking e-commerce operation at 172.20.0.30. On the surface, it's a juice shop. Underneath, it's the financial clearinghouse for NIGHTFALL.\n\nEvery shell company transaction. Every offshore transfer. Every payment to operatives and contractors. It all flows through here, disguised as smoothie purchases.\n\nSQL injection bypasses the login. Get admin access. Find the real transaction records.\n\nYou have everything else. The target list. The false flag evidence. The authorization chain.\n\nThis is where you find out who PROMETHEUS is. Who's paying for all of this. And then you have everything you need.\n\nThe clock is running. Go.",
+
+  "episode_intro": "The target list burns in your mind. Power stations. Water facilities. Financial systems. Real places. Real infrastructure. Real people who will die if this succeeds.\n\n72 hours. That's all you have left.\n\nEverything you've gathered - the deployment manifests, the false flag evidence, the authorization documents - it's enough to prove NIGHTFALL exists. But it's not enough to stop it.\n\nYou need to know who's behind this. Not just Cerberus. Someone is funding them. Someone with enough resources to orchestrate an attack on this scale and enough influence to ensure it's blamed on a foreign power.\n\nPROMETHEUS. That's the codename. The primary investor whose money made all of this possible.\n\nThe Juice Shop storefront is their financial laundry. Millions of dollars disguised as fruit smoothie orders. SQL injection gets you past the login. Admin access gets you to the real records.\n\nThis is the endgame. Find PROMETHEUS. Expose everything. Or watch helplessly as NIGHTFALL goes live.",
+
+  "episode_outro": "The admin panel reveals the truth.\n\nTransaction records stretching back three years. Payments tagged with project codes - SCADA-BRIDGE, ATTRIBUTION-PKG, NIGHTFALL-STAGING. Amounts that dwarf anything a juice shop could legitimately process.\n\nAnd there, in the executive compensation records: the wire transfers to PROMETHEUS.\n\nThe account number routes to a law firm in Delaware. The law firm is owned by a trust in the Caymans. The trust's beneficial owner is...\n\nA United States Senator.\n\nSomeone with access to classified briefings. Someone who sits on the Intelligence Committee. Someone who's been pushing for aggressive action against China for years.\n\nNIGHTFALL isn't just a false flag operation. It's a manufactured justification for a war that certain people have wanted for decades.\n\nYou save everything. Screenshots. Transaction logs. The full money trail from offshore accounts to a sitting member of Congress.\n\nYour connection drops. The screen goes black.\n\nWhen it comes back, there's a message. Plain text. No sender.\n\n'You have everything. 72 hours until NIGHTFALL. Choose carefully what you do with it.'\n\nThe cursor blinks. Waiting.\n\nWhat you do next is up to you.",
+
+  "interstitial": {
+    "title": "Episode 8: STOREFRONT",
+    "content": "PREVIOUSLY: The SQL injection revealed NIGHTFALL's target list. Power substations. Water treatment plants. Financial clearinghouses. Dates. Times. Coordinates.\n\nThis isn't theoretical anymore. The attack is scheduled. And you're running out of time to stop it.\n\nYou've gathered evidence of the conspiracy - deployment manifests, false flag markers, authorization chains. But you still don't know who's really behind this. Who's paying for an attack on American infrastructure?\n\nPROMETHEUS. The primary investor. Their money flows through a front operation at 172.20.0.30 - a legitimate-looking e-commerce site disguised as a juice shop.\n\nSQL injection bypasses the login. Admin access reveals the real records.\n\nThis is the endgame. Find PROMETHEUS. Expose everything."
+  },
+
   "steps": [
     {
       "title": "Open Juice Shop",
-      "explanation": "Juice Shop is a Node.js e-commerce application with intentional vulnerabilities. Open http://localhost:3000 in your browser."
+      "narrative": "Juice Shop looks legitimate - a modern e-commerce site selling fruit beverages. Built on Node.js with Angular frontend. Underneath, it's a deliberately vulnerable application used for security training. Open http://localhost:3000 in your browser. For NIGHTFALL, it represents Cerberus's financial front."
     },
     {
       "title": "Find the login page",
-      "explanation": "Click 'Account' -> 'Login' in the top right to navigate to the login form."
+      "narrative": "Navigate to Account > Login. Standard authentication form. Email and password. Behind this form is a database query that validates credentials. If the query isn't properly parameterized, you can inject SQL commands."
     },
     {
       "title": "Test for SQL injection",
       "command": "Email: ' OR 1=1--\nPassword: anything",
-      "explanation": "The single quote breaks the SQL query. 'OR 1=1' is always true. '--' comments out the rest.",
-      "expected": "Login fails but you might see an error revealing SQL is being used"
+      "narrative": "Classic injection payload. The single quote closes the email string. OR 1=1 makes the condition always true. -- comments out the password check. If vulnerable, this logs you in as the first user in the database - typically admin."
     },
     {
       "title": "Bypass login as admin",
       "command": "Email: admin@juice-sh.op'--\nPassword: anything",
-      "explanation": "We're saying 'log me in as admin@juice-sh.op and ignore everything after'. The comment (--) skips password check.",
-      "expected": "You're logged in as admin!"
+      "narrative": "More targeted attack. We know the admin email (from reconnaissance or guessing). The comment after the email bypasses password validation entirely. The query becomes: SELECT * FROM users WHERE email='admin@juice-sh.op'-- AND password='...'",
+      "expected": "Logged in as admin!"
     },
     {
-      "title": "Alternative: Use any email format",
+      "title": "Alternative: First user bypass",
       "command": "Email: ' OR 1=1--\nPassword: x",
-      "explanation": "This bypasses as the first user in the database (usually admin).",
-      "expected": "Logged in as admin"
+      "narrative": "If you don't know the admin email, this broader injection works. The OR 1=1 returns all users; the application logs you in as the first one. On most systems, the first user is the administrator."
     },
     {
       "title": "View the scoreboard",
-      "explanation": "Juice Shop tracks your progress. Check how many challenges you've solved. Open http://localhost:3000/#/score-board"
+      "narrative": "Juice Shop gamifies security testing - it tracks your progress through 100+ challenges. Open http://localhost:3000/#/score-board to see which vulnerabilities you've discovered. SQL injection login bypass should now be checked."
     },
     {
       "title": "Use SQLMap for automated testing",
       "command": "sqlmap -u 'http://172.20.0.30:3000/rest/user/login' --data='email=test&password=test' --batch",
-      "explanation": "SQLMap can automatically detect and exploit SQL injection. Run this from Kali.",
+      "narrative": "SQLMap automates SQL injection discovery and exploitation. It tests multiple injection techniques and identifies the database type. The --batch flag accepts defaults instead of prompting. This is reconnaissance at scale.",
       "duration": "30-60 sec"
     },
     {
-      "title": "Extract database info with SQLMap",
+      "title": "Extract database info",
       "command": "sqlmap -u 'http://172.20.0.30:3000/rest/user/login' --data='email=test&password=test' --dbs --batch",
-      "explanation": "List all databases.",
+      "narrative": "List all databases. Juice Shop uses SQLite - a file-based database common in smaller applications. The transaction records, user data, and PROMETHEUS payment information are all stored here.",
       "expected": "SQLite database detected",
       "duration": "1-2 min"
     }
   ],
-  "success_criteria": "You logged in as admin without knowing the password. Check the Juice Shop scoreboard for credit.",
+  "success_criteria": "You've bypassed authentication and gained admin access to the Cerberus financial front. You can now access transaction records and trace the PROMETHEUS payments.",
   "next_steps": [
-    "Try other Juice Shop challenges: XSS, broken access control, insecure deserialization",
-    "Explore /api endpoints for more vulnerabilities",
-    "Try to access admin section at /administration"
+    "Explore admin functionality at /administration",
+    "Try other Juice Shop challenges: XSS, broken access control",
+    "Extract more data: sqlmap --dump"
   ]
 }

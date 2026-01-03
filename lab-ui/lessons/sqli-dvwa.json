@@ -7,66 +7,78 @@
   "port": 80,
   "short_description": "Learn SQL injection basics and extract database contents.",
   "description": "SQL injection is one of the most common web vulnerabilities. By injecting SQL commands into input fields, attackers can bypass authentication, extract data, or even take over the server. DVWA provides a safe environment to practice these techniques.",
+
+  "episode_number": 7,
+  "episode_title": "THE QUERY",
+  "next_episode_id": "juiceshop-sqli",
+
+  "handler_message": "The shell revealed database credentials. Now bypass the application entirely. Talk directly to the data.\n\nSQL injection. The portal's user lookup page is vulnerable. No input sanitization. Classic UNION-based extraction.\n\nThe database holds more than customer records. Target lists. Deployment schedules. The full NIGHTFALL operational plan.\n\nThis is what David Chen was looking for. The proof that ties everything together.\n\nExtract it. All of it.",
+
+  "episode_intro": "The shell gave you a foothold. The database credentials gave you an opportunity. Now you need to take it.\n\nSQL injection isn't just a technique - it's a philosophy. The application thinks it's in control. It accepts your input, builds a query, talks to the database. But if you craft that input carefully, you control the conversation.\n\nThe DVWA portal has a user lookup page. Type a user ID, get information back. Simple. Except the developers trusted your input. They concatenated it directly into the SQL query.\n\nAnd that means you don't have to play by their rules anymore.",
+
+  "episode_outro": "The database spills its secrets.\n\nUser tables with password hashes - easy to crack. Customer records with shell company names. Transaction logs that trace money through six different jurisdictions.\n\nBut it's the 'operations' table that stops you cold.\n\nNIGHTFALL target list. Power substations across the Eastern Seaboard. Water treatment facilities in twelve major cities. Financial clearinghouses that process billions in daily transactions.\n\nDates. Times. GPS coordinates. Backup targets in case primary fails.\n\nThe attack isn't theoretical anymore. It's scheduled. And the countdown is measured in hours, not days.\n\nYou save everything. Screenshots. Dumps. Raw data. But you know it's not enough. Nobody will believe a random person with database exports.\n\nYou need the final piece. The money trail that proves this isn't foreign aggression - it's domestic profit. The e-commerce storefront might have it. The last target in Cerberus's infrastructure.",
+
+  "interstitial": {
+    "title": "Episode 7: THE QUERY",
+    "content": "PREVIOUSLY: Command injection gave you a shell on the Cerberus portal. You found database credentials in plaintext config files.\n\nThe customer records were fictions - shell companies laundering money through fake transactions. But references to a 'primary investor' codenamed PROMETHEUS suggest someone is funding this operation at scale.\n\nThe SQL injection vulnerability in the user lookup page is your next entry point. Bypass the application. Talk directly to the database.\n\nNIGHTFALL's target list is in there somewhere. Time to extract it."
+  },
+
   "steps": [
     {
       "title": "Access DVWA in browser",
       "command": "curl -I http://172.20.0.10",
-      "explanation": "First, verify DVWA is running. Then open http://localhost:8080 in your browser.",
+      "narrative": "Verify the portal is running. HTTP 302 redirects to the login page - expected behavior. The application is up. Open http://localhost:8080 in your browser and authenticate with admin/password.",
       "expected": "HTTP/1.1 302 Found (redirect to login)",
       "duration": "1-2 sec"
     },
     {
       "title": "Login to DVWA",
-      "explanation": "Open http://localhost:8080 in your browser. Login with admin / password",
-      "expected": "You see the DVWA dashboard"
+      "narrative": "Authentication with admin/password. In a real engagement, these might be credentials found elsewhere or brute-forced. Once inside, you have access to the vulnerable functionality."
     },
     {
       "title": "Set security to Low",
-      "explanation": "Click 'DVWA Security' in the left menu. Set Security Level to 'Low' and click Submit. This removes protections so you can learn the basics.",
-      "expected": "Security level shows 'Low'"
+      "narrative": "Navigate to 'DVWA Security' and set the level to 'Low'. This removes input sanitization - simulating a poorly-secured application. In production, you'd need to work around protections, but the principles remain the same."
     },
     {
       "title": "Go to SQL Injection page",
-      "explanation": "Click 'SQL Injection' in the left menu. You'll see a User ID input field.",
-      "expected": "A form asking for User ID"
+      "narrative": "The SQL Injection page accepts a User ID. Behind the scenes, the application builds a query: SELECT * FROM users WHERE id = '[your input]'. If your input isn't sanitized, you control the query."
     },
     {
       "title": "Test for SQL injection",
       "command": "1'",
-      "explanation": "Enter this in the User ID field and submit. The single quote breaks the SQL query.",
-      "expected": "You see a SQL error message - this confirms SQLi vulnerability!"
+      "narrative": "A single quote after legitimate input. If the application is vulnerable, this breaks the SQL syntax - the query becomes malformed. An error message confirms injection is possible. The application just told you it's building queries with your input.",
+      "expected": "SQL error message confirms vulnerability"
     },
     {
       "title": "Extract all users",
       "command": "' OR '1'='1",
-      "explanation": "This makes the WHERE clause always true, returning all users.",
-      "expected": "You see multiple users listed (admin, gordonb, etc.)"
+      "narrative": "Boolean-based bypass. The original query was WHERE id='[input]'. Your input makes it WHERE id='' OR '1'='1'. Since 1=1 is always true, all records are returned. You just bypassed the application's logic with four characters."
     },
     {
       "title": "Use UNION to extract data",
       "command": "' UNION SELECT user, password FROM users-- -",
-      "explanation": "UNION combines results from another query. We're extracting usernames and password hashes.",
-      "expected": "You see usernames and MD5 password hashes"
+      "narrative": "UNION combines result sets. If the original query returns two columns, your UNION must also return two columns. We're extracting usernames and password hashes from the users table. The -- comments out any trailing SQL from the original query.",
+      "expected": "Usernames and MD5 password hashes"
     },
     {
       "title": "Use SQLMap for automation",
       "command": "sqlmap -u 'http://172.20.0.10/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='PHPSESSID=YOUR_SESSION_ID;security=low' --dbs",
-      "explanation": "SQLMap automates SQL injection. Replace YOUR_SESSION_ID with your actual session cookie from the browser (F12 > Application > Cookies).",
-      "expected": "SQLMap finds the vulnerability and lists databases",
+      "narrative": "SQLMap automates the discovery and exploitation process. It identifies the injection point, determines the database type, and extracts data. Replace YOUR_SESSION_ID with your actual cookie (F12 > Application > Cookies in browser).",
+      "expected": "SQLMap identifies vulnerability and lists databases",
       "duration": "30-60 sec"
     },
     {
       "title": "Dump the users table",
       "command": "sqlmap -u 'http://172.20.0.10/vulnerabilities/sqli/?id=1&Submit=Submit' --cookie='PHPSESSID=YOUR_SESSION_ID;security=low' -D dvwa -T users --dump",
-      "explanation": "This extracts all data from the users table, including password hashes.",
-      "expected": "Full user table with cracked passwords",
+      "narrative": "Full extraction. SQLMap retrieves every record from the users table, including password hashes. It even offers to crack them using built-in wordlists. This is the data that Cerberus thought was protected behind their application.",
+      "expected": "Complete user table with cracked passwords",
       "duration": "1-2 min"
     }
   ],
-  "success_criteria": "You can extract usernames and password hashes using manual SQLi or SQLMap. Bonus: crack the hashes!",
+  "success_criteria": "You've extracted usernames and password hashes through SQL injection. You understand how unsanitized input leads to complete data compromise.",
   "next_steps": [
     "Try 'Medium' security level (requires different techniques)",
     "Use John to crack the MD5 hashes",
-    "Explore Command Injection in DVWA"
+    "Explore other tables: SHOW TABLES; SELECT * FROM [table_name];"
   ]
 }
