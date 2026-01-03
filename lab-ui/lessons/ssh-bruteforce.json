@@ -7,58 +7,78 @@
   "port": 22,
   "short_description": "Use Hydra to crack weak SSH passwords.",
   "description": "Many systems still use weak or default passwords. This lesson teaches you to use Hydra to brute force SSH credentials. The target has username 'root' with a weak password that Hydra will discover.",
+
+  "episode_number": 2,
+  "episode_title": "WEAK LINKS",
+  "next_episode_id": "tomcat-upload",
+
+  "handler_message": "David Chen. Senior Systems Administrator. TS/SCI clearance. Twenty years at Cerberus.\n\nHe started asking questions about NIGHTFALL three weeks ago. Then he disappeared. Police say he left voluntarily. His family filed a missing persons report.\n\nWe traced his home IP. His personal workstation is still online at 172.20.0.17. SSH is exposed - unusual for someone with his security background. Unless he wanted someone to find it.\n\nHis password habits were... human. Try the obvious first.\n\nWhatever he was gathering, it might still be there.",
+
+  "episode_intro": "David Chen was careful. Twenty years in cybersecurity teaches you paranoia.\n\nBut scared people make mistakes. And in his final days at Cerberus, David Chen was very, very scared.\n\nHis browser history would tell the story - three weeks of searches for 'NIGHTFALL cerberus,' 'infrastructure attack false flag,' 'whistleblower protection laws.'\n\nHe was building a case. Gathering evidence. Trying to figure out who to trust.\n\nThen he vanished.\n\nYou're about to walk through his digital footprints. And somewhere, someone is walking through yours.",
+
+  "episode_outro": "David's files confirm your worst fears. Screenshots of internal memos. Deployment schedules. A target list that reads like a map of American infrastructure.\n\nBut it's his browser history that chills you. He wasn't just gathering evidence - he was trying to warn someone. Draft emails to journalists, never sent. A half-written post on a whistleblower forum, abandoned.\n\nHe found a Tomcat deployment URL buried in the documents. Circled it three times in his notes. Whatever Cerberus is building for NIGHTFALL, it's being staged there.\n\nThe deployment server. That's your next target.\n\nBut as you disconnect, you notice something in David's recent files: a photograph. Grainy, taken from a distance. A man getting into a black SUV.\n\nThe timestamp is from the night David disappeared.\n\nYou save the image. Whoever they are, they're not just hiding something. They're willing to make people disappear to keep it hidden.",
+
+  "interstitial": {
+    "title": "Episode 2: WEAK LINKS",
+    "content": "PREVIOUSLY: You breached Cerberus's forgotten FTP archive. Among the legacy files, one name appeared repeatedly: David Chen.\n\nDavid was a senior systems administrator with two decades of experience. He had access to everything. And three weeks ago, he started downloading files at an unusual rate.\n\nThen he disappeared.\n\nPolice ruled it voluntary departure. His family disagrees. And his home workstation is still online - SSH exposed to the internet.\n\nThat's not careless. That's deliberate.\n\nHe left a door open. Maybe he wanted someone to find what he found."
+  },
+
   "steps": [
     {
       "title": "Verify SSH is running",
       "command": "nmap -sV 172.20.0.17 -p 22",
-      "explanation": "Confirm the SSH service is accessible.",
+      "narrative": "SSH on port 22 - the standard secure shell. Version detection will tell us the OpenSSH release, useful for identifying potential vulnerabilities. But today's attack doesn't need a software bug. It needs weak human choices.",
       "expected": "22/tcp open ssh OpenSSH",
       "duration": "5-10 sec"
     },
     {
       "title": "Create a small wordlist",
       "command": "echo -e 'admin\\npassword\\n123456\\nletmein\\npassword123' > /tmp/passwords.txt",
-      "explanation": "For speed, we'll use a tiny wordlist with common passwords. Real attacks use larger lists like rockyou.txt."
+      "narrative": "Password attacks need wordlists - dictionaries of common passwords. This tiny list covers the basics. Real attacks use rockyou.txt (14 million passwords) or custom lists based on target research. David was scared and distracted. He might have fallen back on something simple.",
+      "expected": "File created at /tmp/passwords.txt"
     },
     {
       "title": "Run Hydra brute force",
       "command": "hydra -l root -P /tmp/passwords.txt ssh://172.20.0.17 -t 4",
-      "explanation": "Hydra tries each password. -l root targets the root user. -t 4 means 4 parallel threads.",
+      "narrative": "Hydra is the industry-standard password cracker. It supports dozens of protocols - SSH, FTP, HTTP, databases, more. The -l flag sets the username, -P provides the password list, -t controls parallel threads. Watch it work through the combinations.",
       "expected": "[22][ssh] host: 172.20.0.17   login: root   password: password123",
       "duration": "5-15 sec"
     },
     {
-      "title": "SSH into target",
+      "title": "Connect via SSH",
       "command": "ssh root@172.20.0.17",
-      "explanation": "Connect using the cracked credentials."
+      "narrative": "Hydra found the password. Now we authenticate legitimately - no exploits, just credentials. This is how most breaches happen. Not sophisticated zero-days, but reused passwords and weak secrets.",
+      "expected": "Password prompt appears"
     },
     {
       "title": "Accept host key",
       "command": "yes",
-      "explanation": "Type 'yes' to accept the SSH host key (first connection only)."
+      "narrative": "First SSH connection to a new host requires accepting its fingerprint. In a real engagement, you'd verify this through another channel to prevent man-in-the-middle attacks. For now, accept and proceed.",
+      "expected": "Connection continues"
     },
     {
       "title": "Enter password",
       "command": "password123",
-      "explanation": "Type the password Hydra found: password123"
+      "narrative": "The password Hydra discovered. 'password123' - one of the most common passwords in the world. David Chen knew better. But fear makes people revert to familiar patterns. Whatever he was running from, it was enough to break his operational security.",
+      "expected": "Shell prompt appears"
     },
     {
       "title": "Verify root access",
       "command": "whoami && hostname",
-      "explanation": "Confirm you have root access on the target.",
+      "narrative": "Confirm your context. You're root on David's workstation. Everything he left behind is accessible. His research. His evidence. Whatever made him a target.",
       "expected": "root and vulnssh"
     },
     {
-      "title": "One-command pwn (after you learn it)",
+      "title": "One-command pwn",
       "command": "pwn ssh",
-      "explanation": "Exit the shell (type 'exit') and try this. Now that you understand the attack, this script connects directly with the known password."
+      "narrative": "Once you understand the attack, automation saves time. Exit and run 'pwn ssh' from Kali - it connects directly with the known credentials. Use this for repeated access or demonstrations."
     }
   ],
   "pwn_command": "pwn ssh",
-  "success_criteria": "You're logged in as root@vulnssh with a # prompt.",
+  "success_criteria": "You're logged in as root on David Chen's workstation. His files and research are accessible.",
   "next_steps": [
-    "Try rockyou.txt: hydra -l root -P /root/wordlists/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz ...",
-    "Use Metasploit: auxiliary/scanner/ssh/ssh_login",
-    "Learn about SSH key-based attacks"
+    "Search his documents: find /home -name '*.pdf' -o -name '*.doc*'",
+    "Check browser history: cat ~/.bash_history",
+    "Look for encrypted files: find / -name '*.gpg' 2>/dev/null"
   ]
 }

