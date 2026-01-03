@@ -65,6 +65,7 @@
     }
   ],
   "success_criteria": "You have a shell on the DVWA container as www-data. You can read files and explore the system.",
+  "pwn_command": "pwn dvwa",
   "next_steps": [
     "Try SQL Injection in DVWA to dump the database",
     "Attempt privilege escalation to root",

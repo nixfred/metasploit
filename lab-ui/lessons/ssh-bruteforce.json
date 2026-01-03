@@ -54,6 +54,7 @@
       "explanation": "Exit the shell (type 'exit') and try this. Now that you understand the attack, this script connects directly with the known password."
     }
   ],
+  "pwn_command": "pwn ssh",
   "success_criteria": "You're logged in as root@vulnssh with a # prompt.",
   "next_steps": [
     "Try rockyou.txt: hydra -l root -P /root/wordlists/seclists/Passwords/Leaked-Databases/rockyou.txt.tar.gz ...",

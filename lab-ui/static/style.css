@@ -1001,6 +1001,7 @@ footer .accent {
 .lesson-prereq,
 .lesson-steps,
 .lesson-success,
+.lesson-cheat,
 .lesson-cleanup {
     margin-bottom: 30px;
 }
@@ -1009,6 +1010,7 @@ footer .accent {
 .lesson-prereq h2,
 .lesson-steps h2,
 .lesson-success h2,
+.lesson-cheat h2,
 .lesson-cleanup h2 {
     color: var(--accent-green);
     font-size: 14px;
@@ -1017,6 +1019,28 @@ footer .accent {
     padding-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 1px;
+}
+
+/* Cheat section styling */
+.lesson-cheat {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid var(--accent-red);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.lesson-cheat h2 {
+    color: var(--accent-red) !important;
+    border-bottom-color: var(--accent-red) !important;
+}
+
+.lesson-cheat p {
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+}
+
+.cheat-block {
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .prereq-check {
