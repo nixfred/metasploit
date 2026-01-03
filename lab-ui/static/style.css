@@ -409,23 +409,6 @@ body {
     position: relative;
 }
 
-.story-intro::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
-    animation: scanline 2s linear infinite;
-}
-
-@keyframes scanline {
-    0% { opacity: 0.3; }
-    50% { opacity: 1; }
-    100% { opacity: 0.3; }
-}
-
 .encrypted-header {
     text-align: center;
     font-size: 11px;
