@@ -76,12 +76,12 @@
                     <div class="funnel-url-row">
                         <span class="funnel-label">Lab UI:</span>
                         <code class="funnel-url-text" id="funnel-lab-url"></code>
-                        <button class="btn btn-copy" onclick="copyFunnelUrl('funnel-lab-url')">COPY</button>
+                        <button class="btn btn-copy" onclick="copyFunnelUrl('funnel-lab-url', this)">COPY</button>
                     </div>
                     <div class="funnel-url-row">
                         <span class="funnel-label">Terminal:</span>
                         <code class="funnel-url-text" id="funnel-term-url"></code>
-                        <button class="btn btn-copy" onclick="copyFunnelUrl('funnel-term-url')">COPY</button>
+                        <button class="btn btn-copy" onclick="copyFunnelUrl('funnel-term-url', this)">COPY</button>
                     </div>
                 </div>
                 <div class="funnel-controls">
@@ -305,15 +305,20 @@
         });
 
         // Copy funnel URL to clipboard
-        function copyFunnelUrl(elementId) {
+        function copyFunnelUrl(elementId, btn) {
             const url = document.getElementById(elementId).textContent;
-            const btn = event.target;
+
+            const copySuccess = () => {
+                btn.textContent = 'COPIED!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'COPY';
+                    btn.classList.remove('copied');
+                }, 1500);
+            };
 
             if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(url).then(() => {
-                    btn.textContent = 'COPIED!';
-                    setTimeout(() => btn.textContent = 'COPY', 1500);
-                });
+                navigator.clipboard.writeText(url).then(copySuccess);
             } else {
                 // Fallback for HTTP
                 const textarea = document.createElement('textarea');
@@ -324,8 +329,7 @@
                 textarea.select();
                 try {
                     document.execCommand('copy');
-                    btn.textContent = 'COPIED!';
-                    setTimeout(() => btn.textContent = 'COPY', 1500);
+                    copySuccess();
                 } catch (err) {
                     btn.textContent = 'FAILED';
                     setTimeout(() => btn.textContent = 'COPY', 1500);
