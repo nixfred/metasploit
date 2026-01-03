@@ -70,7 +70,7 @@
                     <span class="funnel-status" id="funnel-status">Checking...</span>
                 </div>
                 <div class="funnel-warning" id="funnel-warning">
-                    ⚠️ <strong>WARNING:</strong> If you are connected remotely, toggling Funnel will disconnect you!
+                    ⚠️ <strong>WARNING:</strong> If you are connected remotely via Funnel, toggling this OFF will kick you out immediately!
                 </div>
                 <div class="funnel-urls" id="funnel-urls" style="display:none;">
                     <div class="funnel-url">Lab UI: <a id="funnel-lab-url" href="#" target="_blank"></a></div>
@@ -322,8 +322,8 @@
                     document.getElementById('funnel-term-url').href = termUrl;
                     document.getElementById('funnel-term-url').textContent = termUrl;
 
-                    // Show warning if we're accessing via funnel
-                    warningEl.style.display = window.location.hostname.endsWith('.ts.net') ? 'block' : 'none';
+                    // Always show warning when funnel is active
+                    warningEl.style.display = 'block';
                 } else {
                     statusEl.textContent = 'OFF';
                     statusEl.className = 'funnel-status off';
