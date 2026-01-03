@@ -929,6 +929,34 @@ body {
     color: var(--accent-red);
 }
 
+.difficulty.coming-soon {
+    background: rgba(128, 128, 128, 0.3);
+    color: #888;
+    font-style: italic;
+}
+
+/* Coming Soon card */
+.lesson-card.coming-soon {
+    opacity: 0.6;
+    border-style: dashed;
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(50, 50, 70, 0.5) 100%);
+}
+
+.lesson-card.coming-soon h3 {
+    color: #888;
+}
+
+.lesson-card.coming-soon .card-description {
+    font-style: italic;
+}
+
+.btn-disabled {
+    background: #444;
+    color: #888;
+    cursor: not-allowed;
+    border: 1px solid #555;
+}
+
 /* Footer */
 footer {
     text-align: center;

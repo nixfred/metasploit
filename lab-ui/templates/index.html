@@ -25,14 +25,14 @@
 
             <div class="lessons-section">
                 <div class="lessons-header">
-                    <h2>Lessons</h2>
                     <div class="lessons-controls">
                         <div class="difficulty-filter">
                             <button class="filter-btn active" onclick="filterLessons('all')">All</button>
                             <button class="filter-btn" onclick="filterLessons('easy')">Easy</button>
                             <button class="filter-btn" onclick="filterLessons('medium')">Medium</button>
                         </div>
-                        <a id="kali-quick-link" href="#" target="_blank" class="btn btn-small kali-link" style="display:none;">🖥️ Kali Terminal</a>
+                        <button id="kali-quick-link" class="btn btn-small kali-link" onclick="openKaliTerminal()">🖥️ Kali Terminal</button>
+                        <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All Targets</button>
                     </div>
                 </div>
 
@@ -55,12 +55,18 @@
                         </div>
                     </div>
                     {% endfor %}
+                    <!-- Coming Soon placeholder -->
+                    <div class="lesson-card coming-soon" data-difficulty="coming-soon">
+                        <div class="card-header">
+                            <span class="difficulty coming-soon">COMING SOON</span>
+                        </div>
+                        <h3>??? Mystery Lab ???</h3>
+                        <p class="card-description">A new exploit awaits... Stay tuned for the next challenge.</p>
+                        <div class="card-actions">
+                            <button class="btn btn-disabled" disabled>🔒 Locked</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="cleanup-section">
-                <button class="btn btn-danger btn-small" id="kali-stop-btn" onclick="stopKali()" style="display:none;">⬛ Stop Kali</button>
-                <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All Targets</button>
             </div>
 
             <!-- Funnel Toggle Section -->
@@ -124,7 +130,33 @@
         const kaliPort = isFunnel ? 8443 : 7681;
         const kaliProto = isFunnel ? 'https' : 'http';
         const kaliTerminalUrl = `${kaliProto}://${window.location.hostname}:${kaliPort}`;
-        document.getElementById('kali-quick-link').href = kaliTerminalUrl;
+
+        // Open Kali Terminal - starts container if needed
+        async function openKaliTerminal() {
+            const btn = document.getElementById('kali-quick-link');
+            const originalText = btn.textContent;
+
+            // Check if Kali is running
+            try {
+                const res = await fetch('/api/container/kali/status');
+                const data = await res.json();
+
+                if (!data.running) {
+                    btn.textContent = '⏳ Starting Kali...';
+                    btn.disabled = true;
+                    await fetch('/api/kali/start', { method: 'POST' });
+                    // Wait for it to be ready
+                    await new Promise(r => setTimeout(r, 3000));
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                console.error('Failed to check/start Kali:', e);
+            }
+
+            // Open terminal in new tab
+            window.open(kaliTerminalUrl, '_blank');
+        }
 
         // Filter lessons by difficulty
         function filterLessons(difficulty) {
@@ -190,18 +222,6 @@
                 const res = await fetch('/api/containers/status');
                 const data = await res.json();
 
-                // Update Kali status and buttons
-                const kaliStopBtn = document.getElementById('kali-stop-btn');
-                const kaliTermLink = document.getElementById('kali-quick-link');
-
-                if (data.kali && data.kali.running) {
-                    kaliStopBtn.style.display = 'inline-block';
-                    kaliTermLink.style.display = 'inline-block';
-                } else {
-                    kaliStopBtn.style.display = 'none';
-                    kaliTermLink.style.display = 'none';
-                }
-
                 // Update each lesson card's container status (handles multiple lessons per container)
                 Object.entries(data).forEach(([name, info]) => {
                     document.querySelectorAll(`.container-tag[data-container="${name}"]`).forEach(tag => {
@@ -223,15 +243,6 @@
                 setTimeout(checkStatus, 1000);
             } catch (e) {
                 console.error('Stop failed:', e);
-            }
-        }
-
-        async function stopKali() {
-            try {
-                await fetch('/api/container/kali/stop', { method: 'POST' });
-                setTimeout(checkStatus, 1000);
-            } catch (e) {
-                console.error('Stop Kali failed:', e);
             }
         }
 
