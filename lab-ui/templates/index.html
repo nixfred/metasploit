@@ -20,7 +20,7 @@
             </pre>
             <div class="wtf-section">
                 <h2>// WTF IS THIS? //</h2>
-                <p>A localhost hacking lab. Vulnerable Docker containers you can legally attack to learn penetration testing. Click a lesson → container starts → hack it in the Kali terminal.</p>
+                <p>A localhost hacking lab. Vulnerable Docker containers you can legally attack to learn penetration testing. Pick a hack → container starts → pwn it in the Kali terminal.</p>
             </div>
 
             <div class="lessons-section">
@@ -209,8 +209,8 @@
             }
             updateProgress(100);
 
-            // Go to lesson
-            updateSubtitle('Launching lesson...');
+            // Go to hack
+            updateSubtitle('Launching...');
             setTimeout(() => {
                 window.location.href = `/lesson/${lessonId}`;
             }, 800);
