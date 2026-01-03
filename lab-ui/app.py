@@ -22,8 +22,10 @@ def run_docker(cmd):
         # Use project's docker config (no credential helper - public images only)
         env = os.environ.copy()
         # Add Docker bin and user's bin (for docker-credential-none helper)
+        # macOS Docker Desktop path + Linux standard paths
         home = os.path.expanduser('~')
-        env['PATH'] = f"{home}/bin:/Applications/Docker.app/Contents/Resources/bin:" + env.get('PATH', '')
+        extra_paths = f"{home}/bin:/Applications/Docker.app/Contents/Resources/bin:/usr/local/bin"
+        env['PATH'] = extra_paths + ":" + env.get('PATH', '')
         env['DOCKER_CONFIG'] = os.path.join(project_dir, '.docker')
 
         result = subprocess.run(
