@@ -34,6 +34,7 @@ RUN apt-get update && apt-get install -y --fix-missing \
     iputils-ping \
     net-tools \
     tcpdump \
+    sshpass \
     # Editors and utils
     vim \
     nano \
