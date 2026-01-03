@@ -21,8 +21,6 @@
             <div class="header-row">
                 <div class="header-actions-left">
                     <a id="kali-quick-link" href="#" target="_blank" class="btn btn-small" style="display:none;">🖥️ Kali Terminal</a>
-                    <button class="btn btn-danger btn-small" id="kali-stop-btn" onclick="stopKali()" style="display:none;">⬛ Stop Kali</button>
-                    <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All Targets</button>
                 </div>
                 <div class="header-actions">
                     <span class="kali-status" id="kali-status-header">Kali: ⚫</span>
@@ -64,6 +62,11 @@
                     </div>
                     {% endfor %}
                 </div>
+            </div>
+
+            <div class="cleanup-section">
+                <button class="btn btn-danger btn-small" id="kali-stop-btn" onclick="stopKali()" style="display:none;">⬛ Stop Kali</button>
+                <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All Targets</button>
             </div>
         </section>
     </div>
