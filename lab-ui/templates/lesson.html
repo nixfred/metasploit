@@ -36,18 +36,6 @@
                 <p>{{ lesson.description }}</p>
             </section>
 
-            <section class="lesson-prereq">
-                <h2>// STATUS //</h2>
-                <div class="prereq-check" id="container-check">
-                    <span class="check-icon">⏳</span>
-                    <span>Target <code>{{ lesson.container }}</code>: <span id="target-status">checking...</span></span>
-                </div>
-                <div class="prereq-check" id="kali-check">
-                    <span class="check-icon">⏳</span>
-                    <span>Kali Terminal: <span id="kali-status">checking...</span></span>
-                </div>
-            </section>
-
             <section class="lesson-steps">
                 <h2>// STEP-BY-STEP //</h2>
                 {% for step in lesson.steps %}
