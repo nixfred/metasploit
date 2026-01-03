@@ -395,6 +395,112 @@ body {
     margin: 0 auto;
 }
 
+/* ================================
+   STORY MODE INTRO
+   ================================ */
+
+.story-intro {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(0, 255, 65, 0.05) 0%, rgba(26, 26, 46, 0.8) 100%);
+    border: 1px solid var(--accent-green);
+    border-radius: 4px;
+    position: relative;
+}
+
+.story-intro::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
+    animation: scanline 2s linear infinite;
+}
+
+@keyframes scanline {
+    0% { opacity: 0.3; }
+    50% { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+.encrypted-header {
+    text-align: center;
+    font-size: 11px;
+    color: var(--accent-green);
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.story-premise {
+    margin-bottom: 20px;
+}
+
+.story-premise p {
+    color: var(--text-primary);
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 12px;
+}
+
+.story-premise .highlight {
+    color: var(--accent-red);
+    font-weight: bold;
+    text-shadow: 0 0 8px rgba(255, 51, 102, 0.5);
+}
+
+.story-premise .urgent {
+    color: var(--accent-yellow);
+    font-style: italic;
+    border-left: 2px solid var(--accent-yellow);
+    padding-left: 12px;
+    margin-top: 15px;
+}
+
+.conspiracy-teaser {
+    background: rgba(255, 51, 102, 0.1);
+    border-left: 3px solid var(--accent-red);
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.conspiracy-teaser p {
+    color: var(--text-primary);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+}
+
+.conspiracy-teaser p:last-child {
+    margin-bottom: 0;
+    color: var(--accent-red);
+    font-weight: bold;
+}
+
+.mission-prompt {
+    text-align: center;
+    color: var(--accent-green);
+    font-size: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.mission-prompt .prompt-symbol {
+    animation: blink 1s step-end infinite;
+}
+
 .welcome-content h1 {
     font-size: 24px;
     margin-bottom: 10px;
