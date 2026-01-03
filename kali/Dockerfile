@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y --fix-missing \
     net-tools \
     tcpdump \
     sshpass \
+    smbclient \
     # Editors and utils
     vim \
     nano \

