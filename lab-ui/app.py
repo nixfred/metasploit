@@ -17,13 +17,16 @@ LESSONS_DIR = os.path.join(os.path.dirname(__file__), 'lessons')
 def run_docker(cmd):
     """Run a docker-compose command and return result"""
     try:
-        # Include Docker credential helper in PATH
+        project_dir = os.path.dirname(os.path.dirname(__file__))
+
+        # Use project's docker config (no credential helper - public images only)
         env = os.environ.copy()
         env['PATH'] = env.get('PATH', '') + ':/Applications/Docker.app/Contents/Resources/bin'
+        env['DOCKER_CONFIG'] = os.path.join(project_dir, '.docker')
 
         result = subprocess.run(
-            f"cd {os.path.dirname(os.path.dirname(__file__))} && docker-compose {cmd}",
-            shell=True, capture_output=True, text=True, timeout=120, env=env
+            f"cd {project_dir} && docker-compose {cmd}",
+            shell=True, capture_output=True, text=True, timeout=300, env=env
         )
         return {"success": result.returncode == 0, "output": result.stdout + result.stderr}
     except Exception as e:
