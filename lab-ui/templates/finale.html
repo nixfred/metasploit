@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIGHTFALL: The Truth - Pentest Lab</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="finale-container">
+        <header class="finale-header">
+            <a href="/" class="back-link">← Return to Base</a>
+            <h1>EPISODE 9: THE TRUTH</h1>
+            <div class="finale-subtitle">NIGHTFALL: OPERATION CONCLUDED</div>
+        </header>
+
+        <div class="finale-content">
+            <!-- Story Payoff -->
+            <section class="finale-section story-payoff">
+                <h2>// THE REVELATION</h2>
+                <div class="story-text">
+                    <p>You sit in a secure facility outside Langley. Fluorescent lights hum overhead. The evidence is spread across the table - build manifests, wire transfers, surveillance photos, source code with Chinese false flags.</p>
+
+                    <p>NIGHTFALL was real. SCADA-BRIDGE was 72 hours from deployment when you pulled the files. If it had launched, critical infrastructure across the Eastern Seaboard would have gone dark. Power grids. Water treatment. Gas pipelines. And every piece of evidence would have pointed to Beijing.</p>
+
+                    <p>The handler across from you - the one who's been in your ear since the FTP server - removes their sunglasses. Not CIA. Not NSA. Someone higher.</p>
+
+                    <p>"David Chen tried to do this alone," they say. "He disappeared three weeks ago. His body was found yesterday in a car accident outside Baltimore. Very convenient."</p>
+
+                    <p>You ask the question you've been holding since Episode 3: "Who is PROMETHEUS?"</p>
+
+                    <p>The handler slides a photograph across the table. A face you've seen on news networks. Congressional hearings. Defense appropriations committees.</p>
+
+                    <p><strong>Senator Marcus Webb.</strong></p>
+
+                    <p>"He owns 40% of Cerberus Security through shell companies," the handler explains. "NIGHTFALL was insurance. When the attack hit, he'd introduce emergency cyber defense legislation - written by Cerberus, of course. Contracts worth $4 billion over five years. And America would be too scared to question the cost."</p>
+
+                    <p>"What happens now?" you ask.</p>
+
+                    <p>The handler stands. "Webb is being indicted this afternoon. Cerberus is being dismantled. Your evidence made that possible." They pause at the door. "But you didn't hear this from me. And we never met."</p>
+
+                    <p>You're left alone with the files. The truth that almost started a war. The conspiracy that almost succeeded.</p>
+
+                    <p><strong>And the technical skills that stopped it.</strong></p>
+                </div>
+            </section>
+
+            <!-- Technical Skills Review -->
+            <section class="finale-section skills-review">
+                <h2>// WHAT YOU LEARNED</h2>
+                <p class="section-intro">Over the course of eight operations, you acquired a comprehensive penetration testing skillset. This is what you can now do:</p>
+
+                <!-- Episode 1 -->
+                <div class="skill-block">
+                    <h3>Episode 1: THE DISCOVERY - vsftpd Backdoor Exploitation</h3>
+                    <div class="skill-content">
+                        <h4>Technical Skills Acquired:</h4>
+                        <ul>
+                            <li><strong>Port Scanning with Nmap:</strong> You learned to use <code>nmap -sV</code> for service version detection, identifying not just open ports but what's actually listening and what version it's running.</li>
+                            <li><strong>Backdoor Recognition:</strong> Understanding historical vulnerabilities - vsftpd 2.3.4 had a backdoor triggered by ":)" in the username field.</li>
+                            <li><strong>Metasploit Framework Basics:</strong> Launching msfconsole, searching for exploits, understanding module naming conventions.</li>
+                            <li><strong>Exploit Configuration:</strong> Setting RHOSTS (target IP), RHOST vs RHOSTS distinction, payload selection.</li>
+                            <li><strong>Reverse Shell vs Bind Shell:</strong> Understanding why reverse shells bypass firewalls (target connects back to you).</li>
+                            <li><strong>Post-Exploitation Reconnaissance:</strong> Using <code>whoami</code>, <code>id</code>, <code>uname -a</code>, <code>cat /etc/passwd</code>, <code>ip addr</code>, <code>cat /etc/hosts</code> to enumerate system information.</li>
+                            <li><strong>Network Pivoting Awareness:</strong> Recognizing that compromised systems can see internal networks unreachable from your attack position.</li>
+                        </ul>
+                        <h4>Operational Context:</h4>
+                        <p>You discovered the first NIGHTFALL reference on an old FTP server that should have been decommissioned. This taught you that organizations often forget about legacy systems - they become archaeological sites of sensitive data.</p>
+                    </div>
+                </div>
+
+                <!-- Episode 2 -->
+                <div class="skill-block">
+                    <h3>Episode 2: THE ANALYST - SSH Brute Force</h3>
+                    <div class="skill-content">
+                        <h4>Technical Skills Acquired:</h4>
+                        <ul>
+                            <li><strong>Credential-Based Attacks:</strong> Understanding that not all exploits are technical - sometimes you just need the password.</li>
+                            <li><strong>Hydra for Service Brute Forcing:</strong> Using <code>hydra -l root -P wordlist.txt ssh://IP</code> to systematically try passwords against SSH.</li>
+                            <li><strong>Wordlist Strategy:</strong> Learning about rockyou.txt (14 million real-world passwords from breaches) and why custom wordlists matter.</li>
+                            <li><strong>Metasploit Auxiliary Modules:</strong> Understanding that Metasploit isn't just exploits - <code>auxiliary/scanner/ssh/ssh_login</code> provides built-in brute forcing with database integration.</li>
+                            <li><strong>Success Indicator Recognition:</strong> Knowing what "command shell session opened" actually means in different contexts.</li>
+                            <li><strong>File System Reconnaissance:</strong> Using <code>ls</code>, <code>find</code>, <code>cat</code> to search for sensitive files once inside.</li>
+                            <li><strong>Evidence Collection:</strong> Understanding what files matter - bash history, browser history, documents, screenshots.</li>
+                        </ul>
+                        <h4>Operational Context:</h4>
+                        <p>David Chen deliberately left weak credentials as breadcrumbs. This taught you that sometimes vulnerabilities aren't accidents - they're messages. Defenders leaving evidence for the right person to find.</p>
+                    </div>
+                </div>
+
+                <!-- Episode 3 -->
+                <div class="skill-block">
+                    <h3>Episode 3: THE DEPLOYMENT - Tomcat Manager Upload</h3>
+                    <div class="skill-content">
+                        <h4>Technical Skills Acquired:</h4>
+                        <ul>
+                            <li><strong>Web Application Architecture:</strong> Understanding Tomcat as a Java application server and what WAR files are (Web Application Archives).</li>
+                            <li><strong>Management Interface Exploitation:</strong> Recognizing that admin panels are prime targets - they're designed to execute code, just usually for legitimate apps.</li>
+                            <li><strong>Default Credentials:</strong> Learning the most common vulnerability in the world isn't a zero-day - it's laziness. <code>tomcat:tomcat</code> ships with the installation.</li>
+                            <li><strong>HTTP Basic Authentication:</strong> Understanding the curl <code>-I</code> flag for header inspection and recognizing 401 Unauthorized as proof of an authenticated endpoint.</li>
+                            <li><strong>Payload Selection for Java:</strong> Using <code>java/shell_reverse_tcp</code> because it's reliable, platform-independent, and requires no dependencies.</li>
+                            <li><strong>Multi/http Exploit Modules:</strong> Understanding Metasploit's naming - multi/http means it works across platforms via HTTP.</li>
+                            <li><strong>Interactive Shell Upgrade:</strong> Using <code>/bin/bash -i</code> to get a proper terminal with prompts and command history.</li>
+                            <li><strong>Build Artifact Analysis:</strong> Understanding deployment manifests, environment variables, build logs as intelligence sources.</li>
+                        </ul>
+                        <h4>Operational Context:</h4>
+                        <p>You discovered SCADA-BRIDGE deployment manifests - proof that NIGHTFALL wasn't paranoid speculation but an active weapons program targeting critical infrastructure.</p>
+                    </div>
+                </div>
+
+                <!-- Episode 4 -->
+                <div class="skill-block">
+                    <h3>Episode 4: THE EXECUTIVES - Samba (SambaCry)</h3>
+                    <div class="skill-content">
+                        <h4>Technical Skills Acquired:</h4>
+                        <ul>
+                            <li><strong>SMB Protocol Knowledge:</strong> Understanding ports 139 (NetBIOS) and 445 (SMB) as Windows/Linux file sharing protocols.</li>
+                            <li><strong>Version-Specific Exploitation:</strong> Learning that Samba 3.5.0 - 4.6.4 had CVE-2017-7494 (SambaCry) - remote code execution via shared library upload.</li>
+                            <li><strong>Shared Library Injection:</strong> Understanding how attackers can upload malicious .so files to writable shares and trigger their execution.</li>
+                            <li><strong>Target Path Configuration:</strong> Setting exploit parameters like share names and file paths that vary by target.</li>
+                            <li><strong>Root Access Impact:</strong> Understanding that uid=0 means full system control - you can read anything, modify anything, install anything.</li>
+                            <li><strong>Sensitive File Locations:</strong> Knowing where organizations store critical data - /home/executives/, /opt/cerberus/, /var/www/.</li>
+                            <li><strong>Document Intelligence:</strong> Extracting value from PDFs, spreadsheets, internal memos - the "soft" data that reveals organizational structure and intent.</li>
+                        </ul>
+                        <h4>Operational Context:</h4>
+                        <p>The executive file shares contained the conspiracy's paper trail - authorization documents, wire transfers to shell companies, surveillance photos of David Chen. This taught you that technical access is just the beginning - knowing where to look and what to look for is the real skill.</p>
+                    </div>
+                </div>
+
+                <!-- Episode 5 -->
+                <div class="skill-block">
+                    <h3>Episode 5: THE BUILD FARM - DistCC Remote Code Execution</h3>
+                    <div class="skill-content">
+                        <h4>Technical Skills Acquired:</h4>
+                        <ul>
+                            <li><strong>Distributed Systems Vulnerabilities:</strong> Understanding that build farms (distributed compilation infrastructure) can be attack vectors.</li>
+                            <li><strong>DistCC CVE-2004-2687:</strong> Learning that the DistCC daemon accepts compilation requests but doesn't validate embedded commands.</li>
+                            <li><strong>Command Injection in Legacy Systems:</strong> Recognizing that old vulnerabilities persist because systems never get updated.</li>
+                            <li><strong>Low-Privilege Shell Exploitation:</strong> Working with uid=1(daemon) - not root, but still valuable for reconnaissance and lateral movement.</li>
+                            <li><strong>Python PTY for Shell Upgrade:</strong> Using <code>python -c 'import pty; pty.spawn("/bin/bash")'</code> to get proper terminal emulation.</li>
+                            <li><strong>Source Code Analysis:</strong> Reading actual code to find false flags, attribution markers, and malicious intent.</li>
+                            <li><strong>Metasploitable2 Awareness:</strong> Understanding that this is a deliberately vulnerable training VM created by Rapid7 - dozens of exploits in one system.</li>
+                        </ul>
+                        <h4>Operational Context:</h4>
+                        <p>You found source code comments in Chinese - deliberate false flags designed to make SCADA-BRIDGE look like a Chinese APT attack. This taught you about attribution engineering - how attackers plant breadcrumbs to frame others.</p>
+                    </div>
+                </div>
+
+                <!-- Episode 6 -->
+                <div class="skill-block">
+                    <h3>Episode 6: THE PUBLIC FACE - DVWA Command Injection</h3>
+                    <div class="skill-content">
+                        <h4>Technical Skills Acquired:</h4>
+                        <ul>
+                            <li><strong>Command Injection Fundamentals:</strong> Understanding that web forms executing system commands without validation are exploitable.</li>
+                            <li><strong>Shell Metacharacter Exploitation:</strong> Using <code>;</code>, <code>&&</code>, <code>||</code>, <code>|</code> to chain commands in vulnerable inputs.</li>
+                            <li><strong>Reverse Shell Payload Crafting:</strong> Creating bash one-liners with /dev/tcp for callback shells without netcat.</li>
+                            <li><strong>URL Encoding:</strong> Understanding when and how to encode special characters for web-based exploits.</li>
+                            <li><strong>Manual vs Automated Exploitation:</strong> Knowing when to use browser exploitation vs Metasploit modules.</li>
+                            <li><strong>DVWA Security Levels:</strong> Understanding that DVWA (Damn Vulnerable Web Application) has configurable difficulty - teaching defensive coding by showing what NOT to do.</li>
+                            <li><strong>Web Application Reconnaissance:</strong> Looking at source code, checking for client-side filtering, understanding application logic.</li>
+                        </ul>
+                        <h4>Operational Context:</h4>
+                        <p>The Cerberus public website had a vulnerable ping utility. This taught you that public-facing applications are goldmines for reconnaissance - contact forms, search functions, admin panels often have injection vulnerabilities.</p>
+                    </div>
+                </div>
+
+                <!-- Episode 7 -->
+                <div class="skill-block">
+                    <h3>Episode 7: THE MONEY - Juice Shop SQL Injection</h3>
+                    <div class="skill-content">
+                        <h4>Technical Skills Acquired:</h4>
+                        <ul>
+                            <li><strong>SQL Injection Fundamentals:</strong> Understanding that login forms concatenating user input into SQL queries are vulnerable.</li>
+                            <li><strong>Authentication Bypass:</strong> Using <code>' OR 1=1--</code> to make SQL queries always return true.</li>
+                            <li><strong>SQL Comment Syntax:</strong> Understanding <code>--</code> (double dash) comments out the rest of the query.</li>
+                            <li><strong>Boolean Logic Exploitation:</strong> Knowing that <code>1=1</code> is always true, making the WHERE clause pass for any user.</li>
+                            <li><strong>SQLMap Automation:</strong> Using <code>sqlmap -u URL --forms --batch --dump</code> to automate database extraction.</li>
+                            <li><strong>Admin Panel Targeting:</strong> Understanding that admin accounts often have access to customer data, transaction logs, and system configuration.</li>
+                            <li><strong>OWASP Juice Shop Context:</strong> Recognizing this as a deliberately vulnerable modern web app for security training.</li>
+                            <li><strong>Financial Data Intelligence:</strong> Extracting transaction records, wire transfers, shell company payments to trace money flow.</li>
+                        </ul>
+                        <h4>Operational Context:</h4>
+                        <p>The customer portal revealed the money trail - wire transfers from Cerberus to shell companies, foreign bank accounts, and ultimately to Senator Marcus Webb. This taught you that following the money is often more effective than following the technology.</p>
+                    </div>
+                </div>
+
+                <!-- Episode 8 -->
+                <div class="skill-block">
+                    <h3>Episode 8: THE IDENTITY - Cross-Site Scripting (XSS)</h3>
+                    <div class="skill-content">
+                        <h4>Technical Skills Acquired:</h4>
+                        <ul>
+                            <li><strong>Cross-Site Scripting (XSS) Fundamentals:</strong> Understanding that web applications displaying user input without sanitization can execute arbitrary JavaScript.</li>
+                            <li><strong>Reflected vs Stored XSS:</strong> Recognizing the difference between one-time payload delivery (reflected) and persistent attacks (stored).</li>
+                            <li><strong>JavaScript Payload Crafting:</strong> Using <code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code> to prove exploitability.</li>
+                            <li><strong>Cookie Theft for Session Hijacking:</strong> Understanding that stealing session cookies = stealing authenticated sessions.</li>
+                            <li><strong>Browser Developer Tools:</strong> Using F12 Console, Network tab, and Application/Storage to inspect web app behavior.</li>
+                            <li><strong>Input Validation Testing:</strong> Systematically testing search boxes, comment fields, profile updates for XSS vulnerabilities.</li>
+                            <li><strong>Sensitive Data Exfiltration:</strong> Understanding that XSS can steal forms, credentials, personal information - anything the victim's browser can see.</li>
+                        </ul>
+                        <h4>Operational Context:</h4>
+                        <p>The HR portal's search function had stored XSS. When PROMETHEUS logged in to check your background check, your payload fired - revealing Senator Marcus Webb's identity. This taught you that XSS isn't just about alert boxes - it's about waiting for the right victim to trigger your trap.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Overall Competencies -->
+            <section class="finale-section competencies">
+                <h2>// YOUR PENETRATION TESTING COMPETENCY MAP</h2>
+                <p class="section-intro">You now possess skills across the full cybersecurity kill chain:</p>
+
+                <div class="competency-grid">
+                    <div class="competency-item">
+                        <h4>🔍 Reconnaissance</h4>
+                        <ul>
+                            <li>Port scanning (Nmap)</li>
+                            <li>Service enumeration</li>
+                            <li>Version detection</li>
+                            <li>Network mapping</li>
+                            <li>OSINT gathering</li>
+                        </ul>
+                    </div>
+
+                    <div class="competency-item">
+                        <h4>🎯 Weaponization</h4>
+                        <ul>
+                            <li>Metasploit framework</li>
+                            <li>Payload selection</li>
+                            <li>Exploit configuration</li>
+                            <li>Custom payload crafting</li>
+                            <li>Reverse shell techniques</li>
+                        </ul>
+                    </div>
+
+                    <div class="competency-item">
+                        <h4>🚀 Delivery</h4>
+                        <ul>
+                            <li>Web application uploads</li>
+                            <li>Command injection</li>
+                            <li>SQL injection</li>
+                            <li>XSS exploitation</li>
+                            <li>Shared library injection</li>
+                        </ul>
+                    </div>
+
+                    <div class="competency-item">
+                        <h4>💥 Exploitation</h4>
+                        <ul>
+                            <li>Remote code execution</li>
+                            <li>Authentication bypass</li>
+                            <li>Privilege escalation paths</li>
+                            <li>Session hijacking</li>
+                            <li>Backdoor triggering</li>
+                        </ul>
+                    </div>
+
+                    <div class="competency-item">
+                        <h4>📦 Installation</h4>
+                        <ul>
+                            <li>Shell stabilization</li>
+                            <li>Persistence mechanisms</li>
+                            <li>Payload deployment</li>
+                            <li>Interactive shell upgrade</li>
+                            <li>Tool transfer methods</li>
+                        </ul>
+                    </div>
+
+                    <div class="competency-item">
+                        <h4>🎮 Command & Control</h4>
+                        <ul>
+                            <li>Reverse shell management</li>
+                            <li>Session handling</li>
+                            <li>Multi-target coordination</li>
+                            <li>Lateral movement awareness</li>
+                            <li>Network pivoting concepts</li>
+                        </ul>
+                    </div>
+
+                    <div class="competency-item">
+                        <h4>🎁 Actions on Objectives</h4>
+                        <ul>
+                            <li>File system reconnaissance</li>
+                            <li>Data exfiltration</li>
+                            <li>Evidence collection</li>
+                            <li>Credential harvesting</li>
+                            <li>Intelligence analysis</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tools Mastered -->
+            <section class="finale-section tools-mastered">
+                <h2>// TOOLS YOU NOW WIELD</h2>
+                <div class="tools-grid">
+                    <div class="tool-item">
+                        <h4>Metasploit Framework</h4>
+                        <p>Industry-standard exploitation framework. You can search modules, configure exploits, select payloads, manage sessions, and understand the exploit/payload architecture.</p>
+                    </div>
+                    <div class="tool-item">
+                        <h4>Nmap</h4>
+                        <p>Network scanner for port discovery, service detection, OS fingerprinting, and vulnerability assessment. You understand -sV, -p, -A flags and output interpretation.</p>
+                    </div>
+                    <div class="tool-item">
+                        <h4>Hydra</h4>
+                        <p>Network logon cracker supporting multiple protocols. You can brute force SSH, FTP, HTTP, and understand wordlist strategies.</p>
+                    </div>
+                    <div class="tool-item">
+                        <h4>SQLMap</h4>
+                        <p>Automated SQL injection and database takeover tool. You understand URL targeting, form detection, and batch mode operation.</p>
+                    </div>
+                    <div class="tool-item">
+                        <h4>Bash/Linux CLI</h4>
+                        <p>Command-line proficiency for reconnaissance (ls, find, cat, grep), network analysis (ip addr, netstat), and shell operations.</p>
+                    </div>
+                    <div class="tool-item">
+                        <h4>Curl</h4>
+                        <p>HTTP client for web reconnaissance, header inspection (-I), and manual web exploitation workflows.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Certifications & Next Steps -->
+            <section class="finale-section next-steps">
+                <h2>// WHERE YOU GO FROM HERE</h2>
+
+                <div class="next-step-block">
+                    <h3>🎓 Professional Certifications You're Ready For:</h3>
+                    <ul>
+                        <li><strong>eJPT (eLearnSecurity Junior Penetration Tester):</strong> Entry-level cert covering what you just did - scanning, exploitation, post-exploitation. You have the practical skills.</li>
+                        <li><strong>PNPT (Practical Network Penetration Tester):</strong> Focuses on Active Directory, report writing, and real-world scenarios. Next logical step.</li>
+                        <li><strong>CEH (Certified Ethical Hacker):</strong> Vendor-neutral, covers a wide range of tools and techniques. More theory-heavy but recognized globally.</li>
+                        <li><strong>OSCP (Offensive Security Certified Professional):</strong> The gold standard. 24-hour hands-on exam. Brutal, but you've started building the foundation.</li>
+                    </ul>
+                </div>
+
+                <div class="next-step-block">
+                    <h3>🧪 Practice Platforms to Continue Learning:</h3>
+                    <ul>
+                        <li><strong>HackTheBox:</strong> Realistic vulnerable machines, active community, structured learning paths. Start with "Starting Point" boxes.</li>
+                        <li><strong>TryHackMe:</strong> Guided rooms with step-by-step walkthroughs. Great for structured learning and cert prep (OSCP, eJPT paths).</li>
+                        <li><strong>PortSwigger Web Security Academy:</strong> Free training for web app security. Created by the makers of Burp Suite.</li>
+                        <li><strong>PentesterLab:</strong> Focused on web penetration testing. Progresses from basic to advanced.</li>
+                        <li><strong>VulnHub:</strong> Free vulnerable VMs to download and exploit in your own lab.</li>
+                    </ul>
+                </div>
+
+                <div class="next-step-block">
+                    <h3>📚 Skills to Develop Next:</h3>
+                    <ul>
+                        <li><strong>Active Directory Exploitation:</strong> Windows domain attacks, Kerberoasting, pass-the-hash, bloodhound analysis.</li>
+                        <li><strong>Privilege Escalation:</strong> Going from low-privilege shell to root/SYSTEM on both Linux and Windows.</li>
+                        <li><strong>Web App Pentesting Deep Dive:</strong> OWASP Top 10, Burp Suite proficiency, JWT attacks, XXE, SSRF.</li>
+                        <li><strong>Scripting & Automation:</strong> Python for exploit development, Bash for automation, PowerShell for Windows post-exploitation.</li>
+                        <li><strong>Report Writing:</strong> Professional vulnerability reports, executive summaries, remediation recommendations.</li>
+                        <li><strong>Buffer Overflows:</strong> Binary exploitation, stack overflows, shellcode development (for OSCP).</li>
+                    </ul>
+                </div>
+
+                <div class="next-step-block">
+                    <h3>🛠️ Tools to Learn Next:</h3>
+                    <ul>
+                        <li><strong>Burp Suite:</strong> Web proxy for intercepting and modifying HTTP requests. Essential for web app testing.</li>
+                        <li><strong>Bloodhound/SharpHound:</strong> Active Directory visualization and attack path mapping.</li>
+                        <li><strong>Impacket:</strong> Python library for network protocol manipulation (SMB, LDAP, Kerberos).</li>
+                        <li><strong>Gobuster/Feroxbuster:</strong> Directory and file brute forcing for web apps.</li>
+                        <li><strong>Responder/MITM6:</strong> Network poisoning and credential capture.</li>
+                        <li><strong>LinPEAS/WinPEAS:</strong> Automated privilege escalation enumeration scripts.</li>
+                    </ul>
+                </div>
+
+                <div class="next-step-block">
+                    <h3>⚖️ Legal & Ethical Considerations:</h3>
+                    <p><strong>CRITICAL:</strong> Everything you learned here was in a controlled lab environment against systems you own. Real-world pentesting requires:</p>
+                    <ul>
+                        <li><strong>Written Authorization:</strong> Signed contracts with scope, timeline, and rules of engagement before touching ANY system.</li>
+                        <li><strong>Legal Frameworks:</strong> Understanding CFAA (Computer Fraud and Abuse Act), local laws, client NDAs.</li>
+                        <li><strong>Professional Boundaries:</strong> Never exploit vulnerabilities without permission, even for "good" reasons.</li>
+                        <li><strong>Responsible Disclosure:</strong> If you find vulnerabilities in the wild, report them ethically to vendors/owners.</li>
+                        <li><strong>Data Handling:</strong> Client data is sacred. Secure storage, encrypted transfer, proper disposal.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Final Message -->
+            <section class="finale-section final-message">
+                <h2>// FINAL TRANSMISSION</h2>
+                <div class="story-text">
+                    <p>You stopped NIGHTFALL. Not with political power or military force, but with technical skill and persistence.</p>
+
+                    <p>David Chen died trying to expose this conspiracy. You finished what he started.</p>
+
+                    <p>Senator Webb's arrest won't make the news for weeks - it's still classified. Cerberus Security is quietly being dissolved. The SCADA-BRIDGE code has been quarantined and analyzed by NSA's Tailored Access Operations team. The false flag evidence is being documented for potential diplomatic disclosure.</p>
+
+                    <p>Your handler stands in the doorway one last time. "You're good at this. If you ever want a real job..." They leave a business card. No name. Just a phone number and a Washington, D.C. area code.</p>
+
+                    <p>You pocket it. Maybe someday.</p>
+
+                    <p>For now, you have the skills. The knowledge. The proof that one person with the right tools can uncover the truth.</p>
+
+                    <p><strong>The rest is up to you.</strong></p>
+                </div>
+
+                <div class="finale-cta">
+                    <a href="/" class="btn btn-primary">Return to Training Grounds</a>
+                </div>
+            </section>
+        </div>
+
+        <footer class="finale-footer">
+            <p>P3N73S7 L4B :: NIGHTFALL :: Training Completed</p>
+            <p>You are now equipped to pursue professional penetration testing certifications and real-world security assessments.</p>
+        </footer>
+    </div>
+
+    <style>
+        .finale-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            color: #c9d1d9;
+        }
+
+        .finale-header {
+            text-align: center;
+            padding: 2rem 0 3rem 0;
+            border-bottom: 2px solid var(--green);
+        }
+
+        .finale-header h1 {
+            font-size: 3rem;
+            color: var(--green);
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+        }
+
+        .finale-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-top: 0.5rem;
+            font-family: monospace;
+        }
+
+        .finale-content {
+            margin-top: 2rem;
+        }
+
+        .finale-section {
+            margin-bottom: 4rem;
+            padding: 2rem;
+            background: rgba(26, 26, 46, 0.5);
+            border-left: 4px solid var(--green);
+            border-radius: 4px;
+        }
+
+        .finale-section h2 {
+            color: var(--green);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .section-intro {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .story-text {
+            line-height: 1.8;
+            color: #c9d1d9;
+        }
+
+        .story-text p {
+            margin-bottom: 1.2rem;
+        }
+
+        .skill-block {
+            background: rgba(10, 10, 15, 0.6);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+        }
+
+        .skill-block h3 {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-block h4 {
+            color: var(--green);
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .skill-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .skill-content li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .skill-content li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--green);
+        }
+
+        .skill-content code {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: var(--green);
+        }
+
+        .competency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .competency-item {
+            background: rgba(10, 10, 15, 0.6);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .competency-item h4 {
+            color: var(--green);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .competency-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .competency-item li {
+            padding: 0.3rem 0;
+            color: var(--text-muted);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .tool-item {
+            background: rgba(10, 10, 15, 0.6);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .tool-item h4 {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .tool-item p {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .next-step-block {
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: rgba(10, 10, 15, 0.4);
+            border-radius: 4px;
+        }
+
+        .next-step-block h3 {
+            color: var(--green);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .next-step-block ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .next-step-block li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .next-step-block li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--green);
+        }
+
+        .next-step-block strong {
+            color: var(--accent);
+        }
+
+        .final-message {
+            background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, rgba(10, 10, 15, 0.8) 100%);
+            border: 2px solid var(--green);
+        }
+
+        .finale-cta {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .finale-footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: var(--text-dim);
+            font-family: monospace;
+            border-top: 1px solid rgba(0, 255, 65, 0.3);
+        }
+
+        .finale-footer p {
+            margin: 0.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .finale-header h1 {
+                font-size: 2rem;
+            }
+            .competency-grid,
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
