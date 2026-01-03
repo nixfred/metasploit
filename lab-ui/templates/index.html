@@ -73,7 +73,11 @@
     <div class="cyber-modal" id="cyber-modal">
         <div class="cyber-modal-content">
             <div class="cyber-header">
-                <span class="cyber-title" id="modal-title">INITIALIZING...</span>
+                <div class="cyber-title-row">
+                    <span class="cyber-spinner"></span>
+                    <span class="cyber-title" id="modal-title">INITIALIZING...</span>
+                </div>
+                <div class="cyber-subtitle" id="modal-subtitle"></div>
                 <div class="cyber-progress">
                     <div class="cyber-progress-bar" id="modal-progress"></div>
                 </div>
@@ -82,7 +86,7 @@
                 <!-- Log entries appear here -->
             </div>
             <div class="cyber-footer">
-                <span class="cyber-hint">Press ESC to run in background</span>
+                <span class="cyber-hint">First launch pulls images (~1-5 min) • Press ESC to run in background</span>
             </div>
         </div>
     </div>
@@ -115,32 +119,37 @@
 
         // Launch lesson - start container if needed, then go to lesson
         async function launchLesson(lessonId, container) {
-            showModal('LAUNCHING...', '');
-            addLog('kali', 'pending');
-            addLog(container, 'pending');
+            showModal('INITIALIZING', 'Preparing attack environment...');
+            addLog('kali', 'pending', 'Kali Attack Box');
+            addLog(container, 'pending', container);
 
             // Start Kali first (needed for terminal)
+            updateSubtitle('Starting Kali (may pull image on first run)...');
+            updateLog('kali', 'loading');
             try {
                 await fetch('/api/kali/start', { method: 'POST' });
                 updateLog('kali', 'success');
             } catch (e) {
                 updateLog('kali', 'error');
             }
+            updateProgress(50);
 
             // Start the target container
+            updateSubtitle(`Starting ${container} (may pull image on first run)...`);
+            updateLog(container, 'loading');
             try {
                 await fetch(`/api/container/${container}/start`, { method: 'POST' });
                 updateLog(container, 'success');
             } catch (e) {
                 updateLog(container, 'error');
             }
-
             updateProgress(100);
 
             // Go to lesson
+            updateSubtitle('Launching lesson...');
             setTimeout(() => {
                 window.location.href = `/lesson/${lessonId}`;
-            }, 1000);
+            }, 800);
         }
 
         // Status checking - updates lesson cards
@@ -240,6 +249,7 @@
         // Cyber Modal functions
         function showModal(title, subtitle) {
             document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-subtitle').textContent = subtitle || '';
             document.getElementById('modal-log').innerHTML = '';
             document.getElementById('modal-progress').style.width = '0%';
             document.getElementById('cyber-modal').classList.add('active');
@@ -249,20 +259,35 @@
             document.getElementById('cyber-modal').classList.remove('active');
         }
 
-        function addLog(name, status) {
+        function updateSubtitle(text) {
+            document.getElementById('modal-subtitle').textContent = text;
+        }
+
+        function addLog(name, status, displayName) {
             const log = document.getElementById('modal-log');
-            const icon = status === 'pending' ? '⏳' : status === 'success' ? '✅' : '❌';
+            const icon = getStatusIcon(status);
             log.innerHTML += `<div class="log-entry" id="log-${name}">
                 <span class="log-icon">${icon}</span>
-                <span class="log-name">${name}</span>
+                <span class="log-name">${displayName || name}</span>
+                <span class="log-status" id="status-${name}"></span>
             </div>`;
         }
 
         function updateLog(name, status) {
             const entry = document.getElementById(`log-${name}`);
             if (entry) {
-                const icon = status === 'success' ? '✅' : '❌';
-                entry.querySelector('.log-icon').textContent = icon;
+                entry.querySelector('.log-icon').textContent = getStatusIcon(status);
+                entry.classList.toggle('loading', status === 'loading');
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'pending': return '○';
+                case 'loading': return '◌';
+                case 'success': return '✓';
+                case 'error': return '✗';
+                default: return '○';
             }
         }
 
