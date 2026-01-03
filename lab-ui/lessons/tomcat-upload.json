@@ -96,13 +96,17 @@
       "title": "Look for other targets",
       "command": "cat /etc/hosts",
       "explanation": "Docker often adds other container hostnames here. These are your next targets."
+    },
+    {
+      "title": "One-command pwn (after you learn it)",
+      "command": "pwn tomcat",
+      "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs all the Metasploit steps automatically. Use it to demo or practice faster."
     }
   ],
   "success_criteria": "You have a root shell with a proper prompt and can explore the compromised system.",
   "next_steps": [
     "Run 'env' to find secrets in environment variables",
     "Check 'cat /etc/shadow' to grab password hashes",
-    "Scan internal network: ping 172.20.0.10 (DVWA)",
-    "Automate this attack: exit shell, then run 'pwn tomcat'"
+    "Scan internal network: ping 172.20.0.10 (DVWA)"
   ]
 }
