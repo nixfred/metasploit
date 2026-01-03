@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIGHTFALL - Episode {{ episode_number }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="interstitial-page">
+        <div class="interstitial-content">
+            <!-- Episode Header -->
+            <div class="interstitial-header">
+                <span class="episode-label">EPISODE {{ episode_number }}</span>
+                <h1 class="episode-title">{{ episode.episode_title or episode.name }}</h1>
+            </div>
+
+            <!-- Story Content -->
+            {% if interstitial.content %}
+            <div class="interstitial-narrative">
+                {{ interstitial.content | replace('\n', '<br>') | safe }}
+            </div>
+            {% endif %}
+
+            <!-- Target Info -->
+            <div class="interstitial-target">
+                <div class="target-label">TARGET</div>
+                <div class="target-ip">{{ episode.ip }}:{{ episode.port }}</div>
+                <div class="target-name">{{ episode.container }}</div>
+            </div>
+
+            <!-- Begin Episode Button -->
+            <div class="interstitial-action">
+                <a href="{{ url_for('episode', episode_number=episode_number) }}" class="btn btn-primary btn-large begin-episode">
+                    BEGIN EPISODE {{ episode_number }}
+                </a>
+            </div>
+
+            <!-- Navigation -->
+            <div class="interstitial-nav">
+                <a href="{{ url_for('index', mode='story') }}" class="nav-link">All Episodes</a>
+                {% if episode_number > 1 %}
+                <a href="{{ url_for('interstitial', episode_number=episode_number - 1) }}" class="nav-link">Previous Episode</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

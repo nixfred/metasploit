@@ -14,6 +14,49 @@ app = Flask(__name__)
 # Path to lessons
 LESSONS_DIR = os.path.join(os.path.dirname(__file__), 'lessons')
 
+# =============================================================================
+# LESSON LOADING FUNCTIONS
+# =============================================================================
+
+def load_all_lessons():
+    """Load all lesson JSON files and return as list"""
+    lessons = []
+    for f in os.listdir(LESSONS_DIR):
+        if f.endswith('.json'):
+            with open(os.path.join(LESSONS_DIR, f)) as fp:
+                lessons.append(json.load(fp))
+    return lessons
+
+def get_episodes_ordered():
+    """Return lessons sorted by episode_number (for story mode)
+
+    Lessons with episode_number come first (sorted 1-8),
+    lessons without episode_number come after (original behavior).
+    """
+    lessons = load_all_lessons()
+    with_episode = [l for l in lessons if l.get('episode_number')]
+    without_episode = [l for l in lessons if not l.get('episode_number')]
+    return sorted(with_episode, key=lambda x: x['episode_number']) + without_episode
+
+def get_lesson_by_episode(episode_number):
+    """Get a specific lesson by its episode number"""
+    for lesson in load_all_lessons():
+        if lesson.get('episode_number') == episode_number:
+            return lesson
+    return None
+
+def get_lesson_by_id(lesson_id):
+    """Get a specific lesson by its ID"""
+    lesson_file = os.path.join(LESSONS_DIR, f"{lesson_id}.json")
+    if os.path.exists(lesson_file):
+        with open(lesson_file) as f:
+            return json.load(f)
+    return None
+
+# =============================================================================
+# DOCKER FUNCTIONS
+# =============================================================================
+
 def run_docker(cmd):
     """Run a docker compose command and return result"""
     try:
@@ -51,22 +94,69 @@ def get_container_status(name):
     )
     return result.stdout.strip() if result.stdout.strip() else "stopped"
 
+# =============================================================================
+# PAGE ROUTES
+# =============================================================================
+
 @app.route('/')
 def index():
-    """Main page - lesson selector"""
-    lessons = []
-    for f in os.listdir(LESSONS_DIR):
-        if f.endswith('.json'):
-            with open(os.path.join(LESSONS_DIR, f)) as fp:
-                lesson = json.load(fp)
-                lessons.append({
-                    "id": lesson["id"],
-                    "name": lesson["name"],
-                    "difficulty": lesson["difficulty"],
-                    "container": lesson["container"],
-                    "description": lesson.get("short_description", lesson["description"][:100])
-                })
-    return render_template('index.html', lessons=lessons)
+    """Main page - lesson selector
+
+    Supports two modes:
+    - Training mode (default): Original grid view
+    - Story mode (?mode=story): Episode list in narrative order
+    """
+    mode = request.args.get('mode', 'story')  # Default to story mode
+
+    if mode == 'story':
+        # Story mode: episodes in narrative order
+        episodes = get_episodes_ordered()
+        lessons = [{
+            "id": ep["id"],
+            "name": ep["name"],
+            "difficulty": ep["difficulty"],
+            "container": ep["container"],
+            "description": ep.get("short_description", ep["description"][:100]),
+            "episode_number": ep.get("episode_number"),
+            "episode_title": ep.get("episode_title")
+        } for ep in episodes]
+    else:
+        # Training mode: original behavior
+        lessons = []
+        for f in os.listdir(LESSONS_DIR):
+            if f.endswith('.json'):
+                with open(os.path.join(LESSONS_DIR, f)) as fp:
+                    lesson = json.load(fp)
+                    lessons.append({
+                        "id": lesson["id"],
+                        "name": lesson["name"],
+                        "difficulty": lesson["difficulty"],
+                        "container": lesson["container"],
+                        "description": lesson.get("short_description", lesson["description"][:100])
+                    })
+
+    return render_template('index.html', lessons=lessons, mode=mode)
+
+@app.route('/episode/<int:episode_number>')
+def episode(episode_number):
+    """Serve a lesson by episode number (story mode navigation)"""
+    lesson_data = get_lesson_by_episode(episode_number)
+    if not lesson_data:
+        return "Episode not found", 404
+    return render_template('lesson.html', lesson=lesson_data, mode='story')
+
+@app.route('/interstitial/<int:episode_number>')
+def interstitial(episode_number):
+    """Serve the interstitial (story) page before an episode"""
+    lesson_data = get_lesson_by_episode(episode_number)
+    if not lesson_data:
+        return "Episode not found", 404
+
+    interstitial_data = lesson_data.get('interstitial', {})
+    return render_template('interstitial.html',
+                           episode=lesson_data,
+                           interstitial=interstitial_data,
+                           episode_number=episode_number)
 
 @app.route('/lesson/<lesson_id>')
 def lesson(lesson_id):
