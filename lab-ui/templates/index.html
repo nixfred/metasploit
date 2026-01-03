@@ -272,6 +272,11 @@
             if (e.key === 'Escape') hideModal();
         });
 
+        // Hide modal on page load/restore (fixes bfcache issue)
+        window.addEventListener('pageshow', function(event) {
+            hideModal();
+        });
+
         // Initial check
         checkStatus();
         setInterval(checkStatus, 10000);
