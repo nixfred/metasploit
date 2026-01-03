@@ -103,6 +103,7 @@
       "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs all the Metasploit steps automatically. Use it to demo or practice faster."
     }
   ],
+  "pwn_command": "pwn tomcat",
   "success_criteria": "You have a root shell with a proper prompt and can explore the compromised system.",
   "next_steps": [
     "Run 'env' to find secrets in environment variables",

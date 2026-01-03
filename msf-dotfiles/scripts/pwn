@@ -37,13 +37,20 @@ case "$1" in
         echo ""
         msfconsole -q -r "$SCRIPTS_DIR/pwn-distcc.rc"
         ;;
+    dvwa)
+        "$SCRIPTS_DIR/pwn-dvwa.sh"
+        ;;
     list|--list|-l)
         echo "Available targets:"
+        echo "  dvwa      - Command Injection → shell (172.20.0.10)"
         echo "  tomcat    - Tomcat Manager upload (172.20.0.19)"
         echo "  vsftpd    - vsftpd 2.3.4 backdoor (172.20.0.15)"
         echo "  ssh       - SSH weak password (172.20.0.17)"
         echo "  sambacry  - SambaCry RCE (172.20.0.16)"
         echo "  distcc    - DistCC RCE on Metasploitable2 (172.20.0.20)"
+        echo ""
+        echo "Note: sqli-dvwa and juiceshop-sqli are data extraction,"
+        echo "      not shell access - no pwn command for those."
         echo ""
         echo "Usage: pwn <target>"
         ;;

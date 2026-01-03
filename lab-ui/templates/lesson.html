@@ -74,6 +74,17 @@
                 <button class="btn btn-success" onclick="completeLesson()">🎉 Mark Lesson Complete</button>
             </section>
 
+            {% if lesson.pwn_command %}
+            <section class="lesson-cheat">
+                <h2>// CHEAT: AUTO-PWN //</h2>
+                <p>Done it manually? Run this in Kali to see it automated:</p>
+                <div class="command-block cheat-block">
+                    <code>{{ lesson.pwn_command }}</code>
+                    <button class="copy-btn" data-cmd="{{ lesson.pwn_command }}" onclick="copyCommand(this)">COPY</button>
+                </div>
+            </section>
+            {% endif %}
+
             <section class="lesson-cleanup">
                 <h2>// CLEANUP //</h2>
                 <button class="btn btn-danger" onclick="stopTarget()">Stop Target Container</button>

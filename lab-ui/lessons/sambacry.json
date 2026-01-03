@@ -95,6 +95,7 @@
       "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs it automatically."
     }
   ],
+  "pwn_command": "pwn sambacry",
   "success_criteria": "You have root access via Meterpreter. 'getuid' shows uid=0 (root). You can read /etc/shadow.",
   "next_steps": [
     "Use 'hashdump' to extract password hashes",
