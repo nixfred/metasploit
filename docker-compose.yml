@@ -156,12 +156,12 @@ services:
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
-  # Vulnerable SSH - Weak passwords for brute force practice
+  # Vulnerable SSH - Weak password for brute force practice
   # Use with Hydra or MSF auxiliary/scanner/ssh/ssh_login
-  # Creds: root/root, user/password
+  # Creds: root/password123
   # ---------------------------------------------------------------------------
   vulnssh:
-    image: rastasheep/ubuntu-sshd:18.04
+    build: ./targets/vulnssh
     container_name: vulnssh
     hostname: vulnssh
     networks:

