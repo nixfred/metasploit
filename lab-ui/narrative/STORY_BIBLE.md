@@ -169,6 +169,12 @@ Cliffhanger. What comes next. The walls closing in.
 **Story:** The final piece. A legitimate-looking e-commerce front that launders NIGHTFALL funding. This is how you trace the money back to its source.
 **Discovery:** The full picture. Everything you need to expose NIGHTFALL. But as you extract the final files, your connection drops. They've found you. Now it's a race.
 
+### Episode 9: "THE TRUTH"
+**Target:** N/A (Finale - story payoff only)
+**Story:** You've gathered all the evidence. Your handler sends final intel confirming PROMETHEUS's identity: Senator Marcus Webb. The same Webb whose name appeared in Episode 3 deployments and Episode 4 executive files. He wasn't just a Cerberus executive - he IS Cerberus. A sitting US Senator who secretly owns 40% of the company through shell corporations.
+**Discovery:** The full conspiracy exposed. FBI raids Cerberus. Senator Webb arrested. NIGHTFALL prevented. But you'll never know who your handler really was. Some secrets stay buried.
+**Resolution:** Comprehensive technical review of all 8 episodes. Skills learned. Techniques mastered. The story may be over, but your journey as a pentester is just beginning.
+
 ---
 
 ## TONE GUIDE
@@ -220,9 +226,10 @@ Cliffhanger. What comes next. The walls closing in.
 | NIGHTFALL | The operation. Infrastructure attack + false flag |
 | Cerberus Systems | The contractor. The enemy. |
 | SCADA-BRIDGE | The malware. Bridges IT and OT networks. |
-| The Handler | Anonymous contact. Unclear motives. |
-| David Chen | Missing sysadmin. Knew too much. |
-| Marcus Webb | Cerberus CEO. The man at the top. |
+| The Handler | Anonymous contact. Unclear motives. Never revealed. |
+| David Chen | Missing sysadmin whistleblower. Knew too much. |
+| Marcus Webb | US Senator and secret PROMETHEUS. Owns 40% of Cerberus. |
+| PROMETHEUS | Code name for mastermind. Revealed as Senator Marcus Webb in Episode 9. |
 
 ---
 

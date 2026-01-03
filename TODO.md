@@ -1,6 +1,26 @@
 # P3N73S7 L4B - TODO
 
-**v1.0.0 GOLD RELEASE - All lessons tested and working!**
+**v1.1.0 NIGHTFALL - Story-driven cyberthriller experience complete!**
+
+---
+
+## NIGHTFALL Status ✅
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Episode 1 (vsftpd) | ✅ | Discovery - NIGHTFALL reference found |
+| Episode 2 (SSH) | ✅ | Whistleblower - David Chen's evidence |
+| Episode 3 (Tomcat) | ✅ | Deployment - SCADA-BRIDGE confirmed |
+| Episode 4 (Samba) | ✅ | Authorization - Marcus Webb's files |
+| Episode 5 (DistCC) | ✅ | Build Farm - Weapon construction |
+| Episode 6 (DVWA cmd) | ✅ | Money Trail - PROMETHEUS mentioned |
+| Episode 7 (DVWA SQL) | ✅ | Target List - Attack schedule |
+| Episode 8 (Juice Shop) | ✅ | Final Piece - Senator revealed |
+| Episode 9 (Finale) | ✅ | The Truth - Story payoff, skills review |
+| Interstitial pages | ✅ | All 8 episodes have story delivery |
+| Landing page | ✅ | Rewritten to tease experience |
+| Story consistency | ✅ | Timeline, characters, IPs verified |
+| Episode transitions | ✅ | All outros → next episode smooth |
 
 ---
 
@@ -80,10 +100,12 @@ lab
 
 ---
 
-## v1.1.0 Roadmap
+## v1.2.0 Roadmap
 
 - [ ] Funnel toggle on website
 - [ ] Containerize Flask app with nginx
 - [ ] Document Ubuntu support
-- [ ] Add WebGoat lessons
-- [ ] Add bWAPP lessons
+- [ ] Add WebGoat lessons with NIGHTFALL integration
+- [ ] Add bWAPP lessons with NIGHTFALL integration
+- [ ] Persistent progress tracking (SQLite)
+- [ ] Multi-user support
