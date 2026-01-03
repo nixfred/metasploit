@@ -52,22 +52,38 @@
       "duration": "2-5 sec"
     },
     {
-      "title": "Verify root access",
+      "title": "Verify root access (no prompt - just type!)",
       "command": "whoami",
-      "explanation": "In your new shell, check who you are.",
+      "explanation": "IMPORTANT: There is NO prompt. The cursor is just blinking. Type 'whoami' and press Enter anyway - it works! Raw reverse shells don't show a prompt.",
       "expected": "root"
     },
     {
-      "title": "Explore the system",
+      "title": "Upgrade to a real prompt",
+      "command": "/bin/bash -i",
+      "explanation": "Raw reverse shells have no prompt. This spawns an interactive bash so you get a familiar root@container:/# prompt.",
+      "expected": "root@<container>:/# prompt appears"
+    },
+    {
+      "title": "Confirm full access",
       "command": "id && cat /etc/shadow | head -3",
-      "explanation": "Confirm you're root (uid=0) and can read sensitive files.",
+      "explanation": "Confirm you're root (uid=0) and can read sensitive files like /etc/shadow.",
       "expected": "uid=0(root) and shadow file contents"
+    },
+    {
+      "title": "Explore the network",
+      "command": "cat /etc/hosts",
+      "explanation": "Docker adds container hostnames here. These are potential pivot targets."
+    },
+    {
+      "title": "One-command pwn (after you learn it)",
+      "command": "pwn vsftpd",
+      "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs it automatically."
     }
   ],
-  "success_criteria": "You have a command shell session and 'whoami' returns 'root'. You now have complete control of the target system.",
+  "success_criteria": "You have a root shell with a proper prompt (root@...:#) and can explore the compromised system.",
   "next_steps": [
-    "Try 'sessions -l' to list active sessions",
-    "Use 'sessions -u 1' to upgrade to Meterpreter",
-    "Explore post-exploitation modules with 'search post/linux'"
+    "Run 'env' to find secrets in environment variables",
+    "Check for SSH keys: ls -la /root/.ssh/",
+    "Try pivoting: ping 172.20.0.10 (DVWA)"
   ]
 }
