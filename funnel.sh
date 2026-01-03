@@ -14,10 +14,21 @@
 
 set -e
 
+# Auto-set Tailscale operator if not already set (allows funnel without sudo)
+ensure_operator() {
+    if ! tailscale serve status >/dev/null 2>&1; then
+        echo "Setting Tailscale operator (requires sudo once)..."
+        sudo tailscale set --operator="$USER"
+    fi
+}
+
 case "$1" in
     start)
         echo "Starting Tailscale Funnel for P3N73S7 L4B..."
         echo ""
+
+        # Ensure we have operator permissions
+        ensure_operator
 
         # Reset any existing config
         echo "[1/3] Resetting existing Funnel config..."
