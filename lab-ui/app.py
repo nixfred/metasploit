@@ -170,17 +170,60 @@ def stop_all_targets():
             pass  # Container might not exist or already stopped
     return jsonify({"success": True, "stopped": stopped})
 
-# Funnel API endpoints
-def run_funnel(action):
-    """Run funnel.sh with given action"""
-    project_dir = os.path.dirname(os.path.dirname(__file__))
-    funnel_script = os.path.join(project_dir, 'funnel.sh')
+# Funnel API endpoints - call tailscale directly (avoid sudo in funnel.sh)
+def start_funnel():
+    """Start Tailscale Funnel by calling tailscale commands directly"""
     try:
-        result = subprocess.run(
-            [funnel_script, action],
+        output = []
+
+        # Reset existing config
+        subprocess.run(['tailscale', 'serve', 'reset'],
+                      capture_output=True, text=True, timeout=10)
+
+        # Funnel Lab UI (5050 → 443)
+        result1 = subprocess.run(
+            ['tailscale', 'funnel', '--bg', '--https=443', 'http://localhost:5050'],
             capture_output=True, text=True, timeout=30
         )
-        return {"success": result.returncode == 0, "output": result.stdout + result.stderr}
+        output.append(result1.stdout + result1.stderr)
+
+        # Funnel Kali terminal (7681 → 8443)
+        result2 = subprocess.run(
+            ['tailscale', 'funnel', '--bg', '--https=8443', 'http://localhost:7681'],
+            capture_output=True, text=True, timeout=30
+        )
+        output.append(result2.stdout + result2.stderr)
+
+        # Check if operator permission is needed
+        combined = '\n'.join(output)
+        if 'Access denied' in combined or 'permission denied' in combined.lower():
+            return {
+                "success": False,
+                "output": "Tailscale operator not set. Run this once from terminal:\n  sudo tailscale set --operator=$USER\nThen retry."
+            }
+
+        return {"success": result2.returncode == 0, "output": combined}
+    except Exception as e:
+        return {"success": False, "output": str(e)}
+
+def stop_funnel():
+    """Stop Tailscale Funnel"""
+    try:
+        output = []
+
+        result1 = subprocess.run(
+            ['tailscale', 'funnel', '--https=443', 'off'],
+            capture_output=True, text=True, timeout=10
+        )
+        output.append(result1.stdout + result1.stderr)
+
+        result2 = subprocess.run(
+            ['tailscale', 'funnel', '--https=8443', 'off'],
+            capture_output=True, text=True, timeout=10
+        )
+        output.append(result2.stdout + result2.stderr)
+
+        return {"success": True, "output": '\n'.join(output)}
     except Exception as e:
         return {"success": False, "output": str(e)}
 
@@ -225,13 +268,13 @@ def funnel_status():
 @app.route('/api/funnel/start', methods=['POST'])
 def funnel_start():
     """Start Tailscale Funnel"""
-    result = run_funnel('start')
+    result = start_funnel()
     return jsonify(result)
 
 @app.route('/api/funnel/stop', methods=['POST'])
 def funnel_stop():
     """Stop Tailscale Funnel"""
-    result = run_funnel('stop')
+    result = stop_funnel()
     return jsonify(result)
 
 if __name__ == '__main__':
