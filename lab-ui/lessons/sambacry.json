@@ -79,9 +79,9 @@
       "explanation": "Get a system shell from Meterpreter."
     },
     {
-      "title": "Explore the system",
+      "title": "Explore the system (no prompt - just type!)",
       "command": "cat /etc/shadow",
-      "explanation": "Read the shadow file - only root can do this.",
+      "explanation": "No prompt will appear - just type and press Enter! Read the shadow file - only root can do this.",
       "expected": "Password hashes for system users"
     }
   ],
