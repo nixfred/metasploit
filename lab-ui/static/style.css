@@ -95,8 +95,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 15px;
+    gap: 10px;
     flex-wrap: wrap;
+}
+
+/* Make all control bar buttons same height */
+.lessons-controls .filter-btn,
+.lessons-controls .btn {
+    padding: 8px 16px;
+    font-size: 13px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
 }
 
 .kali-link {
