@@ -1,11 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <defs>
-    <linearGradient id="termGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#00ff41;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#00cc33;stop-opacity:1" />
-    </linearGradient>
     <filter id="glow">
-      <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+      <feGaussianBlur stdDeviation="0.8" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -14,28 +10,38 @@
   </defs>
 
   <!-- Background -->
-  <rect width="32" height="32" rx="4" fill="#0a0a0f"/>
+  <rect width="32" height="32" rx="6" fill="#0a0a0f"/>
 
   <!-- Terminal window frame -->
-  <rect x="2" y="2" width="28" height="28" rx="3" fill="none" stroke="#2a2a3e" stroke-width="1"/>
+  <rect x="2" y="2" width="28" height="28" rx="4" fill="none" stroke="#2a2a3e" stroke-width="1.5"/>
 
   <!-- Title bar -->
-  <rect x="2" y="2" width="28" height="6" rx="3" fill="#1a1a2e"/>
-  <circle cx="6" cy="5" r="1.2" fill="#ff3366"/>
-  <circle cx="10" cy="5" r="1.2" fill="#ffcc00"/>
-  <circle cx="14" cy="5" r="1.2" fill="#00ff41"/>
+  <rect x="2" y="2" width="28" height="6" rx="4" fill="#1a1a2e"/>
+  <circle cx="6" cy="5" r="1" fill="#ff3366"/>
+  <circle cx="10" cy="5" r="1" fill="#ffcc00"/>
+  <circle cx="14" cy="5" r="1" fill="#00ff41"/>
 
-  <!-- Terminal prompt -->
-  <g filter="url(#glow)">
-    <!-- $ prompt -->
-    <text x="5" y="17" font-family="monospace" font-size="8" font-weight="bold" fill="url(#termGrad)">$_</text>
+  <!-- Skull (cyber theme) -->
+  <g filter="url(#glow)" transform="translate(16, 16)">
+    <!-- Skull outline -->
+    <ellipse cx="0" cy="-2" rx="7" ry="8" fill="none" stroke="#00ff41" stroke-width="1.5"/>
 
-    <!-- Skull made of characters -->
-    <text x="6" y="26" font-family="monospace" font-size="6" fill="url(#termGrad)">(^_^)</text>
+    <!-- Eyes -->
+    <circle cx="-3" cy="-3" r="2" fill="#00ff41"/>
+    <circle cx="3" cy="-3" r="2" fill="#00ff41"/>
+    <circle cx="-3" cy="-3" r="0.8" fill="#0a0a0f"/>
+    <circle cx="3" cy="-3" r="0.8" fill="#0a0a0f"/>
+
+    <!-- Nose -->
+    <polygon points="0,0 -1.5,2 1.5,2" fill="none" stroke="#00ff41" stroke-width="1"/>
+
+    <!-- Jaw/teeth -->
+    <line x1="-4" y1="4" x2="4" y2="4" stroke="#00ff41" stroke-width="1.5"/>
+    <line x1="-3" y1="4" x2="-3" y2="6" stroke="#00ff41" stroke-width="1"/>
+    <line x1="0" y1="4" x2="0" y2="6" stroke="#00ff41" stroke-width="1"/>
+    <line x1="3" y1="4" x2="3" y2="6" stroke="#00ff41" stroke-width="1"/>
   </g>
 
-  <!-- Blinking cursor -->
-  <rect x="16" y="11" width="4" height="7" fill="#00ff41" opacity="0.8">
-    <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1s" repeatCount="indefinite"/>
-  </rect>
+  <!-- Prompt at bottom -->
+  <text x="4" y="28" font-family="monospace" font-size="4" fill="#00ff41" opacity="0.7">root@pwn</text>
 </svg>
