@@ -138,6 +138,12 @@ body {
     margin-top: auto;
 }
 
+.lesson-card .card-actions .btn {
+    padding: 8px 12px;
+    font-size: 12px;
+    margin: 0;
+}
+
 .lesson-card .btn-start {
     flex: 1;
 }
@@ -145,7 +151,7 @@ body {
 .lesson-card .btn-stop {
     background: var(--accent-red);
     color: white;
-    padding: 6px 10px;
+    border-color: var(--accent-red);
 }
 
 .container-tag {
