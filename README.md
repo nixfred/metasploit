@@ -45,22 +45,22 @@ The narrative doesn't get in the way of the learning—it amplifies it. Every ex
 
 ## 0x01 // QUICK START
 
-### On Your Mac (Local Development)
+### On Your Host Machine (Local Development)
 ```bash
 cd ~/Projects/metasploit
 ./lab.sh                # Starts Lab UI at http://localhost:5050
 ```
 
 ### On Production (Box - Already Running)
-Just browse to: **http://10.0.0.125:5050**
+Just browse to: **http://<host-ip>:5050**
 
 The Lab UI and Kali attack box are already running persistently.
 
 ### Three URLs to Remember
 | URL | What |
 |-----|------|
-| http://localhost:5050 (or 10.0.0.125:5050) | Lab UI - Story-driven lessons |
-| http://localhost:7681 (or 10.0.0.125:7681) | Kali Terminal - Full Kali in browser |
+| http://localhost:5050 (or <host-ip>:5050) | Lab UI - Story-driven lessons |
+| http://localhost:7681 (or <host-ip>:7681) | Kali Terminal - Full Kali in browser |
 | http://localhost:9999 | Dozzle - Docker log viewer |
 
 ### Remote Access via Tailscale
@@ -133,7 +133,7 @@ David Chen died trying to expose this. You finished what he started.
 
 ### The Lab Environment
 
-**Host Machine:** Mac (shaggy)
+**Host Machine:** Linux or macOS
 - Metasploit Framework (`/opt/metasploit-framework/`)
 - SET (Social Engineering Toolkit) at `~/set/`
 - Hydra, John, SQLMap, Nmap, Nikto, Gobuster via Homebrew
@@ -147,7 +147,7 @@ David Chen died trying to expose this. You finished what he started.
 
 **Docker Network:** `172.20.0.0/24 (lab)`
 ```
-172.20.0.1   - Host (attacker - your Mac/box)
+172.20.0.1   - Host (attacker - your machine)
 172.20.0.5   - Kali attack box (web terminal at :7681)
 172.20.0.10  - DVWA (Episodes 6 & 7)
 172.20.0.15  - vsftpd (Episode 1)
@@ -343,7 +343,7 @@ Each lesson is a JSON file in `lab-ui/lessons/` with:
 - **Docker Desktop** installed and running
 - **Git** installed
 
-### Fresh Install on New Mac
+### Fresh Install on New Machine
 
 ```bash
 # 1. Clone the repository
@@ -390,7 +390,7 @@ brew install hydra john-jumbo sqlmap nmap nikto gobuster
 
 ### Starting the Lab
 
-#### On Mac (Local Development)
+#### On Host Machine (Local Development)
 ```bash
 cd ~/Projects/metasploit
 ./lab.sh                # Checks Kali, starts Flask on :5050
@@ -398,7 +398,7 @@ cd ~/Projects/metasploit
 
 #### On Box (Production)
 Lab UI and Kali are already running persistently. Just browse to:
-- http://10.0.0.125:5050
+- http://<host-ip>:5050
 
 ### Accessing Kali
 
@@ -415,12 +415,12 @@ settool                 # Launches SET
 
 #### Via Web Browser
 - http://localhost:7681 (local)
-- http://10.0.0.125:7681 (from LAN)
+- http://<host-ip>:7681 (from LAN)
 - https://shaggy.<tailnet>.ts.net:8443 (via Funnel)
 
 ### Playing Through NIGHTFALL
 
-1. **Browse to Lab UI:** http://localhost:5050 (or 10.0.0.125:5050)
+1. **Browse to Lab UI:** http://localhost:5050 (or <host-ip>:5050)
 2. **Story Mode is default:** Landing page introduces the experience
 3. **Click "Start Your Journey Here"** → Episode 1 interstitial
 4. **Read the briefing** → Launch Episode 1
@@ -575,11 +575,11 @@ The entire `/root` is a Docker volume. This means:
 
 ### Why `restart: always` on Kali?
 
-With Docker Desktop auto-starting on login, Kali becomes a permanent member of your Mac. Open `http://localhost:7681` anytime and it's there.
+With Docker Desktop auto-starting on login, Kali becomes a permanent member of your system. Open `http://localhost:7681` anytime and it's there.
 
 ### Why Bind Mounts for msf-dotfiles and wordlists?
 
-Git becomes the single source of truth. Edit configs on Mac or in Kali, changes go to the repo, git tracks everything.
+Git becomes the single source of truth. Edit configs on the host or in Kali, changes go to the repo, git tracks everything.
 
 ### Why Custom vsftpd Dockerfile?
 

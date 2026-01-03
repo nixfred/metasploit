@@ -8,10 +8,10 @@
 
 **This is NOT an application. This is an ENVIRONMENT.**
 
-The fundamental realization: pentesting setups are personal, evolving, and deeply customized over time. You don't want to rebuild from scratch every time you get a new Mac or need to sync between machines.
+The fundamental realization: pentesting setups are personal, evolving, and deeply customized over time. You don't want to rebuild from scratch every time you get a new machine or need to sync between machines.
 
 This repo is a **portable pentesting environment** that:
-- Clones to any Mac
+- Clones to any Linux or macOS machine
 - Syncs CONFIGURATIONS (not tools)
 - Restores your entire setup in one command
 
@@ -49,7 +49,7 @@ This repo is a **portable pentesting environment** that:
 
 ### 1. Tools Stay on Host, Configs Live in Git
 
-Tools are installed manually on each Mac (via Homebrew):
+Tools are installed manually on each machine (via Homebrew):
 ```bash
 brew install metasploit nmap hydra john-jumbo sqlmap
 ```
@@ -92,7 +92,7 @@ The Kali container (`restart: always`) starts automatically with Docker Desktop:
 - Web terminal at http://localhost:7681
 - Survives reboots, always ready
 - `/root` persisted via Docker volume
-- Shares configs with host Mac via volume mounts
+- Shares configs with host via volume mounts
 
 ### 5. JSON Lessons, No Database
 
@@ -127,7 +127,7 @@ This ensures the lab keeps working even when upstream images vanish.
 
 ## The Clone Experience
 
-What happens when you clone to a new Mac:
+What happens when you clone to a new machine:
 
 ```bash
 # 1. Clone with submodules
