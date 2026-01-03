@@ -1,6 +1,7 @@
 # Machine-specific Metasploit files (never sync)
 database.yml
 *.bak
+msf-dotfiles/history
 
 # Loot and sensitive data
 loot/
@@ -20,6 +21,9 @@ bootsnap_cache/
 
 # macOS
 .DS_Store
+
+# Docker build cache
+.docker/
 
 # Docker volumes (generated data)
 targets/honeypot/cowrie-logs/
