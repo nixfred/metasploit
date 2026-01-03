@@ -1564,3 +1564,352 @@ footer .accent {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
 }
+
+/* ================================
+   NIGHTFALL NARRATIVE SYSTEM
+   ================================ */
+
+/* Mode Toggle */
+.mode-toggle {
+    display: inline-flex;
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    padding: 3px;
+    border: 1px solid var(--border-color);
+}
+
+.mode-btn {
+    padding: 6px 16px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 18px;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.mode-btn:hover {
+    color: var(--text-primary);
+}
+
+.mode-btn.active {
+    background: var(--accent-green);
+    color: var(--bg-primary);
+    font-weight: bold;
+}
+
+/* Episode Badge on Cards */
+.episode-badge {
+    background: var(--accent-purple);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+}
+
+.episode-title-small {
+    font-size: 11px;
+    color: var(--accent-purple);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+/* Episode Card Styling */
+.episode-card {
+    border-left: 3px solid var(--accent-purple);
+}
+
+.episode-card:hover {
+    border-left-color: var(--accent-green);
+}
+
+/* Handler Message Block */
+.handler-message {
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid var(--accent-green);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    position: relative;
+    overflow: hidden;
+}
+
+.handler-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
+    animation: scanline 2s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.handler-header {
+    color: var(--accent-green);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.handler-content {
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.8;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    border-left: 2px solid var(--accent-green);
+}
+
+.handler-footer {
+    color: var(--accent-green);
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-top: 12px;
+    text-align: right;
+    opacity: 0.7;
+}
+
+/* Episode Intro Block */
+.episode-intro {
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.1) 0%, rgba(0, 212, 255, 0.05) 100%);
+    border: 1px solid var(--accent-purple);
+    border-radius: 8px;
+    padding: 20px 25px;
+    margin-bottom: 25px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    font-style: italic;
+    position: relative;
+}
+
+.episode-intro::before {
+    content: '"';
+    position: absolute;
+    top: 5px;
+    left: 15px;
+    font-size: 40px;
+    color: var(--accent-purple);
+    opacity: 0.3;
+    font-family: serif;
+}
+
+/* Episode Outro Block */
+.episode-outro {
+    background: linear-gradient(135deg, rgba(255, 51, 102, 0.1) 0%, rgba(157, 78, 221, 0.05) 100%);
+    border: 1px solid var(--accent-red);
+    border-radius: 8px;
+    padding: 25px;
+    margin: 30px 0;
+    position: relative;
+}
+
+.episode-outro::before {
+    content: 'TO BE CONTINUED...';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--accent-red);
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 3px 12px;
+    border-radius: 4px;
+    letter-spacing: 2px;
+}
+
+.outro-content {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-primary);
+    font-style: italic;
+}
+
+/* Step Narrative (integrated story + teaching) */
+.step-narrative {
+    color: var(--text-secondary);
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+    padding: 12px 15px;
+    background: rgba(0, 212, 255, 0.05);
+    border-left: 2px solid var(--accent-blue);
+    border-radius: 0 6px 6px 0;
+}
+
+/* Next Episode Navigation */
+.next-episode-btn {
+    background: linear-gradient(135deg, var(--accent-purple), #7b2cbf);
+    color: white;
+    border: none;
+    margin-left: 10px;
+}
+
+.next-episode-btn:hover {
+    background: linear-gradient(135deg, #9d4edd, #8b3dc7);
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+}
+
+/* ================================
+   INTERSTITIAL PAGE STYLES
+   ================================ */
+
+.interstitial-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+        radial-gradient(ellipse at center, rgba(157, 78, 221, 0.15) 0%, transparent 70%),
+        linear-gradient(180deg, var(--bg-primary) 0%, #0d0d15 100%);
+    padding: 40px 20px;
+}
+
+.interstitial-content {
+    max-width: 700px;
+    text-align: center;
+}
+
+.interstitial-header {
+    margin-bottom: 40px;
+}
+
+.episode-label {
+    display: inline-block;
+    background: var(--accent-purple);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 16px;
+    border-radius: 4px;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+}
+
+.episode-title {
+    font-size: 36px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 30px rgba(157, 78, 221, 0.5);
+    margin: 0;
+}
+
+.interstitial-narrative {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px 35px;
+    margin-bottom: 40px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text-primary);
+}
+
+.interstitial-target {
+    background: var(--bg-card);
+    border: 1px solid var(--accent-green);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+}
+
+.target-label {
+    font-size: 11px;
+    color: var(--accent-green);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+}
+
+.target-ip {
+    font-size: 24px;
+    color: var(--accent-green);
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    margin-bottom: 5px;
+}
+
+.target-name {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.interstitial-action {
+    margin-bottom: 30px;
+}
+
+.begin-episode {
+    background: linear-gradient(135deg, var(--accent-green), #00cc33);
+    color: var(--bg-primary);
+    font-size: 18px;
+    padding: 18px 50px;
+    border: none;
+    letter-spacing: 2px;
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+    animation: beginPulse 2s infinite;
+}
+
+.begin-episode:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 40px rgba(0, 255, 65, 0.5);
+}
+
+@keyframes beginPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(0, 255, 65, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(0, 255, 65, 0.5); }
+}
+
+.interstitial-nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--accent-blue);
+}
+
+/* Completed Episode Card */
+.completed-episode {
+    opacity: 0.7;
+    border-color: var(--accent-green) !important;
+    background: rgba(0, 255, 65, 0.05);
+}
+
+.completed-episode:hover {
+    opacity: 0.9;
+}
+
+.completion-badge {
+    background: var(--accent-green);
+    color: var(--bg-primary);
+    font-size: 9px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    margin-left: auto;
+}

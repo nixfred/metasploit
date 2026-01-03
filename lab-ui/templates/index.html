@@ -26,6 +26,11 @@
             <div class="lessons-section">
                 <div class="lessons-header">
                     <div class="lessons-controls">
+                        <!-- Mode Toggle -->
+                        <div class="mode-toggle">
+                            <a href="?mode=story" class="mode-btn {% if mode == 'story' %}active{% endif %}">Story</a>
+                            <a href="?mode=training" class="mode-btn {% if mode == 'training' %}active{% endif %}">Training</a>
+                        </div>
                         <div class="difficulty-filter">
                             <button class="filter-btn active" onclick="filterLessons('all')">All</button>
                             <button class="filter-btn" onclick="filterLessons('easy')">Easy</button>
@@ -38,17 +43,29 @@
 
                 <div class="lesson-grid" id="lesson-grid">
                     {% for lesson in lessons %}
-                    <div class="lesson-card" data-difficulty="{{ lesson.difficulty }}" data-container="{{ lesson.container }}">
+                    <div class="lesson-card {% if lesson.episode_number %}episode-card{% endif %}" data-difficulty="{{ lesson.difficulty }}" data-container="{{ lesson.container }}">
                         <div class="card-header">
+                            {% if lesson.episode_number %}
+                            <span class="episode-badge">EP {{ lesson.episode_number }}</span>
+                            {% endif %}
                             <span class="difficulty {{ lesson.difficulty }}">{{ lesson.difficulty | upper }}</span>
                             <span class="container-tag" data-container="{{ lesson.container }}">{{ lesson.container }} ⚫</span>
                         </div>
+                        {% if lesson.episode_title %}
+                        <div class="episode-title-small">{{ lesson.episode_title }}</div>
+                        {% endif %}
                         <h3>{{ lesson.name }}</h3>
                         <p class="card-description">{{ lesson.description }}</p>
                         <div class="card-actions">
+                            {% if lesson.episode_number %}
+                            <button class="btn btn-start" onclick="launchEpisode({{ lesson.episode_number }}, '{{ lesson.container }}')">
+                                Begin Episode →
+                            </button>
+                            {% else %}
                             <button class="btn btn-start" onclick="launchLesson('{{ lesson.id }}', '{{ lesson.container }}')">
                                 Start →
                             </button>
+                            {% endif %}
                             <button class="btn btn-stop btn-small" data-container="{{ lesson.container }}" onclick="stopContainer('{{ lesson.container }}'); event.stopPropagation();" style="display:none;">
                                 ⬛ Stop
                             </button>
@@ -170,6 +187,50 @@
                     card.style.display = 'none';
                 }
             });
+        }
+
+        // Launch episode (story mode) - start container, go to interstitial
+        async function launchEpisode(episodeNumber, container) {
+            showModal('INITIATING NIGHTFALL', 'Preparing mission environment...');
+
+            // Check if Kali is already running
+            let kaliRunning = false;
+            try {
+                const statusRes = await fetch('/api/container/kali/status');
+                const statusData = await statusRes.json();
+                kaliRunning = statusData.running;
+            } catch (e) {}
+
+            if (!kaliRunning) {
+                addLog('kali', 'pending', 'Attack Terminal');
+                updateSubtitle('Establishing secure connection...');
+                updateLog('kali', 'loading');
+                try {
+                    await fetch('/api/kali/start', { method: 'POST' });
+                    updateLog('kali', 'success');
+                } catch (e) {
+                    updateLog('kali', 'error');
+                }
+            }
+            updateProgress(50);
+
+            // Start the target container
+            addLog(container, 'pending', `Target: ${container}`);
+            updateSubtitle(`Locating target system...`);
+            updateLog(container, 'loading');
+            try {
+                await fetch(`/api/container/${container}/start`, { method: 'POST' });
+                updateLog(container, 'success');
+            } catch (e) {
+                updateLog(container, 'error');
+            }
+            updateProgress(100);
+
+            // Go to interstitial (story page) before episode
+            updateSubtitle('Mission briefing incoming...');
+            setTimeout(() => {
+                window.location.href = `/interstitial/${episodeNumber}`;
+            }, 800);
         }
 
         // Launch lesson - start container if needed, then go to lesson
@@ -421,9 +482,56 @@
             btn.textContent = originalText;
         }
 
+        // ================================
+        // PROGRESS MANAGER (shared with lesson.html)
+        // ================================
+        const progressManager = {
+            STORAGE_KEY: 'nightfall_progress',
+
+            getProgress() {
+                try {
+                    const data = localStorage.getItem(this.STORAGE_KEY);
+                    return data ? JSON.parse(data) : { episodes: {}, lessons: {} };
+                } catch (e) {
+                    return { episodes: {}, lessons: {} };
+                }
+            },
+
+            isEpisodeComplete(epNum) {
+                const progress = this.getProgress();
+                return progress.episodes[epNum]?.complete === true;
+            }
+        };
+
+        // Show completion status on episode cards
+        function updateProgressIndicators() {
+            document.querySelectorAll('.episode-card').forEach(card => {
+                const btn = card.querySelector('.btn-start');
+                if (!btn) return;
+
+                // Extract episode number from onclick
+                const onclickAttr = btn.getAttribute('onclick');
+                const match = onclickAttr?.match(/launchEpisode\((\d+)/);
+                if (match) {
+                    const epNum = parseInt(match[1]);
+                    if (progressManager.isEpisodeComplete(epNum)) {
+                        card.classList.add('completed-episode');
+                        // Add completion badge
+                        if (!card.querySelector('.completion-badge')) {
+                            const badge = document.createElement('span');
+                            badge.className = 'completion-badge';
+                            badge.textContent = '✓ COMPLETE';
+                            card.querySelector('.card-header').appendChild(badge);
+                        }
+                    }
+                }
+            });
+        }
+
         // Initial check
         checkStatus();
         checkFunnelStatus();
+        updateProgressIndicators();
         setInterval(checkStatus, 10000);
         setInterval(checkFunnelStatus, 30000);
     </script>

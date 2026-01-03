@@ -20,6 +20,22 @@
                 </div>
             </header>
 
+            <!-- Handler Message (Story Mode) -->
+            {% if lesson.handler_message %}
+            <div class="handler-message">
+                <div class="handler-header">> INCOMING [ENCRYPTED]</div>
+                <div class="handler-content">{{ lesson.handler_message | replace('\n', '<br>') | safe }}</div>
+                <div class="handler-footer">[END TRANSMISSION]</div>
+            </div>
+            {% endif %}
+
+            <!-- Episode Intro (Story Mode) -->
+            {% if lesson.episode_intro %}
+            <div class="episode-intro">
+                {{ lesson.episode_intro | replace('\n', '<br>') | safe }}
+            </div>
+            {% endif %}
+
             <!-- Progress Bar -->
             <div class="progress-tracker">
                 <div class="progress-bar">
@@ -48,7 +64,9 @@
                         {% endif %}
                         <button class="step-done-btn" onclick="markStepDone({{ loop.index }})" title="Mark as done">✓</button>
                     </div>
-                    {% if step.explanation %}
+                    {% if step.narrative %}
+                    <div class="step-narrative">{{ step.narrative | replace('\n', '<br>') | safe }}</div>
+                    {% elif step.explanation %}
                     <p class="step-explanation">{{ step.explanation }}</p>
                     {% endif %}
                     {% if step.command %}
@@ -85,10 +103,20 @@
             </section>
             {% endif %}
 
+            <!-- Episode Outro (Story Mode) -->
+            {% if lesson.episode_outro %}
+            <section class="episode-outro">
+                <div class="outro-content">{{ lesson.episode_outro | replace('\n', '<br>') | safe }}</div>
+            </section>
+            {% endif %}
+
             <section class="lesson-cleanup">
                 <h2>// CLEANUP //</h2>
                 <button class="btn btn-danger" onclick="stopTarget()">Stop Target Container</button>
-                <a href="/" class="btn">← More Hacks</a>
+                {% if lesson.next_episode_id %}
+                <a href="/lesson/{{ lesson.next_episode_id }}" class="btn btn-primary next-episode-btn">Next Episode →</a>
+                {% endif %}
+                <a href="/" class="btn">← All Episodes</a>
             </section>
         </div>
 
@@ -115,8 +143,115 @@
     <script>
         const targetContainer = '{{ lesson.container }}';
         const totalSteps = {{ lesson.steps | length }};
+        const lessonId = '{{ lesson.id }}';
+        const episodeNumber = {{ lesson.episode_number or 'null' }};
         let currentStep = 0;
         let completedSteps = new Set();
+
+        // ================================
+        // PROGRESS MANAGER (localStorage)
+        // ================================
+        const progressManager = {
+            STORAGE_KEY: 'nightfall_progress',
+
+            getProgress() {
+                try {
+                    const data = localStorage.getItem(this.STORAGE_KEY);
+                    return data ? JSON.parse(data) : { episodes: {}, lessons: {} };
+                } catch (e) {
+                    return { episodes: {}, lessons: {} };
+                }
+            },
+
+            saveProgress(progress) {
+                try {
+                    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(progress));
+                } catch (e) {
+                    console.error('Failed to save progress:', e);
+                }
+            },
+
+            // Episode-based tracking (story mode)
+            isEpisodeComplete(epNum) {
+                const progress = this.getProgress();
+                return progress.episodes[epNum]?.complete === true;
+            },
+
+            markEpisodeComplete(epNum) {
+                const progress = this.getProgress();
+                if (!progress.episodes[epNum]) progress.episodes[epNum] = {};
+                progress.episodes[epNum].complete = true;
+                progress.episodes[epNum].completedAt = new Date().toISOString();
+                this.saveProgress(progress);
+            },
+
+            getEpisodeSteps(epNum) {
+                const progress = this.getProgress();
+                return progress.episodes[epNum]?.steps || [];
+            },
+
+            saveEpisodeSteps(epNum, stepsArray) {
+                const progress = this.getProgress();
+                if (!progress.episodes[epNum]) progress.episodes[epNum] = {};
+                progress.episodes[epNum].steps = stepsArray;
+                this.saveProgress(progress);
+            },
+
+            // Lesson-based tracking (training mode)
+            getLessonSteps(lessonId) {
+                const progress = this.getProgress();
+                return progress.lessons[lessonId]?.steps || [];
+            },
+
+            saveLessonSteps(lessonId, stepsArray) {
+                const progress = this.getProgress();
+                if (!progress.lessons[lessonId]) progress.lessons[lessonId] = {};
+                progress.lessons[lessonId].steps = stepsArray;
+                this.saveProgress(progress);
+            },
+
+            // Clear all progress
+            reset() {
+                localStorage.removeItem(this.STORAGE_KEY);
+            }
+        };
+
+        // Load saved progress on page load
+        function loadSavedProgress() {
+            let savedSteps = [];
+            if (episodeNumber) {
+                savedSteps = progressManager.getEpisodeSteps(episodeNumber);
+            } else {
+                savedSteps = progressManager.getLessonSteps(lessonId);
+            }
+
+            savedSteps.forEach(stepNum => {
+                completedSteps.add(stepNum);
+            });
+
+            // Set current step to first incomplete
+            for (let i = 1; i <= totalSteps; i++) {
+                if (!completedSteps.has(i)) {
+                    currentStep = i;
+                    break;
+                }
+            }
+            if (completedSteps.size === totalSteps) {
+                currentStep = totalSteps;
+            }
+
+            updateUI();
+        }
+
+        // Save progress when steps change
+        function saveCurrentProgress() {
+            const stepsArray = Array.from(completedSteps);
+            if (episodeNumber) {
+                progressManager.saveEpisodeSteps(episodeNumber, stepsArray);
+            } else {
+                progressManager.saveLessonSteps(lessonId, stepsArray);
+            }
+        }
 
         // Dynamic terminal URL (works from any host)
         // Detect Tailscale Funnel (.ts.net) and use appropriate port
@@ -181,6 +316,7 @@
             if (stepNum === currentStep && stepNum < totalSteps) {
                 currentStep = stepNum + 1;
             }
+            saveCurrentProgress();
             updateUI();
         }
 
@@ -190,6 +326,13 @@
                 completedSteps.add(i);
             }
             currentStep = totalSteps;
+            saveCurrentProgress();
+
+            // Mark episode complete if in story mode
+            if (episodeNumber) {
+                progressManager.markEpisodeComplete(episodeNumber);
+            }
+
             updateUI();
 
             // Celebration
@@ -344,6 +487,7 @@
         }
 
         // Initialize
+        loadSavedProgress();  // Restore progress from localStorage
         checkStatus();
         setInterval(checkStatus, 10000);
         linkifyUrls();
