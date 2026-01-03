@@ -12,7 +12,7 @@
   "episode_title": "WEAK LINKS",
   "next_episode_id": "tomcat-upload",
 
-  "handler_message": "David Chen. Senior Systems Administrator. TS/SCI clearance. Twenty years at Cerberus.\n\nHe started asking questions about NIGHTFALL three weeks ago. Then he disappeared. Police say he left voluntarily. His family filed a missing persons report.\n\nWe traced his home IP. His personal workstation is still online at 172.20.0.17. SSH is exposed - unusual for someone with his security background. Unless he wanted someone to find it.\n\nHis password habits were... human. Try the obvious first.\n\nWhatever he was gathering, it might still be there.",
+  "handler_message": "David Chen. Senior Systems Administrator. TS/SCI clearance. Twenty years at Cerberus.\n\nHe started asking questions about NIGHTFALL three weeks ago. Then he disappeared. Police say he left voluntarily. His family filed a missing persons report.\n\nHis office workstation is still online at 172.20.0.17. SSH is exposed - unusual for someone with his security background. Unless he wanted someone to find it.\n\nHe knew someone might come looking. The password is deliberately weak. He left breadcrumbs.\n\nWhatever he was gathering, it might still be there.",
 
   "episode_intro": "David Chen was careful. Twenty years in cybersecurity teaches you paranoia.\n\nBut scared people make mistakes. And in his final days at Cerberus, David Chen was very, very scared.\n\nHis browser history would tell the story - three weeks of searches for 'NIGHTFALL cerberus,' 'infrastructure attack false flag,' 'whistleblower protection laws.'\n\nHe was building a case. Gathering evidence. Trying to figure out who to trust.\n\nThen he vanished.\n\nYou're about to walk through his digital footprints. And somewhere, someone is walking through yours.",
 
@@ -20,7 +20,7 @@
 
   "interstitial": {
     "title": "Episode 2: WEAK LINKS",
-    "content": "PREVIOUSLY: You breached Cerberus's forgotten FTP archive. Among the legacy files, one name appeared repeatedly: David Chen.\n\nDavid was a senior systems administrator with two decades of experience. He had access to everything. And three weeks ago, he started downloading files at an unusual rate.\n\nThen he disappeared.\n\nPolice ruled it voluntary departure. His family disagrees. And his home workstation is still online - SSH exposed to the internet.\n\nThat's not careless. That's deliberate.\n\nHe left a door open. Maybe he wanted someone to find what he found."
+    "content": "PREVIOUSLY: You breached Cerberus's forgotten FTP archive. Among the legacy files, one name appeared repeatedly: David Chen.\n\nDavid was a senior systems administrator with two decades of experience. He had access to everything. And three weeks ago, he started downloading files at an unusual rate.\n\nThen he disappeared.\n\nPolice ruled it voluntary departure. His family disagrees. And his office workstation is still online - SSH exposed to the internet.\n\nThat's not careless. That's deliberate.\n\nHe left a door open. Maybe he wanted someone to find what he found."
   },
 
   "steps": [
