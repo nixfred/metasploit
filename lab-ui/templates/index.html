@@ -73,8 +73,16 @@
                     ⚠️ <strong>WARNING:</strong> If you are connected remotely via Funnel, toggling this OFF will kick you out immediately!
                 </div>
                 <div class="funnel-urls" id="funnel-urls" style="display:none;">
-                    <div class="funnel-url">Lab UI: <a id="funnel-lab-url" href="#" target="_blank"></a></div>
-                    <div class="funnel-url">Terminal: <a id="funnel-term-url" href="#" target="_blank"></a></div>
+                    <div class="funnel-url-row">
+                        <span class="funnel-label">Lab UI:</span>
+                        <code class="funnel-url-text" id="funnel-lab-url"></code>
+                        <button class="btn btn-copy" onclick="copyFunnelUrl('funnel-lab-url')">COPY</button>
+                    </div>
+                    <div class="funnel-url-row">
+                        <span class="funnel-label">Terminal:</span>
+                        <code class="funnel-url-text" id="funnel-term-url"></code>
+                        <button class="btn btn-copy" onclick="copyFunnelUrl('funnel-term-url')">COPY</button>
+                    </div>
                 </div>
                 <div class="funnel-controls">
                     <button class="btn btn-funnel-start" id="funnel-start-btn" onclick="toggleFunnel('start')">🌐 Enable Public Access</button>
@@ -296,6 +304,36 @@
             hideModal();
         });
 
+        // Copy funnel URL to clipboard
+        function copyFunnelUrl(elementId) {
+            const url = document.getElementById(elementId).textContent;
+            const btn = event.target;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => {
+                    btn.textContent = 'COPIED!';
+                    setTimeout(() => btn.textContent = 'COPY', 1500);
+                });
+            } else {
+                // Fallback for HTTP
+                const textarea = document.createElement('textarea');
+                textarea.value = url;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    btn.textContent = 'COPIED!';
+                    setTimeout(() => btn.textContent = 'COPY', 1500);
+                } catch (err) {
+                    btn.textContent = 'FAILED';
+                    setTimeout(() => btn.textContent = 'COPY', 1500);
+                }
+                document.body.removeChild(textarea);
+            }
+        }
+
         // Funnel toggle functions
         async function checkFunnelStatus() {
             try {
@@ -317,9 +355,7 @@
 
                     const labUrl = `https://${data.hostname}`;
                     const termUrl = `https://${data.hostname}:8443`;
-                    document.getElementById('funnel-lab-url').href = labUrl;
                     document.getElementById('funnel-lab-url').textContent = labUrl;
-                    document.getElementById('funnel-term-url').href = termUrl;
                     document.getElementById('funnel-term-url').textContent = termUrl;
 
                     // Always show warning when funnel is active
