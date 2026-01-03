@@ -68,15 +68,15 @@
       "duration": "2-5 sec"
     },
     {
-      "title": "Check your access",
+      "title": "Check your access (no prompt - just type!)",
       "command": "id",
-      "explanation": "See what user you're running as.",
+      "explanation": "No prompt will appear - just type and press Enter! See what user you're running as.",
       "expected": "uid=1(daemon)"
     },
     {
-      "title": "Escalate to root (optional)",
+      "title": "Upgrade shell (no prompt - just type!)",
       "command": "python -c 'import pty; pty.spawn(\"/bin/bash\")'",
-      "explanation": "Get a proper interactive shell. From here you can explore privilege escalation."
+      "explanation": "No prompt will appear - just type and press Enter! Get a proper interactive shell for privilege escalation."
     }
   ],
   "success_criteria": "You have a command shell on Metasploitable2. Run 'id' and 'hostname' to confirm you're on the target system.",

