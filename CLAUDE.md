@@ -202,18 +202,155 @@ lab-ui/
   "port": 21,
   "short_description": "One-liner shown in cards",
   "description": "Full description shown in lesson",
+  "handler_message": "Story context from anonymous handler",
+  "episode_intro": "Episode-specific story setup",
+  "episode_outro": "Episode conclusion, transitions to next",
   "steps": [
     {
       "title": "Step title",
       "command": "Command to copy",
       "explanation": "Why we're doing this",
-      "expected": "What you should see"
+      "expected": "What you should see",
+      "narrative": "Optional story context for this step"
     }
   ],
   "success_criteria": "How to know you succeeded",
   "next_steps": ["What to try next"]
 }
 ```
+
+---
+
+## NIGHTFALL Narrative System
+
+**This lab uses story-driven learning inspired by Mr. Robot.**
+
+### Overview
+
+NIGHTFALL is a serialized cyberthriller woven through 8 technical lessons. Students learn pentesting techniques while uncovering a conspiracy:
+
+- **NIGHTFALL**: A false-flag cyberattack on US critical infrastructure
+- **SCADA-BRIDGE**: The weaponized toolkit designed to trigger cascading failures
+- **PROMETHEUS**: A corrupt US Senator secretly orchestrating the attack
+- **Cerberus Systems**: Defense contractor building the weapon
+- **David Chen**: Whistleblower who disappeared with evidence
+
+### Episode Structure
+
+Each lesson is an "episode" with four narrative layers:
+
+1. **Handler Message** (`handler_message`)
+   - Anonymous contact providing intel
+   - Sets context for the episode
+   - Displayed at top of interstitial page
+
+2. **Episode Intro** (`episode_intro`)
+   - Story-specific setup for this target
+   - Why we're attacking this system
+   - What we're looking for
+   - Displayed on interstitial page before lesson starts
+
+3. **Episode Outro** (`episode_outro`)
+   - Reveals what was discovered
+   - Advances the NIGHTFALL plot
+   - Teases next episode
+   - Displayed on interstitial page after lesson completion
+
+4. **Step Narratives** (optional `narrative` in steps)
+   - Story context woven into technical commands
+   - Example: "David's last login was three weeks ago..."
+
+### Interstitial Pages
+
+Each episode has a dedicated interstitial page (`/interstitial/<episode_num>`) that serves as the story delivery mechanism:
+
+- Episode title and difficulty
+- Handler message (intel from anonymous contact)
+- Episode intro (mission briefing)
+- Episode outro (mission debriefing, revealed after lesson)
+- Navigation to the actual lesson
+
+### Story Arc (Episodes 1-9)
+
+| Episode | Target | Story Element | What You Learn |
+|---------|--------|---------------|----------------|
+| EP1 | vsftpd | Discovery - Find NIGHTFALL reference | Backdoor exploitation |
+| EP2 | SSH | Whistleblower - David Chen's evidence | Brute forcing, Hydra |
+| EP3 | Tomcat | Deployment - SCADA-BRIDGE confirmed | WAR file uploads |
+| EP4 | Samba | Authorization - Executive approvals | SambaCry CVE-2017-7494 |
+| EP5 | DistCC | Build Farm - Weapon construction | DistCC CVE-2004-2687 |
+| EP6 | DVWA | Money Trail - PROMETHEUS mentioned | Command injection |
+| EP7 | DVWA | Target List - Attack schedule | SQL injection |
+| EP8 | Juice Shop | Final Piece - Senator revealed | Advanced SQL injection |
+| EP9 | Finale | The Truth - Full reveal, arrest | Comprehensive review |
+
+### Key Story Elements
+
+**Characters:**
+- **David Chen**: Senior sysadmin at Cerberus, disappeared 3 weeks ago with evidence
+- **Marcus Webb**: Cerberus executive, secretly owns 40% through shell companies, revealed as Senator and PROMETHEUS
+- **Handler**: Anonymous contact providing intel throughout
+- **PROMETHEUS**: Code name for the mastermind (revealed as Senator Marcus Webb)
+
+**Timeline:**
+- "Three weeks ago" - established in EP1, maintained throughout
+- 72 hours - deployment countdown mentioned in later episodes
+- All references must stay consistent
+
+**Technical Elements:**
+- Cerberus Systems - defense contractor, target company
+- SCADA-BRIDGE - the attack toolkit
+- NIGHTFALL - the infrastructure attack operation
+- Chinese false flags - attribution markers to frame China
+- $4 billion - cybersecurity legislation contracts
+
+**IP Address Consistency:**
+- 172.20.0.15: vsftpd (EP1)
+- 172.20.0.17: SSH/David's workstation (EP2)
+- 172.20.0.19: Tomcat deployment (EP3)
+- 172.20.0.16: Samba executive shares (EP4)
+- 172.20.0.20: DistCC build farm (EP5)
+- 172.20.0.10: DVWA customer portal (EP6 & EP7)
+- 172.20.0.30: Juice Shop storefront (EP8)
+
+### Finale Page
+
+Episode 9 (`/finale`) is NOT a lesson but a comprehensive story payoff:
+
+- Complete story resolution (Senator Marcus Webb arrested)
+- Comprehensive skills review of all 8 episodes
+- Technical recap of what was learned
+- Thematic conclusion about truth and consequences
+
+### Maintaining Story Consistency
+
+When adding or modifying content:
+
+**DO:**
+- Keep timeline references to "three weeks ago"
+- Connect all targets to Cerberus Systems
+- Reference David Chen, Marcus Webb, Handler consistently
+- Maintain IP address mapping
+- Ensure episode outros transition smoothly to next episode
+- Keep NIGHTFALL → SCADA-BRIDGE → PROMETHEUS progression
+
+**DON'T:**
+- Introduce new timeframes or contradict "three weeks ago"
+- Add targets unrelated to Cerberus
+- Change character names or roles
+- Reveal PROMETHEUS identity before Episode 8
+- Break the episode transition flow
+
+### Testing Story Consistency
+
+Before making story changes:
+
+1. Read all episode intros/outros in sequence
+2. Verify character name consistency
+3. Check timeline references
+4. Confirm IP addresses match docker-compose.yml
+5. Test episode transitions (outro → next episode intro)
+6. Verify Cerberus connection for each target
 
 ---
 
@@ -285,8 +422,10 @@ kali() {
 | `lab-ui/app.py` | Flask backend for Lab UI (port 5050) |
 | `lab-ui/templates/index.html` | Wizard welcome page |
 | `lab-ui/templates/lesson.html` | Lesson page with step tracking |
+| `lab-ui/templates/interstitial.html` | Episode story delivery page |
+| `lab-ui/templates/finale.html` | Episode 9 - Story payoff and skills review |
 | `lab-ui/static/style.css` | Dark hacker theme |
-| `lab-ui/lessons/*.json` | 8 lesson definitions |
+| `lab-ui/lessons/*.json` | 8 lesson definitions with NIGHTFALL story |
 | `HISTORY.md` | Project evolution log |
 | `msf-dotfiles/msfconsole.rc` | Auto-run commands on MS startup |
 | `msf-dotfiles/modules/` | Custom exploit modules |
@@ -345,9 +484,12 @@ volumes:
 - Add custom modules to msf-dotfiles/modules/
 - Improve documentation
 - Help with Hydra/John commands
-- Add new lessons (JSON files)
+- Add new lessons (JSON files) with NIGHTFALL story integration
 - Fix bugs in the Flask app or frontend
 - Improve step tracking and UI/UX
+- Maintain NIGHTFALL story consistency (characters, timeline, IP addresses)
+- Test story continuity across episodes
+- Improve episode narratives and transitions
 
 ### DO NOT:
 - Create exploits for external systems
@@ -368,13 +510,21 @@ volumes:
 4. Add exploit commands to `docs/CHEATSHEET.md`
 5. Create a lesson in `lab-ui/lessons/`
 
-### Adding a New Lesson
+### Adding a New Lesson/Episode
 
 1. Create `lab-ui/lessons/<id>.json`
 2. Follow the JSON structure (see above)
 3. Set `container` to match docker-compose service name
 4. Set `ip` to match the container's static IP
 5. Include clear step-by-step commands
+6. **NIGHTFALL Integration:**
+   - Write `handler_message` - intel from anonymous contact
+   - Write `episode_intro` - connect target to Cerberus/NIGHTFALL
+   - Write `episode_outro` - reveal discovery, advance plot, tease next episode
+   - Add `narrative` fields to key steps for story context
+   - Maintain character consistency (David Chen, Marcus Webb, Handler)
+   - Keep timeline references to "three weeks ago"
+   - Ensure smooth transition from previous episode's outro
 
 ### Adding a Custom Metasploit Module
 
@@ -495,4 +645,4 @@ docker-compose up -d --force-recreate kali
 
 See `HISTORY.md` for detailed project evolution.
 
-Current version: **v1.0.0 GOLD RELEASE** - All 8 lessons tested and working.
+Current version: **v1.1.0 NIGHTFALL** - Story-driven cyberthriller experience with 9 episodes.

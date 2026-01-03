@@ -141,6 +141,86 @@
 
 ---
 
+## v1.1.0 - NIGHTFALL Narrative System
+
+**The transformation from dry tutorials to immersive cyberthriller.**
+
+### What We Built
+
+**NIGHTFALL** - A Mr. Robot-style serialized story woven through all 8 lessons. Students learn pentesting techniques while uncovering a conspiracy involving:
+- False-flag cyberattack on US critical infrastructure (NIGHTFALL)
+- Weaponized toolkit (SCADA-BRIDGE) designed to trigger cascading failures
+- Corrupt US Senator (PROMETHEUS/Marcus Webb) orchestrating the attack
+- Defense contractor (Cerberus Systems) building the weapon
+- Whistleblower (David Chen) who disappeared with evidence
+
+### New Features
+
+1. **Interstitial Pages** (`/interstitial/<episode_num>`)
+   - Dedicated story delivery for each episode
+   - Handler messages - intel from anonymous contact
+   - Episode intro - mission briefing before lesson
+   - Episode outro - mission debriefing after lesson completion
+   - Smooth transitions between episodes
+
+2. **Episode 9 Finale** (`/finale`)
+   - NOT a lesson, but a comprehensive story payoff
+   - Senator Marcus Webb arrested, conspiracy exposed
+   - Extensive skills review of all 8 episodes
+   - Technical recap of what was learned
+   - Thematic conclusion about truth and consequences
+
+3. **Enhanced Landing Page**
+   - Rewrote story intro to tease experience, not spoil plot
+   - "Start Your Journey Here" button → `/interstitial/1`
+   - Episode 9 card with finale badge and green glow
+   - Pulls readers into the narrative journey
+
+4. **Story Integration in All Lessons**
+   - Added `handler_message` to every lesson
+   - Added `episode_intro` and `episode_outro` to every lesson
+   - Added `narrative` fields to key steps
+   - Connected all 8 targets to Cerberus Systems/NIGHTFALL plot
+
+### Story Arc Consistency
+
+- **Timeline**: "Three weeks ago" established and maintained
+- **Characters**: David Chen, Marcus Webb, Handler, PROMETHEUS
+- **IP Addresses**: Consistent across all episodes and interstitials
+- **Episode Transitions**: Each outro seamlessly leads to next episode
+- **Technical Accuracy**: All exploits verified as real and working
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `lab-ui/templates/finale.html` | NEW - 652 lines, Episode 9 story payoff |
+| `lab-ui/templates/interstitial.html` | Enhanced with handler messages, episode structure |
+| `lab-ui/templates/index.html` | Landing page rewrite, finale card, Start button |
+| `lab-ui/app.py` | Added `/finale` route |
+| `lab-ui/static/style.css` | Finale card styling with green glow |
+| `lab-ui/lessons/*.json` | All 8 lessons updated with NIGHTFALL narrative |
+| `README.md` | Complete rewrite with NIGHTFALL documentation (815 lines) |
+| `CLAUDE.md` | Added NIGHTFALL Narrative System section |
+| `.gitignore` | Added machine-specific files (msf-dotfiles/history, .docker/) |
+
+### Testing & Validation
+
+- End-to-end story audit (no continuity errors found)
+- All episode transitions verified
+- Character consistency confirmed
+- Timeline references validated
+- IP address mapping verified
+- All 8 lessons tested with NIGHTFALL integration
+
+### Philosophy
+
+"Don't just teach hacking. Make them FEEL what it's like to uncover the truth."
+
+This isn't a tutorial anymore. It's an experience. Students learn the same technical skills, but now they're part of something bigger - a race against time to expose a conspiracy before NIGHTFALL deploys.
+
+---
+
 ## v0.5.0 - Remote Access & Reliability
 
 **Focus:** Make the lab work reliably from any machine on the network.
@@ -474,4 +554,4 @@ Quick hits:
 
 ---
 
-*Last updated: 2026-01-02 (v1.0.0 GOLD RELEASE)*
+*Last updated: 2026-01-03 (v1.1.0 NIGHTFALL)*
