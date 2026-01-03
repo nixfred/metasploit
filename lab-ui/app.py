@@ -93,13 +93,24 @@ def container_status(name):
 @app.route('/api/containers/status')
 def all_containers_status():
     """Get status of all containers"""
-    containers = ['kali', 'dvwa', 'vsftpd', 'vulnssh', 'vulnmysql', 'tomcat',
-                  'samba', 'metasploitable2', 'juiceshop', 'webgoat']
+    containers = ['kali', 'vsftpd', 'dvwa', 'vulnssh', 'tomcat', 'samba',
+                  'juiceshop', 'metasploitable2', 'vulnmysql', 'webgoat']
     statuses = {}
     for c in containers:
         status = get_container_status(c)
         statuses[c] = {"status": status, "running": "Up" in status}
     return jsonify(statuses)
+
+@app.route('/api/containers/start-all', methods=['POST'])
+def start_all_containers():
+    """Start all containers"""
+    containers = ['kali', 'vsftpd', 'dvwa', 'vulnssh', 'tomcat', 'samba',
+                  'juiceshop', 'metasploitable2', 'vulnmysql', 'webgoat']
+    results = {}
+    for name in containers:
+        result = run_docker(f"up -d {name}")
+        results[name] = result
+    return jsonify({"success": True, "results": results})
 
 @app.route('/api/kali/start', methods=['POST'])
 def start_kali():

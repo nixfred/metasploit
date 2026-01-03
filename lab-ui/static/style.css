@@ -35,7 +35,7 @@ body {
 .wizard-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 40px 20px;
+    padding: 20px 20px;
 }
 
 .wizard-step {
@@ -57,52 +57,181 @@ body {
     text-align: center;
 }
 
+/* Header Row */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
 .ascii-logo {
     color: var(--accent-green);
-    font-size: 10px;
-    line-height: 1.2;
-    margin-bottom: 20px;
-    overflow-x: auto;
+    font-size: 9px;
+    line-height: 1.1;
+    margin: 0 0 10px 0;
+    text-align: center;
     text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
 }
 
-.welcome-content h1 {
-    font-size: 32px;
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Lessons Section */
+.lessons-section {
+    margin-top: 20px;
+}
+
+.lessons-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
+}
+
+.lessons-header h2 {
+    color: var(--accent-blue);
+    font-size: 16px;
+    margin: 0;
+}
+
+.lesson-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.lesson-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.lesson-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.lesson-card h3 {
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.lesson-card .card-description {
+    font-size: 11px;
+    color: var(--text-secondary);
+    flex-grow: 1;
+    margin-bottom: 10px;
+}
+
+.lesson-card .card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.lesson-card .btn-start {
+    flex: 1;
+}
+
+.lesson-card .btn-stop {
+    background: var(--accent-red);
+    color: white;
+    padding: 6px 10px;
+}
+
+.container-tag {
+    font-size: 10px;
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.container-tag.running {
+    color: var(--accent-green);
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.header-actions-left {
+    display: flex;
+    gap: 10px;
+}
+
+.kali-status {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.kali-status.running {
+    color: var(--accent-green);
+}
+
+/* WTF Section */
+.wtf-section {
+    text-align: center;
+    margin: 15px 0;
+    padding: 10px;
+}
+
+.wtf-section h2 {
+    color: var(--accent-green);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.wtf-section p {
+    color: var(--text-secondary);
+    font-size: 12px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.welcome-content h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
     color: var(--text-primary);
 }
 
 .intro-text {
-    font-size: 18px;
+    font-size: 16px;
     color: var(--text-secondary);
     max-width: 600px;
-    margin: 0 auto 40px;
+    margin: 0 auto 15px;
 }
 
 .what-is-this {
-    margin: 40px 0;
+    margin: 15px 0;
     text-align: left;
 }
 
 .what-is-this h2 {
     text-align: center;
     color: var(--accent-blue);
-    margin-bottom: 30px;
-    font-size: 18px;
+    margin-bottom: 15px;
+    font-size: 16px;
 }
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-bottom: 40px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
 .feature {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 25px;
+    padding: 15px;
     text-align: center;
     transition: all 0.3s;
 }
@@ -113,29 +242,119 @@ body {
 }
 
 .feature-icon {
-    font-size: 40px;
+    font-size: 28px;
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 8px;
 }
 
 .feature h3 {
     color: var(--accent-green);
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    font-size: 14px;
 }
 
 .feature p {
     color: var(--text-secondary);
+    font-size: 12px;
+    margin: 0;
+}
+
+
+/* Cyber Modal */
+.cyber-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.cyber-modal.active {
+    display: flex;
+}
+
+.cyber-modal-content {
+    background: var(--bg-primary);
+    border: 2px solid var(--accent-green);
+    border-radius: 8px;
+    padding: 25px;
+    min-width: 350px;
+    max-width: 450px;
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+}
+
+.cyber-header {
+    margin-bottom: 20px;
+}
+
+.cyber-title {
+    display: block;
+    color: var(--accent-green);
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.cyber-progress {
+    height: 4px;
+    background: var(--bg-secondary);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.cyber-progress-bar {
+    height: 100%;
+    background: var(--accent-green);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.cyber-log {
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.log-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-family: monospace;
+}
+
+.log-icon {
     font-size: 14px;
 }
 
-/* System Status */
+.log-name {
+    color: var(--text-primary);
+    font-size: 13px;
+}
+
+.cyber-footer {
+    text-align: center;
+}
+
+.cyber-hint {
+    color: var(--text-secondary);
+    font-size: 11px;
+}
+
+/* Legacy - keep for lesson page */
 .system-status {
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 25px;
-    margin: 40px auto;
-    max-width: 500px;
+    padding: 15px;
 }
 
 .system-status h2 {
@@ -184,32 +403,30 @@ body {
 /* Running Targets Section */
 .running-targets {
     background: var(--bg-secondary);
-    border: 1px solid var(--accent-red);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 25px;
-    margin: 30px auto;
-    max-width: 500px;
+    padding: 15px;
 }
 
 .running-targets h2 {
-    color: var(--accent-red);
+    color: var(--accent-blue);
     font-size: 16px;
     margin-bottom: 10px;
     text-align: center;
 }
 
-.targets-note {
-    color: var(--text-secondary);
-    font-size: 12px;
-    text-align: center;
-    margin-bottom: 15px;
-}
-
 .targets-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-bottom: 15px;
+    gap: 5px;
+    margin-bottom: 10px;
+    min-height: 40px;
+}
+
+.no-targets {
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-align: center;
 }
 
 .target-item {
