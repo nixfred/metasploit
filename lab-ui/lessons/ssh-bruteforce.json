@@ -47,6 +47,11 @@
       "command": "whoami && hostname",
       "explanation": "Confirm you have root access on the target.",
       "expected": "root and vulnssh"
+    },
+    {
+      "title": "One-command pwn (after you learn it)",
+      "command": "pwn ssh",
+      "explanation": "Exit the shell (type 'exit') and try this. Now that you understand the attack, this script connects directly with the known password."
     }
   ],
   "success_criteria": "You're logged in as root@vulnssh with a # prompt.",

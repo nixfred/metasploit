@@ -77,6 +77,11 @@
       "title": "Upgrade shell (no prompt - just type!)",
       "command": "python -c 'import pty; pty.spawn(\"/bin/bash\")'",
       "explanation": "No prompt will appear - just type and press Enter! Get a proper interactive shell for privilege escalation."
+    },
+    {
+      "title": "One-command pwn (after you learn it)",
+      "command": "pwn distcc",
+      "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs it automatically."
     }
   ],
   "success_criteria": "You have a command shell on Metasploitable2. Run 'id' and 'hostname' to confirm you're on the target system.",

@@ -83,6 +83,11 @@
       "command": "cat /etc/shadow",
       "explanation": "No prompt will appear - just type and press Enter! Read the shadow file - only root can do this.",
       "expected": "Password hashes for system users"
+    },
+    {
+      "title": "One-command pwn (after you learn it)",
+      "command": "pwn sambacry",
+      "explanation": "Exit the shell (type 'exit' twice) and try this. Now that you understand the attack, this script runs it automatically."
     }
   ],
   "success_criteria": "You have root access via Meterpreter. 'getuid' shows uid=0 (root). You can read /etc/shadow.",
