@@ -17,6 +17,24 @@
             width: 100%;
         }
     </style>
+    <script>
+        // Disable "Leave site?" warning by removing all beforeunload handlers
+        window.addEventListener('DOMContentLoaded', function() {
+            // Override window.onbeforeunload
+            Object.defineProperty(window, 'onbeforeunload', {
+                get: function() { return null; },
+                set: function() { return; }
+            });
+            // Remove any existing beforeunload listeners
+            window.onbeforeunload = null;
+        });
+        // Also intercept addEventListener to block beforeunload
+        const origAddEventListener = window.addEventListener;
+        window.addEventListener = function(type, listener, options) {
+            if (type === 'beforeunload') return;
+            return origAddEventListener.call(this, type, listener, options);
+        };
+    </script>
 </head>
 <body>
     <div id="terminal"></div>

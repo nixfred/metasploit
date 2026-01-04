@@ -71,6 +71,9 @@ RUN git clone https://github.com/tsl0922/ttyd.git /tmp/ttyd && \
 # Create persistent directories (will be overlaid by volume mounts)
 RUN mkdir -p /root/.msf4 /root/loot /root/wordlists /root/scripts
 
+# Copy custom ttyd index.html (disables leave warning)
+COPY index.html /usr/share/ttyd/index.html
+
 # Set up a nice prompt
 RUN echo 'PS1="\[\033[1;31m\]kali\[\033[0m\]@\[\033[1;34m\]attackbox\[\033[0m\]:\[\033[1;32m\]\w\[\033[0m\]# "' >> /root/.bashrc
 
@@ -104,6 +107,7 @@ WORKDIR /root
 
 # Start ttyd with bash
 # -W: Writable (allow input)
+# -I: Custom index.html (disables leave warning)
 # -t: Terminal options for theming
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["ttyd", "-W", "-t", "fontSize=14", "-t", "theme={'background':'#1a1a2e','foreground':'#eee'}", "bash"]
+CMD ["ttyd", "-W", "-I", "/usr/share/ttyd/index.html", "-t", "fontSize=14", "-t", "theme={'background':'#1a1a2e','foreground':'#eee'}", "bash"]
