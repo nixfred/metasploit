@@ -488,21 +488,38 @@
             });
         }
 
-        // Clear terminal iframe before navigation to prevent "leave page?" warning
-        function clearTerminalAndNavigate(url) {
+        // Completely remove terminal iframe to prevent "leave page?" warning
+        function destroyTerminal() {
             const frame = document.getElementById('terminal-frame');
             if (frame) {
                 frame.src = 'about:blank';
+                frame.remove();
             }
-            setTimeout(() => { window.location.href = url; }, 50);
         }
 
-        // Intercept all link clicks to clear terminal first
+        // Clear on ANY page unload (back button, refresh, close, navigation)
+        window.addEventListener('beforeunload', function(e) {
+            destroyTerminal();
+            // Don't return anything - prevents our page from showing warning
+        });
+
+        // Catch back/forward button BEFORE it triggers
+        window.addEventListener('popstate', function(e) {
+            destroyTerminal();
+        });
+
+        // Also handle pagehide (mobile/bfcache)
+        window.addEventListener('pagehide', function() {
+            destroyTerminal();
+        });
+
+        // Intercept all link clicks to destroy terminal first
         document.addEventListener('click', function(e) {
             const link = e.target.closest('a[href]');
             if (link && !link.target && link.href && !link.href.startsWith('javascript:')) {
                 e.preventDefault();
-                clearTerminalAndNavigate(link.href);
+                destroyTerminal();
+                setTimeout(() => { window.location.href = link.href; }, 50);
             }
         });
 
