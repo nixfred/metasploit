@@ -33,8 +33,8 @@
     },
     {
       "title": "Start Metasploit",
-      "command": "msfconsole -q",
-      "narrative": "Metasploit is the industry-standard exploitation framework. The -q flag suppresses the banner for faster startup. Inside, you have access to thousands of exploits, payloads, and auxiliary modules. For a backdoor this well-documented, the exploit is already written.",
+      "command": "msfconsole",
+      "narrative": "Metasploit is the industry-standard exploitation framework. Inside, you have access to thousands of exploits, payloads, and auxiliary modules. For a backdoor this well-documented, the exploit is already written.",
       "duration": "5-15 sec"
     },
     {

@@ -34,7 +34,7 @@
     },
     {
       "title": "Start Metasploit",
-      "command": "msfconsole -q",
+      "command": "msfconsole",
       "narrative": "DistCC's vulnerability is elegant in its simplicity. The daemon accepts compilation requests but doesn't validate the commands embedded within them. You can send arbitrary code disguised as a compile job. Metasploit makes this trivial.",
       "duration": "5-15 sec"
     },

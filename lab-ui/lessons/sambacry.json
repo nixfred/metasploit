@@ -40,7 +40,7 @@
     },
     {
       "title": "Start Metasploit",
-      "command": "msfconsole -q",
+      "command": "msfconsole",
       "narrative": "SambaCry is a serious vulnerability - it allows uploading a shared library to a writable share and then loading it into the Samba process. Remote code execution through a legitimate-looking file operation. Metasploit has a module ready.",
       "duration": "5-15 sec"
     },
