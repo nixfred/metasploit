@@ -1986,6 +1986,78 @@ footer .accent {
     color: var(--accent-yellow);
 }
 
+.status-warning {
+    color: var(--accent-yellow);
+    font-weight: bold;
+}
+
+/* Prominent target status box */
+.target-status-box {
+    background: rgba(255, 204, 0, 0.1);
+    border: 2px solid var(--accent-yellow);
+    border-radius: 8px;
+    padding: 20px 30px;
+    margin: 30px 0;
+    text-align: center;
+}
+
+.target-status-box .status-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--accent-yellow);
+    margin-bottom: 10px;
+}
+
+.target-status-box .status-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid var(--accent-yellow);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.target-status-box.ready {
+    background: rgba(0, 255, 65, 0.1);
+    border-color: var(--accent-green);
+}
+
+.target-status-box.ready .status-content {
+    color: var(--accent-green);
+}
+
+.target-status-box.warning {
+    background: rgba(255, 204, 0, 0.15);
+    border-color: var(--accent-yellow);
+}
+
+.target-status-box .target-details {
+    font-size: 14px;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.target-status-box .target-ip {
+    font-family: monospace;
+    color: var(--accent-green);
+}
+
+/* Disabled begin button */
+.begin-episode.disabled {
+    background: linear-gradient(135deg, #444, #333);
+    color: #666;
+    cursor: not-allowed;
+    pointer-events: none;
+    animation: none;
+    box-shadow: none;
+}
+
 .interstitial-action {
     margin-bottom: 30px;
 }

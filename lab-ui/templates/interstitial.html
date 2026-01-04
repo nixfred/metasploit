@@ -31,20 +31,25 @@
             </div>
             {% endif %}
 
-            <!-- Target Info -->
-            <div class="interstitial-target">
-                <div class="target-label">TARGET</div>
-                <div class="target-ip">{{ episode.ip }}:{{ episode.port }}</div>
-                <div class="target-name">{{ episode.container }}</div>
-                <div class="target-status" id="target-status">
-                    <span class="status-spinner"></span> Preparing target...
+            <!-- Target Status (Prominent) -->
+            <div class="target-status-box" id="target-status-box">
+                <div class="status-content" id="target-status">
+                    <span class="status-spinner"></span>
+                    <span class="status-text">INITIALIZING TARGET SYSTEM...</span>
+                </div>
+                <div class="target-details">
+                    <span class="target-ip">{{ episode.ip }}:{{ episode.port }}</span>
+                    <span class="target-name">{{ episode.container }}</span>
                 </div>
             </div>
 
-            <!-- Begin Episode Button -->
+            <!-- Begin Episode Button (disabled until ready) -->
             <div class="interstitial-action">
-                <a href="{{ url_for('episode', episode_number=episode_number) }}" class="btn btn-primary btn-large begin-episode">
-                    BEGIN EPISODE {{ episode_number }}
+                <a href="{{ url_for('episode', episode_number=episode_number) }}"
+                   class="btn btn-primary btn-large begin-episode disabled"
+                   id="begin-btn"
+                   onclick="return isReady;">
+                    WAITING FOR TARGET...
                 </a>
             </div>
 
@@ -61,7 +66,11 @@
     <script>
         // Auto-start container while user reads the story
         const containerName = '{{ episode.container }}';
+        const episodeNumber = {{ episode_number }};
         const statusEl = document.getElementById('target-status');
+        const statusBox = document.getElementById('target-status-box');
+        const beginBtn = document.getElementById('begin-btn');
+        let isReady = false;
 
         async function startContainer() {
             try {
@@ -71,14 +80,30 @@
                 const data = await response.json();
 
                 if (data.status === 'started' || data.status === 'already_running') {
-                    statusEl.innerHTML = '<span class="status-ready">✓</span> Target ready';
-                    statusEl.classList.add('ready');
+                    // Success - enable button
+                    isReady = true;
+                    statusEl.innerHTML = '<span class="status-ready">✓</span><span class="status-text">TARGET SYSTEM ONLINE</span>';
+                    statusBox.classList.add('ready');
+                    beginBtn.classList.remove('disabled');
+                    beginBtn.textContent = 'BEGIN EPISODE ' + episodeNumber;
+                    beginBtn.onclick = null;
                 } else {
-                    statusEl.innerHTML = '<span class="status-error">!</span> ' + (data.message || 'Start manually in lesson');
+                    // Failed but allow continue
+                    enableWithWarning(data.message || 'Container may need manual start');
                 }
             } catch (err) {
-                statusEl.innerHTML = '<span class="status-error">!</span> Will start when needed';
+                // Network error - allow continue anyway
+                enableWithWarning('Could not verify target - continuing anyway');
             }
+        }
+
+        function enableWithWarning(msg) {
+            isReady = true;
+            statusEl.innerHTML = '<span class="status-warning">⚠</span><span class="status-text">' + msg + '</span>';
+            statusBox.classList.add('warning');
+            beginBtn.classList.remove('disabled');
+            beginBtn.textContent = 'BEGIN EPISODE ' + episodeNumber;
+            beginBtn.onclick = null;
         }
 
         // Start container immediately on page load
