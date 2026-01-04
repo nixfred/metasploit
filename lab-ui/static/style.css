@@ -2123,32 +2123,33 @@ footer .accent {
 }
 
 /* ================================
-   COMPACT LANDING PAGE LAYOUT
+   BALANCED LANDING PAGE LAYOUT
+   One screen, breathing room, descriptions
    ================================ */
 
 .wizard-container.compact-layout {
-    padding: 12px 20px;
+    padding: 15px 25px;
     max-width: 1400px;
     background: radial-gradient(ellipse at top, rgba(0, 255, 65, 0.03) 0%, transparent 50%);
 }
 
-/* Compact Header: Logo + Controls in one row */
+/* Header */
 .compact-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 15px;
-    background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(10, 10, 15, 0.95) 100%);
+    padding: 12px 20px;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(10, 10, 15, 0.98) 100%);
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .ascii-logo.compact {
-    font-size: 18px;
+    font-size: 20px;
     margin: 0;
     font-family: inherit;
     white-space: nowrap;
@@ -2156,9 +2157,8 @@ footer .accent {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: none;
     font-weight: bold;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
 }
 
 .nightfall-tag {
@@ -2166,9 +2166,9 @@ footer .accent {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     animation: nightfallPulse 3s ease-in-out infinite;
 }
 
@@ -2180,30 +2180,29 @@ footer .accent {
 .header-controls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .header-controls .mode-toggle {
-    padding: 2px;
+    padding: 3px;
     background: rgba(0, 0, 0, 0.3);
     border-radius: 20px;
 }
 
 .header-controls .mode-btn {
-    padding: 5px 14px;
-    font-size: 11px;
+    padding: 6px 16px;
+    font-size: 12px;
     transition: all 0.2s;
 }
 
 .header-controls .mode-btn.active {
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.4);
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.4);
 }
 
 .header-controls .filter-btn {
-    padding: 5px 12px !important;
-    font-size: 11px !important;
-    height: auto !important;
+    padding: 6px 14px !important;
+    font-size: 12px !important;
     transition: all 0.2s;
 }
 
@@ -2212,9 +2211,8 @@ footer .accent {
 }
 
 .header-controls .btn-small {
-    padding: 5px 12px !important;
-    font-size: 11px !important;
-    height: auto !important;
+    padding: 6px 14px !important;
+    font-size: 12px !important;
     transition: all 0.2s;
 }
 
@@ -2225,54 +2223,52 @@ footer .accent {
 
 .header-controls .kali-link {
     background: linear-gradient(135deg, var(--accent-green), #00cc33);
-    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.3);
 }
 
 .header-controls .kali-link:hover {
     box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
 }
 
-/* Compact Story Intro - Two columns */
+/* Story Intro */
 .story-intro.compact {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 20px;
-    max-width: none;
-    margin: 0 0 12px 0;
-    padding: 18px 22px;
-    background: linear-gradient(135deg, rgba(0, 255, 65, 0.08) 0%, rgba(157, 78, 221, 0.05) 50%, rgba(26, 26, 46, 0.9) 100%);
-    border: 1px solid rgba(0, 255, 65, 0.3);
-    box-shadow:
-        0 0 30px rgba(0, 255, 65, 0.1),
-        inset 0 0 60px rgba(0, 255, 65, 0.02);
+    grid-template-columns: 1.3fr 1fr;
+    gap: 25px;
+    margin: 0 0 15px 0;
+    padding: 18px 24px;
+    background: linear-gradient(135deg, rgba(0, 255, 65, 0.06) 0%, rgba(157, 78, 221, 0.04) 50%, rgba(26, 26, 46, 0.95) 100%);
+    border: 1px solid rgba(0, 255, 65, 0.25);
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.08);
 }
 
 .story-intro.compact .encrypted-header {
-    font-size: 12px;
-    margin-bottom: 12px;
+    font-size: 13px;
+    margin-bottom: 10px;
     letter-spacing: 4px;
-    text-shadow: 0 0 20px rgba(0, 255, 65, 0.8);
+    text-shadow: 0 0 15px rgba(0, 255, 65, 0.6);
 }
 
 .story-intro.compact p {
-    font-size: 12px;
-    line-height: 1.6;
+    font-size: 13px;
+    line-height: 1.5;
     margin-bottom: 10px;
     color: var(--text-primary);
 }
 
 .story-intro.compact .btn {
-    padding: 10px 20px;
-    font-size: 12px;
+    padding: 10px 22px;
+    font-size: 13px;
     font-weight: bold;
     letter-spacing: 1px;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.25);
     transition: all 0.3s;
 }
 
 .story-intro.compact .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+    box-shadow: 0 0 25px rgba(0, 255, 65, 0.4);
 }
 
 .story-left, .story-right {
@@ -2282,8 +2278,8 @@ footer .accent {
 
 .story-right {
     justify-content: center;
-    padding-left: 20px;
-    border-left: 1px solid rgba(157, 78, 221, 0.3);
+    padding-left: 25px;
+    border-left: 1px solid rgba(157, 78, 221, 0.25);
 }
 
 .story-right strong {
@@ -2292,57 +2288,59 @@ footer .accent {
 
 .story-right .urgent {
     margin-top: 10px;
-    padding: 10px 12px;
-    font-size: 11px;
-    background: rgba(255, 204, 0, 0.1);
+    padding: 8px 12px;
+    font-size: 12px;
+    background: rgba(255, 204, 0, 0.08);
     border-left: 3px solid var(--accent-yellow);
     border-radius: 0 4px 4px 0;
 }
 
-/* Compact WTF Section */
+/* WTF Section */
 .wtf-section.compact {
-    margin: 0 0 12px 0;
-    padding: 12px 18px;
+    margin: 0 0 15px 0;
+    padding: 12px 20px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     justify-content: center;
-    background: linear-gradient(90deg, rgba(0, 255, 65, 0.05) 0%, rgba(0, 212, 255, 0.05) 100%);
+    background: linear-gradient(90deg, rgba(0, 255, 65, 0.04) 0%, rgba(0, 212, 255, 0.04) 100%);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .wtf-label {
     color: var(--accent-green);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
-    text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.4);
 }
 
 .wtf-section.compact span {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text-secondary);
 }
 
-/* Compact Lessons Section */
+/* Lessons Section */
 .lessons-section.compact {
     margin-top: 0;
 }
 
-/* Compact Lesson Grid - More columns, smaller cards */
+/* Lesson Grid */
 .lesson-grid.compact {
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
 }
 
 .lesson-card.compact {
-    padding: 12px;
+    padding: 14px 16px;
     min-height: auto;
     background: linear-gradient(145deg, var(--bg-card) 0%, rgba(20, 20, 35, 0.95) 100%);
     border: 1px solid var(--border-color);
     transition: all 0.25s ease;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .lesson-card.compact::before {
@@ -2365,8 +2363,8 @@ footer .accent {
     border-color: var(--accent-green);
     transform: translateY(-3px);
     box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.4),
-        0 0 20px rgba(0, 255, 65, 0.15);
+        0 8px 20px rgba(0, 0, 0, 0.35),
+        0 0 15px rgba(0, 255, 65, 0.12);
 }
 
 .lesson-card.compact.episode-card {
@@ -2375,39 +2373,28 @@ footer .accent {
 
 .lesson-card.compact.episode-card:hover {
     border-left-color: var(--accent-green);
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.4),
-        0 0 20px rgba(157, 78, 221, 0.2);
 }
 
 .lesson-card.compact .card-header {
     margin-bottom: 8px;
-    gap: 5px;
+    gap: 6px;
 }
 
 .lesson-card.compact .episode-badge {
-    font-size: 9px;
-    padding: 3px 6px;
+    font-size: 10px;
+    padding: 3px 7px;
     background: linear-gradient(135deg, var(--accent-purple), #7b2cbf);
-    box-shadow: 0 2px 8px rgba(157, 78, 221, 0.3);
+    box-shadow: 0 2px 6px rgba(157, 78, 221, 0.25);
 }
 
 .lesson-card.compact .difficulty {
-    font-size: 9px;
-    padding: 3px 7px;
-}
-
-.lesson-card.compact .difficulty.easy {
-    box-shadow: 0 2px 8px rgba(0, 255, 65, 0.2);
-}
-
-.lesson-card.compact .difficulty.medium {
-    box-shadow: 0 2px 8px rgba(255, 204, 0, 0.2);
+    font-size: 10px;
+    padding: 3px 8px;
 }
 
 .lesson-card.compact .container-tag {
-    font-size: 9px;
-    padding: 2px 5px;
+    font-size: 10px;
+    padding: 2px 6px;
 }
 
 .lesson-card.compact .container-tag.running {
@@ -2415,19 +2402,33 @@ footer .accent {
 }
 
 .lesson-card.compact h3 {
-    font-size: 12px;
-    margin-bottom: 10px;
-    line-height: 1.4;
+    font-size: 14px;
+    margin-bottom: 6px;
+    line-height: 1.3;
     color: var(--text-primary);
 }
 
+/* Card description */
+.lesson-card.compact .card-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+}
+
 .lesson-card.compact .card-actions {
-    gap: 6px;
+    gap: 8px;
+    margin-top: auto;
 }
 
 .lesson-card.compact .btn-start {
     padding: 8px 16px;
-    font-size: 14px;
+    font-size: 12px;
     margin-top: 0;
     background: linear-gradient(135deg, rgba(0, 255, 65, 0.1) 0%, transparent 100%);
     border: 1px solid var(--accent-green);
@@ -2437,38 +2438,38 @@ footer .accent {
 .lesson-card.compact .btn-start:hover {
     background: var(--accent-green);
     color: var(--bg-primary);
-    box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.35);
 }
 
 .lesson-card.compact .btn-stop {
-    padding: 8px 10px;
-    font-size: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
 }
 
-/* Finale card special styling */
+/* Finale card */
 .lesson-card.compact.finale-card {
     border: 2px solid transparent;
     background:
         linear-gradient(145deg, var(--bg-card) 0%, rgba(20, 20, 35, 0.95) 100%) padding-box,
         linear-gradient(135deg, var(--accent-green), var(--accent-purple), var(--accent-red)) border-box;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.15);
 }
 
 .lesson-card.compact.finale-card:hover {
     box-shadow:
-        0 8px 30px rgba(0, 0, 0, 0.4),
-        0 0 30px rgba(0, 255, 65, 0.3);
+        0 8px 25px rgba(0, 0, 0, 0.4),
+        0 0 25px rgba(0, 255, 65, 0.25);
 }
 
 .lesson-card.compact.finale-card .btn-primary {
     background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
 }
 
-/* Compact Funnel Section */
+/* Funnel Section */
 .funnel-section.compact {
-    margin-top: 12px;
-    padding: 12px 18px;
-    background: linear-gradient(90deg, rgba(0, 212, 255, 0.05) 0%, rgba(26, 26, 46, 0.8) 100%);
+    margin-top: 15px;
+    padding: 12px 20px;
+    background: linear-gradient(90deg, rgba(0, 212, 255, 0.04) 0%, rgba(26, 26, 46, 0.85) 100%);
     border: 1px solid var(--border-color);
     border-radius: 8px;
 }
@@ -2476,19 +2477,18 @@ footer .accent {
 .funnel-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     flex-wrap: wrap;
 }
 
 .funnel-section.compact .funnel-label {
     font-size: 12px;
     color: var(--text-secondary);
-    min-width: auto;
 }
 
 .funnel-section.compact .funnel-status {
     font-size: 11px;
-    padding: 3px 10px;
+    padding: 4px 12px;
     border-radius: 12px;
 }
 
@@ -2505,25 +2505,25 @@ footer .accent {
 .funnel-urls-inline code {
     font-size: 11px;
     background: var(--bg-card);
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 4px;
     color: var(--accent-green);
     border: 1px solid var(--border-color);
 }
 
 .btn-tiny {
-    padding: 3px 8px !important;
+    padding: 4px 10px !important;
     font-size: 11px !important;
     transition: all 0.2s;
 }
 
 .btn-tiny:hover {
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .funnel-section.compact .funnel-warning {
     font-size: 11px;
-    padding: 8px 12px;
+    padding: 8px 14px;
     margin-top: 10px;
     margin-bottom: 0;
     border-radius: 4px;
@@ -2532,7 +2532,7 @@ footer .accent {
 
 .funnel-section.compact .btn-funnel-start,
 .funnel-section.compact .btn-funnel-stop {
-    padding: 5px 14px;
+    padding: 6px 16px;
     font-size: 11px;
     border-radius: 15px;
     transition: all 0.2s;
@@ -2543,17 +2543,17 @@ footer .accent {
     transform: translateY(-1px);
 }
 
-/* Compact Footer */
+/* Footer */
 footer.compact {
     padding: 12px;
-    margin-top: 12px;
+    margin-top: 15px;
     font-size: 11px;
     text-align: center;
     border-top: 1px solid var(--border-color);
-    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.15) 100%);
 }
 
-/* Responsive for compact layout */
+/* Responsive */
 @media (max-width: 900px) {
     .story-intro.compact {
         grid-template-columns: 1fr;
@@ -2561,7 +2561,7 @@ footer.compact {
 
     .story-right {
         border-left: none;
-        border-top: 1px solid rgba(157, 78, 221, 0.3);
+        border-top: 1px solid rgba(157, 78, 221, 0.25);
         padding-left: 0;
         padding-top: 15px;
     }
@@ -2572,6 +2572,6 @@ footer.compact {
     }
 
     .lesson-grid.compact {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 }
