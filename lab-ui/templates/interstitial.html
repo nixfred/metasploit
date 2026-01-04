@@ -27,6 +27,9 @@
                 <div class="target-label">TARGET</div>
                 <div class="target-ip">{{ episode.ip }}:{{ episode.port }}</div>
                 <div class="target-name">{{ episode.container }}</div>
+                <div class="target-status" id="target-status">
+                    <span class="status-spinner"></span> Preparing target...
+                </div>
             </div>
 
             <!-- Begin Episode Button -->
@@ -45,5 +48,32 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Auto-start container while user reads the story
+        const containerName = '{{ episode.container }}';
+        const statusEl = document.getElementById('target-status');
+
+        async function startContainer() {
+            try {
+                const response = await fetch(`/api/container/${containerName}/start`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.status === 'started' || data.status === 'already_running') {
+                    statusEl.innerHTML = '<span class="status-ready">✓</span> Target ready';
+                    statusEl.classList.add('ready');
+                } else {
+                    statusEl.innerHTML = '<span class="status-error">!</span> ' + (data.message || 'Start manually in lesson');
+                }
+            } catch (err) {
+                statusEl.innerHTML = '<span class="status-error">!</span> Will start when needed';
+            }
+        }
+
+        // Start container immediately on page load
+        startContainer();
+    </script>
 </body>
 </html>
