@@ -60,24 +60,26 @@
                             <span class="container-tag" data-container="{{ lesson.container }}">{{ lesson.container }} ⚫</span>
                         </div>
                         <h3>{{ lesson.name }}</h3>
+                        <p class="card-desc">{{ lesson.short_description }}</p>
                         <div class="card-actions">
                             {% if lesson.episode_number %}
-                            <button class="btn btn-start" onclick="launchEpisode({{ lesson.episode_number }}, '{{ lesson.container }}')">▶</button>
+                            <button class="btn btn-start" onclick="launchEpisode({{ lesson.episode_number }}, '{{ lesson.container }}')">Begin</button>
                             {% else %}
-                            <button class="btn btn-start" onclick="launchLesson('{{ lesson.id }}', '{{ lesson.container }}')">▶</button>
+                            <button class="btn btn-start" onclick="launchLesson('{{ lesson.id }}', '{{ lesson.container }}')">Start</button>
                             {% endif %}
-                            <button class="btn btn-stop btn-small" data-container="{{ lesson.container }}" onclick="stopContainer('{{ lesson.container }}'); event.stopPropagation();" style="display:none;">⬛</button>
+                            <button class="btn btn-stop btn-small" data-container="{{ lesson.container }}" onclick="stopContainer('{{ lesson.container }}'); event.stopPropagation();" style="display:none;">Stop</button>
                         </div>
                     </div>
                     {% endfor %}
                     <!-- Finale Card -->
                     <div class="lesson-card compact finale-card" data-difficulty="finale">
                         <div class="card-header">
-                            <span class="difficulty finale">EP9</span>
+                            <span class="difficulty finale">FINALE</span>
                         </div>
                         <h3>🎯 THE TRUTH</h3>
+                        <p class="card-desc">Full story payoff and skills review.</p>
                         <div class="card-actions">
-                            <button class="btn btn-primary" onclick="window.location.href='/finale'">📖</button>
+                            <button class="btn btn-primary" onclick="window.location.href='/finale'">View</button>
                         </div>
                     </div>
                 </div>
