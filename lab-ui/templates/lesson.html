@@ -113,8 +113,10 @@
             <section class="lesson-cleanup">
                 <h2>// CLEANUP //</h2>
                 <button class="btn btn-danger" onclick="stopTarget()">Stop Target Container</button>
-                {% if lesson.next_episode_id %}
-                <a href="/lesson/{{ lesson.next_episode_id }}" class="btn btn-primary next-episode-btn">Next Episode →</a>
+                {% if lesson.episode_number and lesson.episode_number < 8 %}
+                <a href="/interstitial/{{ lesson.episode_number + 1 }}" class="btn btn-primary next-episode-btn">Next Episode →</a>
+                {% elif lesson.episode_number == 8 %}
+                <a href="/finale" class="btn btn-primary next-episode-btn">Episode 9: The Truth →</a>
                 {% endif %}
                 <a href="/" class="btn">← All Episodes</a>
             </section>
