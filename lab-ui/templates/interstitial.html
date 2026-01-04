@@ -15,10 +15,19 @@
                 <h1 class="episode-title">{{ episode.episode_title or episode.name }}</h1>
             </div>
 
-            <!-- Story Content -->
-            {% if interstitial.content %}
-            <div class="interstitial-narrative">
-                {{ interstitial.content | replace('\n', '<br>') | safe }}
+            <!-- Handler Message -->
+            {% if episode.handler_message %}
+            <div class="handler-message">
+                <div class="handler-header">> INCOMING [ENCRYPTED]</div>
+                <div class="handler-content">{{ episode.handler_message | replace('\n', '<br>') | safe }}</div>
+                <div class="handler-footer">[END TRANSMISSION]</div>
+            </div>
+            {% endif %}
+
+            <!-- Episode Intro (Story Setup) -->
+            {% if episode.episode_intro %}
+            <div class="episode-intro">
+                {{ episode.episode_intro | replace('\n', '<br>') | safe }}
             </div>
             {% endif %}
 
