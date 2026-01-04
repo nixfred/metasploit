@@ -2121,3 +2121,265 @@ footer .accent {
     letter-spacing: 1px;
     margin-left: auto;
 }
+
+/* ================================
+   COMPACT LANDING PAGE LAYOUT
+   ================================ */
+
+.wizard-container.compact-layout {
+    padding: 10px 20px;
+    max-width: 1400px;
+}
+
+/* Compact Header: Logo + Controls in one row */
+.compact-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ascii-logo.compact {
+    font-size: 16px;
+    margin: 0;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.nightfall-tag {
+    color: var(--accent-purple);
+    font-size: 12px;
+    opacity: 0.8;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.header-controls .mode-toggle {
+    padding: 2px;
+}
+
+.header-controls .mode-btn {
+    padding: 4px 12px;
+    font-size: 11px;
+}
+
+.header-controls .filter-btn {
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    height: auto !important;
+}
+
+.header-controls .btn-small {
+    padding: 4px 10px !important;
+    font-size: 11px !important;
+    height: auto !important;
+}
+
+/* Compact Story Intro - Two columns */
+.story-intro.compact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: none;
+    margin: 10px 0;
+    padding: 15px;
+}
+
+.story-intro.compact .encrypted-header {
+    font-size: 10px;
+    margin-bottom: 10px;
+}
+
+.story-intro.compact p {
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.story-intro.compact .btn {
+    padding: 8px 16px;
+    font-size: 12px;
+}
+
+.story-left, .story-right {
+    display: flex;
+    flex-direction: column;
+}
+
+.story-right {
+    justify-content: center;
+}
+
+.story-right .urgent {
+    margin-top: 8px;
+    padding-left: 10px;
+    font-size: 11px;
+}
+
+/* Compact WTF Section */
+.wtf-section.compact {
+    margin: 8px 0;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.wtf-label {
+    color: var(--accent-green);
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.wtf-section.compact span {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* Compact Lessons Section */
+.lessons-section.compact {
+    margin-top: 10px;
+}
+
+/* Compact Lesson Grid - More columns, smaller cards */
+.lesson-grid.compact {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+}
+
+.lesson-card.compact {
+    padding: 10px;
+    min-height: auto;
+}
+
+.lesson-card.compact .card-header {
+    margin-bottom: 6px;
+    gap: 4px;
+}
+
+.lesson-card.compact .episode-badge {
+    font-size: 9px;
+    padding: 2px 5px;
+}
+
+.lesson-card.compact .difficulty {
+    font-size: 9px;
+    padding: 2px 6px;
+}
+
+.lesson-card.compact .container-tag {
+    font-size: 9px;
+    padding: 1px 4px;
+}
+
+.lesson-card.compact h3 {
+    font-size: 12px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+
+.lesson-card.compact .card-actions {
+    gap: 4px;
+}
+
+.lesson-card.compact .btn-start {
+    padding: 6px 12px;
+    font-size: 14px;
+    margin-top: 0;
+}
+
+.lesson-card.compact .btn-stop {
+    padding: 6px 8px;
+    font-size: 12px;
+}
+
+/* Compact Funnel Section */
+.funnel-section.compact {
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+}
+
+.funnel-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.funnel-section.compact .funnel-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    min-width: auto;
+}
+
+.funnel-section.compact .funnel-status {
+    font-size: 11px;
+    padding: 2px 8px;
+}
+
+.funnel-urls-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.funnel-urls-inline code {
+    font-size: 11px;
+    background: var(--bg-card);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--accent-green);
+}
+
+.btn-tiny {
+    padding: 2px 6px !important;
+    font-size: 10px !important;
+}
+
+.funnel-section.compact .funnel-warning {
+    font-size: 11px;
+    padding: 6px 10px;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.funnel-section.compact .btn-funnel-start,
+.funnel-section.compact .btn-funnel-stop {
+    padding: 4px 12px;
+    font-size: 11px;
+}
+
+/* Compact Footer */
+footer.compact {
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 11px;
+}
+
+/* Responsive for compact layout */
+@media (max-width: 900px) {
+    .story-intro.compact {
+        grid-template-columns: 1fr;
+    }
+
+    .compact-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .lesson-grid.compact {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+}

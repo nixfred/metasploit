@@ -8,143 +8,94 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="wizard-container">
-        <!-- Single Page Layout -->
+    <div class="wizard-container compact-layout">
+        <!-- Compact Single Page Layout -->
         <section class="main-content">
-            <pre class="ascii-logo">
-    ____  _____  _   _ _____ _____ ____ _____   _        _    ____
-   |  _ \|___ / | \ | |___  | ____/ ___|_   _| | |      / \  | __ )
-   | |_) | |_ \ |  \| |  / /|  _| \___ \ | |   | |     / _ \ |  _ \
-   |  __/ ___) || |\  | / / | |___ ___) || |   | |___ / ___ \| |_) |
-   |_|   |____/ |_| \_|/_/  |_____|____/ |_|   |_____/_/   \_\____/
-                                          :: NIGHTFALL ::
-            </pre>
+            <!-- Header: Logo + Controls -->
+            <div class="compact-header">
+                <pre class="ascii-logo compact">P3N73S7 L4B <span class="nightfall-tag">:: NIGHTFALL ::</span></pre>
+                <div class="header-controls">
+                    <div class="mode-toggle">
+                        <a href="?mode=story" class="mode-btn {% if mode == 'story' %}active{% endif %}">Story</a>
+                        <a href="?mode=training" class="mode-btn {% if mode == 'training' %}active{% endif %}">Training</a>
+                    </div>
+                    <div class="difficulty-filter">
+                        <button class="filter-btn active" onclick="filterLessons('all')">All</button>
+                        <button class="filter-btn" onclick="filterLessons('easy')">Easy</button>
+                        <button class="filter-btn" onclick="filterLessons('medium')">Med</button>
+                    </div>
+                    <button id="kali-quick-link" class="btn btn-small kali-link" onclick="openKaliTerminal()">🖥️ Kali</button>
+                    <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All</button>
+                </div>
+            </div>
+
             {% if mode == 'story' %}
-            <!-- NIGHTFALL Story Mode Intro -->
-            <div class="story-intro">
-                <div class="encrypted-header">
-                    <span class="blink">▌</span> WELCOME TO NIGHTFALL <span class="blink">▌</span>
+            <!-- Compact Story Intro -->
+            <div class="story-intro compact">
+                <div class="story-left">
+                    <div class="encrypted-header"><span class="blink">▌</span> NIGHTFALL <span class="blink">▌</span></div>
+                    <p>Not just a lab—a conspiracy you'll uncover one hack at a time. Eight episodes teach real exploits while a story emerges: encrypted messages, evidence files, a missing whistleblower.</p>
+                    <button class="btn btn-primary" onclick="window.location.href='/interstitial/1'">▶ Start Episode 1</button>
                 </div>
-                <div class="story-premise">
-                    <p>This isn't just a penetration testing lab.</p>
-                    <p>It's a conspiracy you'll uncover one hack at a time.</p>
-                    <p>Eight episodes. Each one teaches you a real exploit—port scanning, brute forcing, SQL injection, command injection. The technical skills are real. The commands work. The vulnerabilities are authentic.</p>
-                    <p>But while you're learning to break into systems, a story will emerge. Encrypted messages from a handler. Evidence files on compromised servers. A whistleblower who disappeared. A plot that connects them all.</p>
-                    <p class="urgent">You won't see it coming. That's the point.</p>
-                </div>
-                <div class="conspiracy-teaser">
-                    <p>By the time you reach Episode 8, you'll know how to:</p>
-                    <p>• Exploit backdoored FTP servers and crack SSH passwords<br>
-                    • Upload malicious web apps and inject commands through forms<br>
-                    • Bypass authentication with SQL injection and steal sessions with XSS<br>
-                    • Compromise file shares and reverse-engineer build systems</p>
-                    <p><strong>And you'll know what NIGHTFALL is.</strong></p>
-                    <p>The narrative doesn't get in the way of the learning—it amplifies it. Every exploit has context. Every compromise reveals another piece of the puzzle. Every command you type moves you closer to the truth.</p>
-                </div>
-                <div class="mission-prompt">
-                    <button class="btn btn-primary btn-large" onclick="window.location.href='/interstitial/1'" style="font-size: 1.2rem; padding: 1rem 2rem; margin-top: 1rem;">
-                        ▶ Start Your Journey Here
-                    </button>
+                <div class="story-right">
+                    <p><strong>You'll learn:</strong> FTP backdoors, SSH brute forcing, WAR uploads, command injection, SQL injection, SMB exploits, and more.</p>
+                    <p class="urgent">Every command moves you closer to the truth.</p>
                 </div>
             </div>
             {% else %}
-            <!-- Training Mode Intro -->
-            <div class="wtf-section">
-                <h2>// WTF IS THIS? //</h2>
-                <p>A localhost hacking lab. Vulnerable Docker containers you can legally attack to learn penetration testing. Pick a hack → container starts → pwn it in the Kali terminal.</p>
+            <!-- Compact Training Mode -->
+            <div class="wtf-section compact">
+                <span class="wtf-label">// WTF IS THIS? //</span>
+                <span>Localhost hacking lab. Pick a hack → container starts → pwn it.</span>
             </div>
             {% endif %}
 
-            <div class="lessons-section">
-                <div class="lessons-header">
-                    <div class="lessons-controls">
-                        <!-- Mode Toggle -->
-                        <div class="mode-toggle">
-                            <a href="?mode=story" class="mode-btn {% if mode == 'story' %}active{% endif %}">Story</a>
-                            <a href="?mode=training" class="mode-btn {% if mode == 'training' %}active{% endif %}">Training</a>
-                        </div>
-                        <div class="difficulty-filter">
-                            <button class="filter-btn active" onclick="filterLessons('all')">All</button>
-                            <button class="filter-btn" onclick="filterLessons('easy')">Easy</button>
-                            <button class="filter-btn" onclick="filterLessons('medium')">Medium</button>
-                        </div>
-                        <button id="kali-quick-link" class="btn btn-small kali-link" onclick="openKaliTerminal()">🖥️ Kali Terminal</button>
-                        <button class="btn btn-danger btn-small" onclick="stopAllContainers()">⬛ Stop All Targets</button>
-                    </div>
-                </div>
-
-                <div class="lesson-grid" id="lesson-grid">
+            <div class="lessons-section compact">
+                <div class="lesson-grid compact" id="lesson-grid">
                     {% for lesson in lessons %}
-                    <div class="lesson-card {% if lesson.episode_number %}episode-card{% endif %}" data-difficulty="{{ lesson.difficulty }}" data-container="{{ lesson.container }}">
+                    <div class="lesson-card compact {% if lesson.episode_number %}episode-card{% endif %}" data-difficulty="{{ lesson.difficulty }}" data-container="{{ lesson.container }}">
                         <div class="card-header">
-                            {% if lesson.episode_number %}
-                            <span class="episode-badge">EP {{ lesson.episode_number }}</span>
-                            {% endif %}
+                            {% if lesson.episode_number %}<span class="episode-badge">EP{{ lesson.episode_number }}</span>{% endif %}
                             <span class="difficulty {{ lesson.difficulty }}">{{ lesson.difficulty | upper }}</span>
                             <span class="container-tag" data-container="{{ lesson.container }}">{{ lesson.container }} ⚫</span>
                         </div>
-                        {% if lesson.episode_title %}
-                        <div class="episode-title-small">{{ lesson.episode_title }}</div>
-                        {% endif %}
                         <h3>{{ lesson.name }}</h3>
-                        <p class="card-description">{{ lesson.description }}</p>
                         <div class="card-actions">
                             {% if lesson.episode_number %}
-                            <button class="btn btn-start" onclick="launchEpisode({{ lesson.episode_number }}, '{{ lesson.container }}')">
-                                Begin Episode →
-                            </button>
+                            <button class="btn btn-start" onclick="launchEpisode({{ lesson.episode_number }}, '{{ lesson.container }}')">▶</button>
                             {% else %}
-                            <button class="btn btn-start" onclick="launchLesson('{{ lesson.id }}', '{{ lesson.container }}')">
-                                Start →
-                            </button>
+                            <button class="btn btn-start" onclick="launchLesson('{{ lesson.id }}', '{{ lesson.container }}')">▶</button>
                             {% endif %}
-                            <button class="btn btn-stop btn-small" data-container="{{ lesson.container }}" onclick="stopContainer('{{ lesson.container }}'); event.stopPropagation();" style="display:none;">
-                                ⬛ Stop
-                            </button>
+                            <button class="btn btn-stop btn-small" data-container="{{ lesson.container }}" onclick="stopContainer('{{ lesson.container }}'); event.stopPropagation();" style="display:none;">⬛</button>
                         </div>
                     </div>
                     {% endfor %}
                     <!-- Finale Card -->
-                    <div class="lesson-card finale-card" data-difficulty="finale">
+                    <div class="lesson-card compact finale-card" data-difficulty="finale">
                         <div class="card-header">
-                            <span class="difficulty finale">EPISODE 9</span>
+                            <span class="difficulty finale">EP9</span>
                         </div>
                         <h3>🎯 THE TRUTH</h3>
-                        <p class="card-description">The NIGHTFALL conclusion. What you learned. Where you go from here.</p>
                         <div class="card-actions">
-                            <button class="btn btn-primary" onclick="window.location.href='/finale'">
-                                📖 View Finale
-                            </button>
+                            <button class="btn btn-primary" onclick="window.location.href='/finale'">📖</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Funnel Toggle Section -->
-            <div class="funnel-section" id="funnel-section">
-                <div class="funnel-header">
-                    <h3>🌐 Public Access (Tailscale Funnel)</h3>
-                    <span class="funnel-status" id="funnel-status">Checking...</span>
+            <!-- Funnel Section - Compact -->
+            <div class="funnel-section compact" id="funnel-section">
+                <div class="funnel-row">
+                    <span class="funnel-label">🌐 Funnel:</span>
+                    <span class="funnel-status" id="funnel-status">...</span>
+                    <span class="funnel-urls-inline" id="funnel-urls" style="display:none;">
+                        <code id="funnel-lab-url"></code>
+                        <button class="btn btn-copy btn-tiny" onclick="copyFunnelUrl('funnel-lab-url', this)">📋</button>
+                    </span>
+                    <button class="btn btn-funnel-start btn-small" id="funnel-start-btn" onclick="toggleFunnel('start')">Enable</button>
+                    <button class="btn btn-funnel-stop btn-small" id="funnel-stop-btn" onclick="toggleFunnel('stop')" style="display:none;">Disable</button>
                 </div>
-                <div class="funnel-warning" id="funnel-warning">
-                    ⚠️ <strong>WARNING:</strong> If you are connected remotely via Funnel, toggling this OFF will kick you out immediately!
-                </div>
-                <div class="funnel-urls" id="funnel-urls" style="display:none;">
-                    <div class="funnel-url-row">
-                        <span class="funnel-label">Lab UI:</span>
-                        <code class="funnel-url-text" id="funnel-lab-url"></code>
-                        <button class="btn btn-copy" onclick="copyFunnelUrl('funnel-lab-url', this)">COPY</button>
-                    </div>
-                    <div class="funnel-url-row">
-                        <span class="funnel-label">Terminal:</span>
-                        <code class="funnel-url-text" id="funnel-term-url"></code>
-                        <button class="btn btn-copy" onclick="copyFunnelUrl('funnel-term-url', this)">COPY</button>
-                    </div>
-                </div>
-                <div class="funnel-controls">
-                    <button class="btn btn-funnel-start" id="funnel-start-btn" onclick="toggleFunnel('start')">🌐 Enable Public Access</button>
-                    <button class="btn btn-funnel-stop" id="funnel-stop-btn" onclick="toggleFunnel('stop')" style="display:none;">🔒 Disable Public Access</button>
-                </div>
+                <div class="funnel-warning" id="funnel-warning" style="display:none;">⚠️ Disabling will disconnect you!</div>
             </div>
         </section>
     </div>
@@ -171,7 +122,7 @@
         </div>
     </div>
 
-    <footer>
+    <footer class="compact">
         <p>All attacks target localhost containers only. <span class="accent">// NEVER use against unauthorized systems //</span></p>
     </footer>
 
@@ -466,18 +417,12 @@
                 const warningEl = document.getElementById('funnel-warning');
 
                 if (data.active && data.hostname) {
-                    statusEl.textContent = 'ACTIVE';
+                    statusEl.textContent = 'ON';
                     statusEl.className = 'funnel-status active';
                     startBtn.style.display = 'none';
                     stopBtn.style.display = 'inline-block';
-                    urlsEl.style.display = 'block';
-
-                    const labUrl = `https://${data.hostname}`;
-                    const termUrl = `https://${data.hostname}:8443`;
-                    document.getElementById('funnel-lab-url').textContent = labUrl;
-                    document.getElementById('funnel-term-url').textContent = termUrl;
-
-                    // Always show warning when funnel is active
+                    urlsEl.style.display = 'inline-flex';
+                    document.getElementById('funnel-lab-url').textContent = `https://${data.hostname}`;
                     warningEl.style.display = 'block';
                 } else {
                     statusEl.textContent = 'OFF';
@@ -489,7 +434,7 @@
                 }
             } catch (e) {
                 console.error('Funnel status check failed:', e);
-                document.getElementById('funnel-status').textContent = 'Error';
+                document.getElementById('funnel-status').textContent = '?';
             }
         }
 
