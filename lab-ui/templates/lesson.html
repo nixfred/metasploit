@@ -488,6 +488,24 @@
             });
         }
 
+        // Clear terminal iframe before navigation to prevent "leave page?" warning
+        function clearTerminalAndNavigate(url) {
+            const frame = document.getElementById('terminal-frame');
+            if (frame) {
+                frame.src = 'about:blank';
+            }
+            setTimeout(() => { window.location.href = url; }, 50);
+        }
+
+        // Intercept all link clicks to clear terminal first
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a[href]');
+            if (link && !link.target && link.href && !link.href.startsWith('javascript:')) {
+                e.preventDefault();
+                clearTerminalAndNavigate(link.href);
+            }
+        });
+
         // Initialize
         loadSavedProgress();  // Restore progress from localStorage
         checkStatus();
