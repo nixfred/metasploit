@@ -34,8 +34,8 @@
     },
     {
       "title": "Initialize the attack framework",
-      "command": "msfconsole -q",
-      "narrative": "Metasploit is the industry-standard penetration testing framework. The -q flag starts it quietly, skipping the ASCII art banner. What you're about to do - uploading a malicious WAR file - is the same technique real attackers use. The difference is authorization. You're exposing a conspiracy. They're just trying to profit.",
+      "command": "msfconsole",
+      "narrative": "Metasploit is the industry-standard penetration testing framework. What you're about to do - uploading a malicious WAR file - is the same technique real attackers use. The difference is authorization. You're exposing a conspiracy. They're just trying to profit.",
       "duration": "5-15 sec"
     },
     {
