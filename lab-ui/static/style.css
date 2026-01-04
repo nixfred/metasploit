@@ -1951,6 +1951,41 @@ footer .accent {
     color: var(--text-secondary);
 }
 
+.target-status {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--accent-yellow);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.target-status.ready {
+    color: var(--accent-green);
+}
+
+.status-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--accent-yellow);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.status-ready {
+    color: var(--accent-green);
+    font-weight: bold;
+}
+
+.status-error {
+    color: var(--accent-yellow);
+}
+
 .interstitial-action {
     margin-bottom: 30px;
 }
