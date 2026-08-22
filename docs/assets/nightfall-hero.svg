@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720" role="img" aria-labelledby="title desc">
+  <title id="title">P3N73S7 L4B NIGHTFALL</title>
+  <desc id="desc">A dark cyber training banner with nine linked episodes inside an isolated localhost Docker network.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#05090d"/><stop offset=".58" stop-color="#09131a"/><stop offset="1" stop-color="#141024"/></linearGradient>
+    <radialGradient id="green"><stop stop-color="#21d4a7" stop-opacity=".25"/><stop offset="1" stop-color="#21d4a7" stop-opacity="0"/></radialGradient>
+    <pattern id="grid" width="38" height="38" patternUnits="userSpaceOnUse"><path d="M38 0H0V38" fill="none" stroke="#21d4a7" stroke-opacity=".05"/></pattern>
+    <filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="shadow"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity=".6"/></filter>
+  </defs>
+  <rect width="1600" height="720" rx="34" fill="url(#bg)"/><rect width="1600" height="720" rx="34" fill="url(#grid)"/><circle cx="1260" cy="300" r="430" fill="url(#green)"/>
+  <g font-family="monospace">
+    <text x="96" y="112" fill="#21d4a7" font-size="21" font-weight="700" letter-spacing="6">WIREPARKHACKERZ · TRAINING RANGE</text>
+    <text x="92" y="234" fill="#eefbf7" font-size="82" font-weight="800" letter-spacing="3">P3N73S7 L4B</text>
+    <text x="94" y="323" fill="#ff4d5f" font-size="68" font-weight="800" letter-spacing="11" filter="url(#glow)">NIGHTFALL</text>
+    <text x="98" y="383" fill="#a9bbb6" font-size="23">Learn exploitation through conspiracy.</text>
+    <g transform="translate(98 458)" filter="url(#shadow)"><rect width="720" height="126" rx="12" fill="#101820" stroke="#26483e"/><text x="28" y="42" fill="#21d4a7" font-size="17" font-weight="700" letter-spacing="3">AUTHORIZED SCOPE</text><text x="28" y="84" fill="#eefbf7" font-size="25" font-weight="700">LOCALHOST DOCKER TARGETS ONLY</text></g>
+    <text x="98" y="652" fill="#718981" font-size="17">9 EPISODES · GUIDED KALI TERMINAL · ISOLATED 172.20.0.0/24 LAB</text>
+  </g>
+  <g transform="translate(1005 123)" font-family="monospace" filter="url(#shadow)">
+    <rect width="458" height="446" rx="18" fill="#0b1118" stroke="#25383e"/>
+    <text x="28" y="46" fill="#8b7cf6" font-size="17" font-weight="700" letter-spacing="3">EPISODE TRACE</text>
+    <path d="M62 88V376" stroke="#263c3d" stroke-width="4"/>
+    <g font-size="16" font-weight="700">
+      <g transform="translate(0 68)"><circle cx="62" cy="20" r="13" fill="#21d4a7"/><text x="94" y="26" fill="#dffaf3">01 · FORGOTTEN DOOR</text></g>
+      <g transform="translate(0 108)"><circle cx="62" cy="20" r="13" fill="#21d4a7"/><text x="94" y="26" fill="#dffaf3">02 · WEAK LINKS</text></g>
+      <g transform="translate(0 148)"><circle cx="62" cy="20" r="13" fill="#21d4a7"/><text x="94" y="26" fill="#dffaf3">03 · DEPLOYMENT</text></g>
+      <g transform="translate(0 188)"><circle cx="62" cy="20" r="13" fill="#8b7cf6"/><text x="94" y="26" fill="#ece8ff">04 · SHARED SECRETS</text></g>
+      <g transform="translate(0 228)"><circle cx="62" cy="20" r="13" fill="#8b7cf6"/><text x="94" y="26" fill="#ece8ff">05 · BUILD FARM</text></g>
+      <g transform="translate(0 268)"><circle cx="62" cy="20" r="13" fill="#8b7cf6"/><text x="94" y="26" fill="#ece8ff">06 · INPUT VALIDATION</text></g>
+      <g transform="translate(0 308)"><circle cx="62" cy="20" r="13" fill="#ff4d5f"/><text x="94" y="26" fill="#ffe5e8">07 · THE QUERY</text></g>
+      <g transform="translate(0 348)"><circle cx="62" cy="20" r="13" fill="#ff4d5f"/><text x="94" y="26" fill="#ffe5e8">08 · STOREFRONT</text></g>
+      <g transform="translate(0 388)"><circle cx="62" cy="20" r="16" fill="#ff4d5f" filter="url(#glow)"/><text x="94" y="26" fill="#ffe5e8">09 · THE TRUTH</text></g>
+    </g>
+  </g>
+  <rect x="2" y="2" width="1596" height="716" rx="32" fill="none" stroke="#25383e" stroke-width="4"/>
+</svg>
