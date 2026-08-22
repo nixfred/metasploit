@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/wireparkhackerz-logo.png" alt="WireParkHackerz" width="150"/>
+  <img src="docs/assets/nightfall-hero.svg" alt="P3N73S7 L4B NIGHTFALL, a story driven localhost pentesting learning lab with nine episodes inside an isolated Docker network" width="100%"/>
 </p>
 
 <h1 align="center">
@@ -40,6 +40,25 @@ But while you're learning to break into systems, a story will emerge. Encrypted 
 **And you'll know what NIGHTFALL is.**
 
 The narrative doesn't get in the way of the learning—it amplifies it. Every exploit has context. Every compromise reveals another piece of the puzzle. Every command you type moves you closer to the truth.
+
+```mermaid
+flowchart LR
+    E1[EP1<br/>Forgotten Door] --> E2[EP2<br/>Weak Links]
+    E2 --> E3[EP3<br/>Deployment]
+    E3 --> E4[EP4<br/>Shared Secrets]
+    E4 --> E5[EP5<br/>Build Farm]
+    E5 --> E6[EP6<br/>Input Validation]
+    E6 --> E7[EP7<br/>The Query]
+    E7 --> E8[EP8<br/>Storefront]
+    E8 --> E9[EP9<br/>The Truth]
+
+    classDef early fill:#101820,stroke:#21d4a7,color:#eafff9
+    classDef middle fill:#181526,stroke:#8b7cf6,color:#f5f1ff
+    classDef finale fill:#291316,stroke:#ff4d5f,color:#fff0f2
+    class E1,E2,E3 early
+    class E4,E5,E6 middle
+    class E7,E8,E9 finale
+```
 
 ---
 
@@ -177,6 +196,29 @@ David Chen died trying to expose this. You finished what he started.
 
 **Note:** Port 5000 is used by macOS AirPlay Receiver, so Lab UI uses 5050.
 
+```mermaid
+flowchart TB
+    B[Browser] -->|5050| U[Flask Lab UI]
+    B -->|7681| K[Kali ttyd<br/>172.20.0.5]
+    B -->|9999| D[Dozzle logs]
+    U -->|Docker control API| X[(Docker socket)]
+    K --> N[Isolated lab network<br/>172.20.0.0/24]
+    X --> N
+    N --> V[Purpose built targets<br/>vsftpd · SSH · Tomcat · Samba]
+    N --> W[Web targets<br/>DVWA · Juice Shop · WebGoat]
+    N --> M[Metasploitable2<br/>MySQL · WordPress · bWAPP]
+    V -. no external targets .-> Z[Local training<br/>boundary]
+    W -. no external targets .-> Z
+    M -. no external targets .-> Z
+
+    classDef ui fill:#101820,stroke:#21d4a7,color:#eafff9
+    classDef lab fill:#181526,stroke:#8b7cf6,color:#f5f1ff
+    classDef boundary fill:#291316,stroke:#ff4d5f,color:#fff0f2
+    class B,U,K,D ui
+    class X,N,V,W,M lab
+    class Z boundary
+```
+
 ### Lab UI Stack
 
 - **Backend:** Flask (Python) on port 5050
@@ -288,6 +330,25 @@ Each lesson is a JSON file in `lab-ui/lessons/` with:
 7. **sqli-dvwa.json** - EP7: THE QUERY
 8. **juiceshop-sqli.json** - EP8: STOREFRONT
 9. **finale.html** - EP9: THE TRUTH (template, not JSON)
+
+```mermaid
+flowchart LR
+    P[Episode picker] --> I[Story<br/>interstitial]
+    I --> S[Start target<br/>container]
+    S --> L[Guided lesson<br/>+ embedded Kali]
+    L --> T[Step tracking<br/>in browser session]
+    T --> O[Episode outro<br/>and evidence]
+    O --> N{More episodes?}
+    N -->|yes| I
+    N -->|no| F[Finale<br/>skills review]
+
+    classDef story fill:#181526,stroke:#8b7cf6,color:#f5f1ff
+    classDef action fill:#101820,stroke:#21d4a7,color:#eafff9
+    classDef finale fill:#291316,stroke:#ff4d5f,color:#fff0f2
+    class P,I,O,N story
+    class S,L,T action
+    class F finale
+```
 
 ---
 
@@ -619,6 +680,23 @@ To enable Tailscale remote access. Target containers stay on 127.0.0.1 for secur
 - Firewall isolation was attempted and removed (complexity vs. security tradeoff)
 
 ### Safe Usage Guidelines
+
+```mermaid
+flowchart TB
+    L[Default local use] --> H[127.0.0.1<br/>target bindings]
+    L --> T[Tailscale private<br/>network access]
+    T --> A[Authenticated<br/>tailnet peers]
+    F[Tailscale Funnel] --> P[Public HTTPS<br/>exposure]
+    P --> R[Kali root terminal<br/>has no app authentication]
+    R --> S[Use briefly for trusted demos<br/>then stop Funnel]
+
+    classDef safe fill:#102219,stroke:#21d4a7,color:#eafff9
+    classDef private fill:#171b2b,stroke:#8b7cf6,color:#f5f1ff
+    classDef danger fill:#291316,stroke:#ff4d5f,color:#fff0f2
+    class L,H safe
+    class T,A private
+    class F,P,R,S danger
+```
 
 ✅ **DO:**
 - Use on isolated networks (home lab, private VPN)
